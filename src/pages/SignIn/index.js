@@ -24,7 +24,13 @@ const SignIn = props => {
     if (isAuthenticated) {
       return history.replace('/home');
     }
-  });
+
+    // Since the useEffect() functions are run on every subsequent re-render/update,
+    // we can tell React to skip a run, for performance purposes, by adding
+    // a second parameter which is an array that contains a list of state variables
+    // to watch for. React will only re-run the side effect
+    // if one of the items in this array changes.
+  }, [isAuthenticated]);
 
   return (
     <SContainer>
