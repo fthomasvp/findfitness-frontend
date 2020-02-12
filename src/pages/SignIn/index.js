@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInRequest } from '../../store/ducks/SignIn';
+import YupSchema, { email, password } from '../validators';
 import {
   SContainer,
   SForm,
@@ -11,8 +12,15 @@ import {
   SPanel,
   SButton,
 } from './styles';
+import STextLink from '../../components/TextLink';
 import logo from '../../assets/images/logo@3x.png';
 import PropTypes from 'prop-types';
+
+// Yup Fields Schema
+const SignInSchema = YupSchema({
+  email,
+  password,
+});
 
 const SignIn = props => {
   const dispatch = useDispatch();
@@ -24,13 +32,7 @@ const SignIn = props => {
     if (isAuthenticated) {
       return history.replace('/home');
     }
-
-    // Since the useEffect() functions are run on every subsequent re-render/update,
-    // we can tell React to skip a run, for performance purposes, by adding
-    // a second parameter which is an array that contains a list of state variables
-    // to watch for. React will only re-run the side effect
-    // if one of the items in this array changes.
-  }, [isAuthenticated]);
+  });
 
   return (
     <SContainer>
@@ -40,14 +42,12 @@ const SignIn = props => {
           onSubmit={({ email, password }) => {
             dispatch(signInRequest(email, password));
           }}
-          // validationSchema={schema({
-          //   email: emailValidation,
-          //   password: passwordValidation
-          // })}
+          validationSchema={SignInSchema}
         >
           {({ values, ...formikProps }) => {
             const { handleChange, handleSubmit, handleBlur } = formikProps;
             const { email, password } = values;
+            const { errors, touched } = formikProps;
 
             return (
               <SForm onSubmit={handleSubmit}>
@@ -66,7 +66,7 @@ const SignIn = props => {
                     onBlur={handleBlur}
                     value={email}
                   />
-                  {/* {errors.email && touched.email && errors.email} */}
+                  {errors.email && touched.email && errors.email}
                 </SInputGroup>
 
                 <SInputGroup>
@@ -79,10 +79,12 @@ const SignIn = props => {
                     onBlur={handleBlur}
                     value={password}
                   />
-                  {/* {errors.password && touched.password && errors.password} */}
+                  {errors.password && touched.password && errors.password}
                 </SInputGroup>
 
                 <SButton type="submit">Acessar</SButton>
+
+                <STextLink to="/signup">Crie uma conta gratuita</STextLink>
               </SForm>
             );
           }}
