@@ -11,9 +11,11 @@ export const SContainer = Styled.section`
 
 export const SPanel = Styled.div`
   width: 400px;
-  height: 450px;
+  height: 600px;
   display: flex;
   flex-flow: column wrap;
+  border: 1px solid lightgray;
+  border-radius: 7px;
 `;
 
 export const SLabel = Styled.label`
