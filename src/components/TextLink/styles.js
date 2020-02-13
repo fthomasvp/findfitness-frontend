@@ -7,6 +7,14 @@ export const WrapperLink = Styled.div`
 `;
 
 export const SLink = Styled(Link)`
-  font-size: 1.2em;
-  color: #222;
+  font-size: 1.1em;
+  color: #F8F8FF;
+
+  &:hover {
+    color: lightblue;
+  }
+
+  // &:visited {
+  //   color: purple;
+  // }
 `;
