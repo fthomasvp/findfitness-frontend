@@ -1,12 +1,13 @@
 import Styled from 'styled-components';
 
 export const SContainer = Styled.section`
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   display: flex;
   flex-flow: column wrap;
   justify-content: center;
   align-items: center;
+  background-image: linear-gradient(45deg, lightblue, purple);
 `;
 
 export const SPanel = Styled.div`
@@ -16,12 +17,14 @@ export const SPanel = Styled.div`
   flex-flow: column wrap;
   border: 1px solid lightgray;
   border-radius: 7px;
+  padding: 10px;
 `;
 
 export const SLabel = Styled.label`
   font-size: 1.2em;
   font-weight: bold;
   text-align: left;
+  color: white;
   margin-bottom: 5px;
 `;
 
@@ -39,12 +42,14 @@ export const SInputGroup = Styled.div`
 `;
 
 export const SInput = Styled.input`
+  height: 18px;
   padding: 5px;
   border-radius: 5px;
 `;
 
 export const SButton = Styled.button`
-  width: 120px;
+  width: 160px;
+  height: 35px;
   padding: 5px;
   border-radius: 5px;
   align-self: center;
