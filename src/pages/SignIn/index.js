@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { signInRequest } from '../../store/ducks/SignIn';
 import YupSchema, { email, password } from '../validators';
 import {
@@ -14,7 +15,6 @@ import {
 } from './styles';
 import STextLink from '../../components/TextLink';
 import logo from '../../assets/images/logo@3x.png';
-import PropTypes from 'prop-types';
 
 // Yup Fields Schema
 const SignInSchema = YupSchema({
@@ -22,10 +22,10 @@ const SignInSchema = YupSchema({
   password,
 });
 
-const SignIn = props => {
+const SignIn = () => {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(state => state.signIn.isAuthenticated);
-  const { history } = props;
+  const history = useHistory();
 
   useEffect(() => {
     // Unmount component
@@ -54,7 +54,6 @@ const SignIn = props => {
                 <img
                   src={logo}
                   alt="FindFitness_Logo"
-                  style={{ backgroundColor: '#222' }}
                 />
                 <SInputGroup>
                   <SLabel htmlFor="email">Email</SLabel>
@@ -82,7 +81,7 @@ const SignIn = props => {
                   {errors.password && touched.password && errors.password}
                 </SInputGroup>
 
-                <SButton type="submit">Acessar</SButton>
+                <SButton type="submit">Acessar conta</SButton>
 
                 <STextLink to="/signup">Crie uma conta gratuita</STextLink>
               </SForm>
@@ -92,10 +91,6 @@ const SignIn = props => {
       </SPanel>
     </SContainer>
   );
-};
-
-SignIn.propTypes = {
-  history: PropTypes.object.isRequired,
 };
 
 export default SignIn;
