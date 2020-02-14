@@ -54,6 +54,12 @@ const SignIn = () => {
                 <img
                   src={logo}
                   alt="FindFitness_Logo"
+                  style={{
+                    width: '100px',
+                    height: '70px',
+                    display: 'flex',
+                    alignSelf: 'center',
+                  }}
                 />
                 <SInputGroup>
                   <SLabel htmlFor="email">Email</SLabel>
