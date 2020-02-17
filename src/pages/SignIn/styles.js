@@ -20,14 +20,6 @@ export const SPanel = Styled.div`
   padding: 10px;
 `;
 
-export const SLabel = Styled.label`
-  font-size: 1.2em;
-  font-weight: bold;
-  text-align: left;
-  color: white;
-  margin-bottom: 5px;
-`;
-
 export const SForm = Styled.form`
   height: 100vh;
   display: flex;
@@ -39,19 +31,4 @@ export const SForm = Styled.form`
 export const SInputGroup = Styled.div`
   display: flex;
   flex-flow: column wrap;
-`;
-
-export const SInput = Styled.input`
-  height: 18px;
-  padding: 5px;
-  border-radius: 5px;
-`;
-
-export const SButton = Styled.button`
-  width: 160px;
-  height: 35px;
-  padding: 5px;
-  border-radius: 5px;
-  align-self: center;
-  font-weight: bold;
 `;
