@@ -8,7 +8,7 @@ export const WrapperLink = Styled.div`
 
 export const SLink = Styled(Link)`
   font-size: 1.1em;
-  color: #F8F8FF;
+  color: ${({ color }) => color || '#F8F8FF'};
 
   &:hover {
     color: lightblue;
