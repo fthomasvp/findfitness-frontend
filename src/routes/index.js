@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 
 import SignIn from '../pages/SignIn';
+import SignUp from '../pages/SignUp';
 
 const Routes = () => {
   return (
@@ -12,7 +13,7 @@ const Routes = () => {
           <SignIn />
         </Route>
         <Route exact path="/signup">
-          <h1>Sign Up</h1>
+          <SignUp />
         </Route>
         <Route exact path="/home">
           <h1>Home</h1>
