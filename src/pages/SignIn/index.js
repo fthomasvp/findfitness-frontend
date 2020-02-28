@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { signInRequest } from '../../store/ducks/SignIn';
 import YupSchema, { email, password } from '../validators';
-import { SContainer, SForm, SInputGroup, SPanel } from './styles';
+import { SContainer, SInputGroup, SPanel } from './styles';
 import SLabel from '../../components/Label';
 import SInput from '../../components/Input';
 import SButton from '../../components/Button';
 import STextLink from '../../components/TextLink';
+import SForm from '../../components/Form';
 import logo from '../../assets/images/logo@3x.png';
 
 // Yup Fields Schema
