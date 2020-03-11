@@ -1,12 +1,14 @@
 import React from 'react';
 import { Formik } from 'formik';
-import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateAddressForm } from '../../../store/ducks/SignUp';
+// import YupSchema, { email, password } from '../../validators';
 import SForm from '../../../components/Form';
 import SInput from '../../../components/Input';
 import SLabel from '../../../components/Label';
-import YupSchema, { email, password } from '../../validators';
+import SButton from '../../../components/Button';
 import { SInputGroup, SPanel, SWrapperFormik } from './styles';
-import StepNavigator from '../StepNavigator';
 
 // Yup Fields Schema
 // const AddressSchema = YupSchema({
@@ -14,19 +16,22 @@ import StepNavigator from '../StepNavigator';
 //   password,
 // });
 
-const AddressForm = props => {
-  const { createUser, setCreateUser, currentStep, setCurrentStep } = props;
+const AddressForm = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { userToCreate } = useSelector(state => state.signUp);
 
   return (
     <SWrapperFormik>
       <Formik
-        initialValues={createUser.address}
+        initialValues={userToCreate.address}
         onSubmit={values => {
           const address = values;
 
-          setCreateUser({ ...createUser, address });
+          dispatch(updateAddressForm(address));
 
-          setCurrentStep(currentStep + 1);
+          history.replace('/login');
         }}
         // validationSchema={AddressSchema}
       >
@@ -36,13 +41,13 @@ const AddressForm = props => {
           const { errors, touched } = formikProps;
 
           return (
-            <SForm onSubmit={handleSubmit}>
-              <article>
-                <p style={{ color: 'white' }}>
-                  E para tornar o FindFitness ainda mais seguro...
-                </p>
-                <p>precisamos anotar os dados do seu endereço :)</p>
-              </article>
+            <SForm onSubmit={handleSubmit} style={{ alignItems: 'center' }}>
+              <h1 style={{ color: 'white', alignSelf: 'center' }}>
+                Para tornar o FindFitness ainda mais seguro...
+              </h1>
+              <h3 style={{ color: 'white', alignSelf: 'center' }}>
+                Precisamos anotar os dados do seu endereço ;-)
+              </h3>
               <SPanel>
                 <SInputGroup>
                   <SLabel htmlFor="zipcode">CEP</SLabel>
@@ -160,12 +165,21 @@ const AddressForm = props => {
                   {errors.state && touched.state && errors.state}
                 </SInputGroup>
 
-                <StepNavigator
-                  buttonNames={['VOLTAR', 'FINALIZAR']}
-                  currentStep={currentStep}
-                  setCurrentStep={setCurrentStep}
-                  typeSubmit
-                />
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100px',
+                    display: 'flex',
+                    justifyContent: 'space-evenly',
+                  }}
+                >
+                  <SButton width="40%" type="button" onClick={() => history.goBack()}>
+                    VOLTAR
+                  </SButton>
+                  <SButton width="40%" backgroundColor="blue" type="submit">
+                    FINALIZAR
+                  </SButton>
+                </div>
               </SPanel>
             </SForm>
           );
@@ -173,13 +187,6 @@ const AddressForm = props => {
       </Formik>
     </SWrapperFormik>
   );
-};
-
-AddressForm.propTypes = {
-  createUser: PropTypes.object.isRequired,
-  setCreateUser: PropTypes.func.isRequired,
-  currentStep: PropTypes.number.isRequired,
-  setCurrentStep: PropTypes.func.isRequired,
 };
 
 export default AddressForm;
