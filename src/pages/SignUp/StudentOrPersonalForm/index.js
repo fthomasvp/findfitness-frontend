@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { updatePersonForm } from '../../../store/ducks/SignUp';
-// import YupSchema, { email, password } from '../../validators';
+import YupSchema, {
+  email,
+  password,
+  name,
+  phone,
+  cpf,
+  birthdate,
+} from '../../validators';
 import {
   SWrapperFormik,
   SPanel,
@@ -16,19 +23,29 @@ import SLabel from '../../../components/Label';
 import SInput from '../../../components/Input';
 import SButton from '../../../components/Button';
 
-// Yup Fields Schema
-// const StudentOrPersonalSchema = YupSchema({
-//   email,
-//   password,
-// });
+/**
+ * Yup Fields Schema
+ */
+const StudentOrPersonalSchema = YupSchema({
+  email,
+  password,
+  name,
+  phone,
+  cpf,
+  birthdate,
+});
 
 const StudentOrPersonalForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
   const { userToCreate } = useSelector(state => state.signUp);
+  const { gender } =
+    userToCreate && userToCreate.profileType === 'STUDENT'
+      ? userToCreate.student
+      : userToCreate.personal;
 
-  const [genderForm, setGenderForm] = useState('M');
+  const [genderForm, setGenderForm] = useState(gender);
   const [genderStyles, setGenderStyles] = useState([
     {
       type: 'M',
@@ -87,6 +104,12 @@ const StudentOrPersonalForm = () => {
     setGenderStyles(newGenderStyles);
   };
 
+  useEffect(() => {
+    handleToggleGender(gender);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gender]);
+
   return (
     <SWrapperFormik>
       <Formik
@@ -102,7 +125,7 @@ const StudentOrPersonalForm = () => {
 
           history.push('/signup/addressform');
         }}
-        // validationSchema={StudentOrPersonalSchema}
+        validationSchema={StudentOrPersonalSchema}
       >
         {({ values, ...formikProps }) => {
           const user = values;
@@ -159,7 +182,7 @@ const StudentOrPersonalForm = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={user.phone}
-                    maxLength="15"
+                    maxLength="11"
                     width="105px"
                   />
                   {errors.phone && touched.phone && errors.phone}
@@ -173,7 +196,7 @@ const StudentOrPersonalForm = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={user.cpf}
-                    maxLength="14"
+                    maxLength="11"
                     width="110px"
                   />
                   {errors.cpf && touched.cpf && errors.cpf}
