@@ -1,24 +1,32 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import StepNavigator from '../StepNavigator';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
   SContainer,
   SToggleButton,
   SToggleButtonGroup,
   SPanel,
 } from './styles';
+import SButton from '../../../components/Button';
+import { updateProfileType } from '../../../store/ducks/SignUp';
 
-const ProfileForm = props => {
-  const { createUser, setCreateUser, currentStep, setCurrentStep } = props;
+const ProfileForm = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-  const isStudent = createUser.profileType === 'STUDENT';
+  const { profileType } = useSelector(state => state.signUp.userToCreate);
 
-  const handleClick = async profileType => {
-    await setCreateUser({ ...createUser, profileType });
-    // setTimeout(() => {
-    //   setCurrentStep(2);
-    // }, 600);
+  const [profileTypeForm, setProfileTypeForm] = useState(profileType);
+
+  const handleToggleProfileType = profileTypeForm => setProfileTypeForm(profileTypeForm);
+
+  const handleClickNextButton = () => {
+    dispatch(updateProfileType(profileTypeForm));
+
+    history.push('/signup/userform');
   };
+
+  const isStudent = profileTypeForm === 'STUDENT';
 
   const getToggleStyle = isStudent =>
     isStudent ? { backgroundColor: '#10097a' } : {};
@@ -32,39 +40,53 @@ const ProfileForm = props => {
   return (
     <SContainer>
       <SPanel>
-        <h1>Olá! Vamos criar a sua conta?</h1>
-        <p>Primeiro precisamos saber se você é um Personal ou um Estudante.</p>
-        <p>Por favor, selecione uma das opções abaixo:</p>
+        <h1 style={{ color: 'white', alignSelf: 'center' }}>
+          Olá! Vamos criar a sua conta?
+        </h1>
+        <p style={{ color: 'white', alignSelf: 'center' }}>
+          Primeiro precisamos saber se você é um Personal ou um Estudante.
+        </p>
+        <p style={{ color: 'white', alignSelf: 'center' }}>
+          Por favor, selecione uma das opções abaixo:
+        </p>
+
         <SToggleButtonGroup>
           <SToggleButton
             style={getToggleStyle(isStudent)}
-            onClick={() => handleClick('STUDENT')}
+            onClick={() => handleToggleProfileType('STUDENT')}
           >
             <p style={getTextStyle(isStudent)}>ESTUDANTE</p>
           </SToggleButton>
           <SToggleButton
             style={getToggleStyle(!isStudent)}
-            onClick={() => handleClick('PERSONAL')}
+            onClick={() => handleToggleProfileType('PERSONAL')}
           >
             <p style={getTextStyle(!isStudent)}>PERSONAL</p>
           </SToggleButton>
         </SToggleButtonGroup>
 
-        <StepNavigator
-          buttonNames={['VOLTAR', 'PRÓXIMO']}
-          currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
-        />
+        <div
+          style={{
+            width: '100%',
+            height: '100px',
+            display: 'flex',
+            justifyContent: 'space-evenly',
+          }}
+        >
+          <SButton width="40%" onClick={() => history.goBack()}>
+            VOLTAR
+          </SButton>
+          <SButton
+            width="40%"
+            backgroundColor="blue"
+            onClick={() => handleClickNextButton()}
+          >
+            PRÓXIMO
+          </SButton>
+        </div>
       </SPanel>
     </SContainer>
   );
-};
-
-ProfileForm.propTypes = {
-  createUser: PropTypes.object.isRequired,
-  setCreateUser: PropTypes.func.isRequired,
-  currentStep: PropTypes.number.isRequired,
-  setCurrentStep: PropTypes.func.isRequired,
 };
 
 export default ProfileForm;
