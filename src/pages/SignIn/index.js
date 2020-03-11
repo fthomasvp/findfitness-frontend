@@ -20,8 +20,9 @@ const SignInSchema = YupSchema({
 
 const SignIn = () => {
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(state => state.signIn.isAuthenticated);
   const history = useHistory();
+
+  const isAuthenticated = useSelector(state => state.signIn.isAuthenticated);
 
   useEffect(() => {
     // Unmount component
