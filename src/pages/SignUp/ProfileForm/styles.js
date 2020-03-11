@@ -15,7 +15,7 @@ export const SPanel = Styled.div`
   height: 720px;
   display: flex;
   flex-flow: column wrap;
-  justify-content: space-evenly;
+  justify-content: space-around;
   border: 1px solid lightgray;
   border-radius: 7px;
   padding: 10px;

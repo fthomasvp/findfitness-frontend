@@ -18,7 +18,8 @@ const ProfileForm = () => {
 
   const [profileTypeForm, setProfileTypeForm] = useState(profileType);
 
-  const handleToggleProfileType = profileTypeForm => setProfileTypeForm(profileTypeForm);
+  const handleToggleProfileType = profileTypeForm =>
+    setProfileTypeForm(profileTypeForm);
 
   const handleClickNextButton = () => {
     dispatch(updateProfileType(profileTypeForm));
@@ -39,17 +40,16 @@ const ProfileForm = () => {
 
   return (
     <SContainer>
+      <h1 style={{ color: 'white', alignSelf: 'center' }}>
+        Olá! Vamos criar a sua conta?
+      </h1>
+      <h3 style={{ color: 'white', alignSelf: 'center' }}>
+        Primeiro precisamos saber se você é um Personal ou um Estudante.
+      </h3>
       <SPanel>
-        <h1 style={{ color: 'white', alignSelf: 'center' }}>
-          Olá! Vamos criar a sua conta?
-        </h1>
-        <p style={{ color: 'white', alignSelf: 'center' }}>
-          Primeiro precisamos saber se você é um Personal ou um Estudante.
-        </p>
-        <p style={{ color: 'white', alignSelf: 'center' }}>
+        <h4 style={{ color: 'white', alignSelf: 'center' }}>
           Por favor, selecione uma das opções abaixo:
-        </p>
-
+        </h4>
         <SToggleButtonGroup>
           <SToggleButton
             style={getToggleStyle(isStudent)}
