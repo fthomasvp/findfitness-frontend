@@ -12,12 +12,25 @@ export const SWrapperFormik = Styled.div`
 `;
 
 export const SPanel = Styled.div`
-  width: 400px;
-  height: 750px;
+  width: 500px;
+  height: 720px;
   display: flex;
   flex-flow: column wrap;
   justify-content: space-evenly;
   border: 1px solid lightgray;
   border-radius: 7px;
   padding: 10px;
+`;
+
+export const SToggleButtonGroup = Styled.div`
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  align-items: center;
+`;
+
+export const SToggleButton = Styled.button`
+  width: ${({ width }) => width || '200px'};
+  border-radius: 30px;
 `;

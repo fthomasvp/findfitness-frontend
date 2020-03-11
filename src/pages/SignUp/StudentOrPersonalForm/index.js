@@ -1,42 +1,108 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
-import YupSchema, { email, password } from '../../validators';
-import PropTypes from 'prop-types';
-import { SWrapperFormik, SPanel, SInputGroup } from './styles';
+import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { updatePersonForm } from '../../../store/ducks/SignUp';
+// import YupSchema, { email, password } from '../../validators';
+import {
+  SWrapperFormik,
+  SPanel,
+  SInputGroup,
+  SToggleButtonGroup,
+  SToggleButton,
+} from './styles';
 import SForm from '../../../components/Form';
 import SLabel from '../../../components/Label';
 import SInput from '../../../components/Input';
-import StepNavigator from '../StepNavigator';
+import SButton from '../../../components/Button';
 
 // Yup Fields Schema
-const StudentOrPersonalSchema = YupSchema({
-  email,
-  password,
-});
+// const StudentOrPersonalSchema = YupSchema({
+//   email,
+//   password,
+// });
 
-const StudentOrPersonalForm = props => {
-  const { createUser, setCreateUser, currentStep, setCurrentStep } = props;
+const StudentOrPersonalForm = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { userToCreate } = useSelector(state => state.signUp);
+
+  const [genderForm, setGenderForm] = useState('M');
+  const [genderStyles, setGenderStyles] = useState([
+    {
+      type: 'M',
+      isSelected: true,
+      toggleStyle: { backgroundColor: '#10097a' },
+      textStyle: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        color: '#fff',
+      },
+    },
+    {
+      type: 'F',
+      isSelected: false,
+      toggleStyle: {},
+      textStyle: {},
+    },
+    {
+      type: 'I',
+      isSelected: false,
+      toggleStyle: {},
+      textStyle: {},
+    },
+  ]);
+
+  /**
+   * ToggleGender
+   */
+  const handleToggleGender = genderForm => {
+    const newGenderStyles = genderStyles.map(gender => {
+      if (gender.type === genderForm) {
+        const toggleStyleToApply = { backgroundColor: '#10097a' };
+        const textStyleToApply = {
+          fontWeight: 'bold',
+          fontSize: 16,
+          color: '#fff',
+        };
+
+        gender.isSelected = true;
+        gender.toggleStyle = toggleStyleToApply;
+        gender.textStyle = textStyleToApply;
+      } else {
+        gender.isSelected = false;
+        gender.toggleStyle = {};
+        gender.textStyle = {
+          fontWeight: 'bold',
+          fontSize: 16,
+          color: '#bbb',
+        };
+      }
+
+      return gender;
+    });
+
+    setGenderForm(genderForm);
+    setGenderStyles(newGenderStyles);
+  };
 
   return (
     <SWrapperFormik>
       <Formik
         initialValues={
-          createUser.profileType === 'STUDENT'
-            ? createUser.student
-            : createUser.personal
+          userToCreate.profileType === 'STUDENT'
+            ? userToCreate.student
+            : userToCreate.personal
         }
         onSubmit={values => {
-          const user = values;
+          const person = { ...values, gender: genderForm };
 
-          if (createUser.profileType === 'STUDENT') {
-            setCreateUser({ ...createUser, student: user });
-          } else {
-            setCreateUser({ ...createUser, personal: user });
-          }
+          dispatch(updatePersonForm(person));
 
-          setCurrentStep(currentStep + 1);
+          history.push('/signup/addressform');
         }}
-        validationSchema={StudentOrPersonalSchema}
+        // validationSchema={StudentOrPersonalSchema}
       >
         {({ values, ...formikProps }) => {
           const user = values;
@@ -44,17 +110,16 @@ const StudentOrPersonalForm = props => {
           const { errors, touched } = formikProps;
 
           return (
-            <SForm onSubmit={handleSubmit}>
-              <article>
-                <h1 style={{ color: 'white' }}>
-                  Hey! Queremos te conhecer melhor...
-                </h1>
-                <p style={{ color: 'white' }}>
-                  Poderia nos dizer quem é você? ;)
-                </p>
-              </article>
+            <SForm onSubmit={handleSubmit} style={{ alignItems: 'center' }}>
+              <h1 style={{ color: 'white', alignSelf: 'center' }}>
+                Hey! Queremos te conhecer melhor...
+              </h1>
+              <h3 style={{ color: 'white', alignSelf: 'center' }}>
+                Poderia nos contar um pouco mais sobre você?
+              </h3>
+
               <SPanel>
-                {createUser.profileType === 'PERSONAL' ? (
+                {userToCreate.profileType === 'PERSONAL' ? (
                   <SInputGroup>
                     <SLabel htmlFor="cref">CREF</SLabel>
                     <SInput
@@ -80,7 +145,7 @@ const StudentOrPersonalForm = props => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={user.name}
-                    autoFocus={createUser.profileType === 'STUDENT'}
+                    autoFocus={userToCreate.profileType === 'STUDENT'}
                     maxLength="140"
                   />
                   {errors.name && touched.name && errors.name}
@@ -115,16 +180,81 @@ const StudentOrPersonalForm = props => {
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="gender">Gênero</SLabel>
-                  {/* Será um ToggleButton */}
-                  <SInput
-                    id="gender"
-                    type="text"
-                    name="gender"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={user.gender}
-                  />
-                  {errors.gender && touched.gender && errors.gender}
+
+                  <SToggleButtonGroup>
+                    <SToggleButton
+                      width="33%"
+                      type="button"
+                      style={
+                        genderStyles[0].isSelected
+                          ? genderStyles[0].toggleStyle
+                          : {}
+                      }
+                      onClick={() => handleToggleGender('M')}
+                    >
+                      <p
+                        style={
+                          genderStyles[0].isSelected
+                            ? genderStyles[0].textStyle
+                            : {
+                                fontWeight: 'bold',
+                                fontSize: 16,
+                                color: '#bbb',
+                              }
+                        }
+                      >
+                        MASCULINO
+                      </p>
+                    </SToggleButton>
+                    <SToggleButton
+                      width="33%"
+                      type="button"
+                      style={
+                        genderStyles[1].isSelected
+                          ? genderStyles[1].toggleStyle
+                          : {}
+                      }
+                      onClick={() => handleToggleGender('F')}
+                    >
+                      <p
+                        style={
+                          genderStyles[1].isSelected
+                            ? genderStyles[1].textStyle
+                            : {
+                                fontWeight: 'bold',
+                                fontSize: 16,
+                                color: '#bbb',
+                              }
+                        }
+                      >
+                        FEMININO
+                      </p>
+                    </SToggleButton>
+                    <SToggleButton
+                      width="33%"
+                      type="button"
+                      style={
+                        genderStyles[2].isSelected
+                          ? genderStyles[2].toggleStyle
+                          : {}
+                      }
+                      onClick={() => handleToggleGender('I')}
+                    >
+                      <p
+                        style={
+                          genderStyles[2].isSelected
+                            ? genderStyles[2].textStyle
+                            : {
+                                fontWeight: 'bold',
+                                fontSize: 16,
+                                color: '#bbb',
+                              }
+                        }
+                      >
+                        INTERSEXO
+                      </p>
+                    </SToggleButton>
+                  </SToggleButtonGroup>
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="birthdate">Data de Nascimento</SLabel>
@@ -165,12 +295,26 @@ const StudentOrPersonalForm = props => {
                   />
                   {errors.password && touched.password && errors.password}
                 </SInputGroup>
-                <StepNavigator
-                  buttonNames={['VOLTAR', 'PRÓXIMO']}
-                  currentStep={currentStep}
-                  setCurrentStep={setCurrentStep}
-                  typeSubmit
-                />
+
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100px',
+                    display: 'flex',
+                    justifyContent: 'space-evenly',
+                  }}
+                >
+                  <SButton
+                    width="40%"
+                    type="button"
+                    onClick={() => history.goBack()}
+                  >
+                    VOLTAR
+                  </SButton>
+                  <SButton width="40%" backgroundColor="blue" type="submit">
+                    PRÓXIMO
+                  </SButton>
+                </div>
               </SPanel>
             </SForm>
           );
@@ -178,13 +322,6 @@ const StudentOrPersonalForm = props => {
       </Formik>
     </SWrapperFormik>
   );
-};
-
-StudentOrPersonalForm.propTypes = {
-  createUser: PropTypes.object.isRequired,
-  setCreateUser: PropTypes.func.isRequired,
-  currentStep: PropTypes.number.isRequired,
-  setCurrentStep: PropTypes.func.isRequired,
 };
 
 export default StudentOrPersonalForm;
