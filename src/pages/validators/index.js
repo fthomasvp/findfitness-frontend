@@ -14,16 +14,6 @@ export const name = Yup.string()
   .max(140, 'Deve conter até 140 caracteres')
   .required('Preencha o campo');
 
-export const phone = Yup.string()
-  .matches(/\d/, 'Deve conter apenas números')
-  .min(11, 'Deve conter pelo menos 11 caracteres')
-  .required('Preencha o campo');
-
-export const cpf = Yup.string()
-  .matches(/\d/, 'Deve conter apenas números')
-  .min(11, 'Deve conter pelo menos 11 caracteres')
-  .required('Preencha o campo');
-
 export const birthdate = Yup.date()
   .max(moment().subtract(18, 'years'), 'Precisa ter pelo menos 18 anos ')
   .required('Preencha o campo');
