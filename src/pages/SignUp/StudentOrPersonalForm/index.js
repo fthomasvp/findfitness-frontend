@@ -3,14 +3,7 @@ import { Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { updatePersonForm } from '../../../store/ducks/SignUp';
-import YupSchema, {
-  email,
-  password,
-  name,
-  phone,
-  cpf,
-  birthdate,
-} from '../../validators';
+import YupSchema, { email, password, name, birthdate } from '../../validators';
 import {
   SWrapperFormik,
   SPanel,
@@ -30,8 +23,6 @@ const StudentOrPersonalSchema = YupSchema({
   email,
   password,
   name,
-  phone,
-  cpf,
   birthdate,
 });
 
@@ -126,6 +117,33 @@ const StudentOrPersonalForm = () => {
           history.push('/signup/addressform');
         }}
         validationSchema={StudentOrPersonalSchema}
+        validate={values => {
+          const { cpf, phone } = values;
+          const messages = {
+            requiredNumericField: 'Preencha o campo apenas com números',
+            specialCharactersField:
+              'Não pode conter letras, espaços em branco ou caracteres especiais',
+          };
+          const errors = {};
+
+          if (!cpf) {
+            errors.cpf = messages.requiredNumericField;
+          } else if (/\D/.test(cpf)) {
+            errors.cpf = messages.specialCharactersField;
+          } else if (cpf.replace(/\D/, '').length < 11) {
+            errors.cpf = 'Não possui 11 dígitos';
+          }
+
+          if (!phone) {
+            errors.phone = messages.requiredNumericField;
+          } else if (/\D/.test(phone)) {
+            errors.phone = messages.specialCharactersField;
+          } else if (phone.replace(/\D/, '').length < 11) {
+            errors.phone = 'Não possui 11 dígitos';
+          }
+
+          return errors;
+        }}
       >
         {({ values, ...formikProps }) => {
           const user = values;
