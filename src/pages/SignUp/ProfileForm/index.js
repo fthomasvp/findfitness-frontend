@@ -8,7 +8,7 @@ import {
   SPanel,
 } from './styles';
 import SButton from '../../../components/Button';
-import { updateProfileType } from '../../../store/ducks/SignUp';
+import { storeProfileType } from '../../../store/ducks/SignUp';
 
 const ProfileForm = () => {
   const history = useHistory();
@@ -22,7 +22,7 @@ const ProfileForm = () => {
     setProfileTypeForm(profileTypeForm);
 
   const handleClickNextButton = () => {
-    dispatch(updateProfileType(profileTypeForm));
+    dispatch(storeProfileType(profileTypeForm));
 
     history.push('/signup/userform');
   };
