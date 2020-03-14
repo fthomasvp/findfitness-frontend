@@ -13,7 +13,7 @@ export const SWrapperFormik = Styled.div`
 
 export const SPanel = Styled.div`
   width: 500px;
-  height: 720px;
+  height: 80vh;
   display: flex;
   flex-flow: column wrap;
   justify-content: space-evenly;
