@@ -6,7 +6,8 @@ import { all } from 'redux-saga/effects';
 //  requests de vários cliques consecutivos
 
 import SignIn from './SignIn';
+import SignUp from './SignUp';
 
 export default function* rootSaga() {
-  return yield all([SignIn]);
+  return yield all([SignIn, SignUp]);
 }
