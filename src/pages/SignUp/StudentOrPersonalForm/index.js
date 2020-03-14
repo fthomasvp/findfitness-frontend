@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { updatePersonForm } from '../../../store/ducks/SignUp';
+import { storePersonForm } from '../../../store/ducks/SignUp';
 import YupSchema, {
   errorMessages,
   email,
@@ -118,7 +118,7 @@ const StudentOrPersonalForm = () => {
         onSubmit={values => {
           const person = { ...values, gender: genderForm };
 
-          dispatch(updatePersonForm(person));
+          dispatch(storePersonForm(person));
 
           history.push('/signup/addressform');
         }}
