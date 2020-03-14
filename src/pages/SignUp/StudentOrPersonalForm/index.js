@@ -3,7 +3,13 @@ import { Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { updatePersonForm } from '../../../store/ducks/SignUp';
-import YupSchema, { email, password, name, birthdate } from '../../validators';
+import YupSchema, {
+  errorMessages,
+  email,
+  password,
+  name,
+  birthdate,
+} from '../../validators';
 import {
   SWrapperFormik,
   SPanel,
@@ -118,28 +124,37 @@ const StudentOrPersonalForm = () => {
         }}
         validationSchema={StudentOrPersonalSchema}
         validate={values => {
-          const { cpf, phone } = values;
-          const messages = {
-            requiredNumericField: 'Preencha o campo apenas com números',
-            specialCharactersField:
-              'Não pode conter letras, espaços em branco ou caracteres especiais',
-          };
+          const { cpf, phone, cref } = values;
+          const {
+            requiredNumericField,
+            specialCharactersField,
+          } = errorMessages;
           const errors = {};
 
           if (!cpf) {
-            errors.cpf = messages.requiredNumericField;
+            errors.cpf = requiredNumericField;
           } else if (/\D/.test(cpf)) {
-            errors.cpf = messages.specialCharactersField;
+            errors.cpf = specialCharactersField;
           } else if (cpf.replace(/\D/, '').length < 11) {
             errors.cpf = 'Não possui 11 dígitos';
           }
 
           if (!phone) {
-            errors.phone = messages.requiredNumericField;
+            errors.phone = requiredNumericField;
           } else if (/\D/.test(phone)) {
-            errors.phone = messages.specialCharactersField;
+            errors.phone = specialCharactersField;
           } else if (phone.replace(/\D/, '').length < 11) {
             errors.phone = 'Não possui 11 dígitos';
+          }
+
+          if (userToCreate.profileType === 'PERSONAL') {
+            if (!cref) {
+              errors.cref = 'Preencha o campo';
+            } else if (cref.length < 11) {
+              errors.cref = 'Deve conter 11 caracteres';
+            } else if (!/^[0-9]{6}-[A-Z]{1}\/[A-Z]{2}/gm.test(cref)) {
+              errors.cref = 'Precisa seguir o seguinte padrão: 000000-X/XX';
+            }
           }
 
           return errors;
