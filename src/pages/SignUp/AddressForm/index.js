@@ -3,7 +3,14 @@ import { Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateAddressForm } from '../../../store/ducks/SignUp';
-// import YupSchema, { email, password } from '../../validators';
+import YupSchema, {
+  street,
+  number,
+  neighborhood,
+  city,
+  state,
+  zipcode,
+} from '../../validators';
 import SForm from '../../../components/Form';
 import SInput from '../../../components/Input';
 import SLabel from '../../../components/Label';
@@ -11,10 +18,14 @@ import SButton from '../../../components/Button';
 import { SInputGroup, SPanel, SWrapperFormik } from './styles';
 
 // Yup Fields Schema
-// const AddressSchema = YupSchema({
-//   email,
-//   password,
-// });
+const AddressSchema = YupSchema({
+  street,
+  number,
+  neighborhood,
+  city,
+  state,
+  zipcode,
+});
 
 const AddressForm = () => {
   const history = useHistory();
@@ -33,7 +44,7 @@ const AddressForm = () => {
 
           history.replace('/login');
         }}
-        // validationSchema={AddressSchema}
+        validationSchema={AddressSchema}
       >
         {({ values, ...formikProps }) => {
           const address = values;
@@ -58,7 +69,7 @@ const AddressForm = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={address.zipcode}
-                    maxLength="9"
+                    maxLength="8"
                     width="75px"
                     autoFocus
                   />
@@ -100,8 +111,8 @@ const AddressForm = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={address.number}
-                    maxLength="15"
-                    width="50px"
+                    maxLength="10"
+                    width="80px"
                   />
                   {errors.number && touched.number && errors.number}
                 </SInputGroup>
@@ -159,8 +170,8 @@ const AddressForm = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={address.state}
-                    maxLength="25"
-                    width="120px"
+                    maxLength="2"
+                    width="35px"
                   />
                   {errors.state && touched.state && errors.state}
                 </SInputGroup>
@@ -173,7 +184,11 @@ const AddressForm = () => {
                     justifyContent: 'space-evenly',
                   }}
                 >
-                  <SButton width="40%" type="button" onClick={() => history.goBack()}>
+                  <SButton
+                    width="40%"
+                    type="button"
+                    onClick={() => history.goBack()}
+                  >
                     VOLTAR
                   </SButton>
                   <SButton width="40%" backgroundColor="blue" type="submit">
