@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateAddressForm } from '../../../store/ducks/SignUp';
+import { storeAddressForm, signUpRequest } from '../../../store/ducks/SignUp';
 import YupSchema, {
   street,
   number,
@@ -40,7 +40,10 @@ const AddressForm = () => {
         onSubmit={values => {
           const address = values;
 
-          dispatch(updateAddressForm(address));
+          userToCreate.address = address;
+
+          dispatch(storeAddressForm(address));
+          dispatch(signUpRequest(userToCreate));
 
           history.replace('/login');
         }}
