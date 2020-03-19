@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Formik } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { storePersonForm } from '../../../store/ducks/SignUp';
@@ -21,6 +21,7 @@ import SForm from '../../../components/Form';
 import SLabel from '../../../components/Label';
 import SInput from '../../../components/Input';
 import SButton from '../../../components/Button';
+import SErrorMessageInput from '../../../components/Form/ErrorMessageInput';
 
 /**
  * Yup Fields Schema
@@ -163,7 +164,6 @@ const StudentOrPersonalForm = () => {
         {({ values, ...formikProps }) => {
           const user = values;
           const { handleChange, handleSubmit, handleBlur } = formikProps;
-          const { errors, touched } = formikProps;
 
           return (
             <SForm onSubmit={handleSubmit} style={{ alignItems: 'center' }}>
@@ -189,7 +189,12 @@ const StudentOrPersonalForm = () => {
                       width="90px"
                       autoFocus
                     />
-                    {errors.cref && touched.cref && errors.cref}
+                    <ErrorMessage
+                      name="cref"
+                      render={message => (
+                        <SErrorMessageInput message={message} />
+                      )}
+                    />
                   </SInputGroup>
                 ) : null}
                 <SInputGroup>
@@ -204,7 +209,10 @@ const StudentOrPersonalForm = () => {
                     autoFocus={userToCreate.profileType === 'STUDENT'}
                     maxLength="140"
                   />
-                  {errors.name && touched.name && errors.name}
+                  <ErrorMessage
+                    name="name"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="phone">Celular</SLabel>
@@ -218,7 +226,10 @@ const StudentOrPersonalForm = () => {
                     maxLength="11"
                     width="105px"
                   />
-                  {errors.phone && touched.phone && errors.phone}
+                  <ErrorMessage
+                    name="phone"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="cpf">CPF</SLabel>
@@ -232,7 +243,10 @@ const StudentOrPersonalForm = () => {
                     maxLength="11"
                     width="110px"
                   />
-                  {errors.cpf && touched.cpf && errors.cpf}
+                  <ErrorMessage
+                    name="cpf"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="gender">Gênero</SLabel>
@@ -323,7 +337,10 @@ const StudentOrPersonalForm = () => {
                     value={user.birthdate}
                     width="130px"
                   />
-                  {errors.birthdate && touched.birthdate && errors.birthdate}
+                  <ErrorMessage
+                    name="birthdate"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="email">Email</SLabel>
@@ -336,7 +353,10 @@ const StudentOrPersonalForm = () => {
                     value={user.email}
                     maxLength="140"
                   />
-                  {errors.email && touched.email && errors.email}
+                  <ErrorMessage
+                    name="email"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="password">Senha</SLabel>
@@ -349,29 +369,31 @@ const StudentOrPersonalForm = () => {
                     value={user.password}
                     maxLength="30"
                   />
-                  {errors.password && touched.password && errors.password}
+                  <ErrorMessage
+                    name="password"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
-
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100px',
-                    display: 'flex',
-                    justifyContent: 'space-evenly',
-                  }}
-                >
-                  <SButton
-                    width="40%"
-                    type="button"
-                    onClick={() => history.goBack()}
-                  >
-                    VOLTAR
-                  </SButton>
-                  <SButton width="40%" backgroundColor="blue" type="submit">
-                    PRÓXIMO
-                  </SButton>
-                </div>
               </SPanel>
+              <div
+                style={{
+                  width: '500px',
+                  height: '100px',
+                  display: 'flex',
+                  justifyContent: 'space-evenly',
+                }}
+              >
+                <SButton
+                  width="25%"
+                  type="button"
+                  onClick={() => history.goBack()}
+                >
+                  VOLTAR
+                </SButton>
+                <SButton width="25%" backgroundColor="blue" type="submit">
+                  PRÓXIMO
+                </SButton>
+              </div>
             </SForm>
           );
         }}

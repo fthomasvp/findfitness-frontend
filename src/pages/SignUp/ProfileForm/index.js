@@ -64,27 +64,26 @@ const ProfileForm = () => {
             <p style={getTextStyle(!isStudent)}>PERSONAL</p>
           </SToggleButton>
         </SToggleButtonGroup>
-
-        <div
-          style={{
-            width: '100%',
-            height: '100px',
-            display: 'flex',
-            justifyContent: 'space-evenly',
-          }}
-        >
-          <SButton width="40%" onClick={() => history.goBack()}>
-            VOLTAR
-          </SButton>
-          <SButton
-            width="40%"
-            backgroundColor="blue"
-            onClick={() => handleClickNextButton()}
-          >
-            PRÓXIMO
-          </SButton>
-        </div>
       </SPanel>
+      <div
+        style={{
+          width: '500px',
+          height: '100px',
+          display: 'flex',
+          justifyContent: 'space-evenly',
+        }}
+      >
+        <SButton width="25%" onClick={() => history.goBack()}>
+          VOLTAR
+        </SButton>
+        <SButton
+          width="25%"
+          backgroundColor="blue"
+          onClick={() => handleClickNextButton()}
+        >
+          PRÓXIMO
+        </SButton>
+      </div>
     </SContainer>
   );
 };

@@ -4,10 +4,10 @@ export const SContainer = Styled.section`
   width: 100vw;
   height: 100vh;
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(339deg, #00A4EF 10%, rgba(255,150,0,1) 90%);
+  background: linear-gradient(rgba(40, 20, 150, 1), rgba(120, 70, 255, 0.9));
 `;
 
 export const SPanel = Styled.div`

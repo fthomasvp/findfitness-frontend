@@ -1,5 +1,5 @@
 import React from 'react';
-import { Formik } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { storeAddressForm, signUpRequest } from '../../../store/ducks/SignUp';
@@ -11,11 +11,12 @@ import YupSchema, {
   state,
   zipcode,
 } from '../../validators';
+import { SInputGroup, SPanel, SWrapperFormik } from './styles';
 import SForm from '../../../components/Form';
 import SInput from '../../../components/Input';
 import SLabel from '../../../components/Label';
 import SButton from '../../../components/Button';
-import { SInputGroup, SPanel, SWrapperFormik } from './styles';
+import SErrorMessageInput from '../../../components/Form/ErrorMessageInput';
 
 // Yup Fields Schema
 const AddressSchema = YupSchema({
@@ -52,7 +53,6 @@ const AddressForm = () => {
         {({ values, ...formikProps }) => {
           const address = values;
           const { handleChange, handleSubmit, handleBlur } = formikProps;
-          const { errors, touched } = formikProps;
 
           return (
             <SForm onSubmit={handleSubmit} style={{ alignItems: 'center' }}>
@@ -76,7 +76,10 @@ const AddressForm = () => {
                     width="75px"
                     autoFocus
                   />
-                  {errors.zipcode && touched.zipcode && errors.zipcode}
+                  <ErrorMessage
+                    name="zipcode"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="street">Rua</SLabel>
@@ -88,7 +91,10 @@ const AddressForm = () => {
                     onBlur={handleBlur}
                     value={address.street}
                   />
-                  {errors.street && touched.street && errors.street}
+                  <ErrorMessage
+                    name="street"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="neighborhood">Bairro</SLabel>
@@ -101,9 +107,10 @@ const AddressForm = () => {
                     value={address.neighborhood}
                     width="205px"
                   />
-                  {errors.neighborhood &&
-                    touched.neighborhood &&
-                    errors.neighborhood}
+                  <ErrorMessage
+                    name="neighborhood"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="number">N°</SLabel>
@@ -117,7 +124,10 @@ const AddressForm = () => {
                     maxLength="10"
                     width="80px"
                   />
-                  {errors.number && touched.number && errors.number}
+                  <ErrorMessage
+                    name="number"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="complement">Complemento</SLabel>
@@ -131,7 +141,10 @@ const AddressForm = () => {
                     maxLength="14"
                     width="110px"
                   />
-                  {errors.complement && touched.complement && errors.complement}
+                  <ErrorMessage
+                    name="complement"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="referenceLocation">
@@ -146,9 +159,10 @@ const AddressForm = () => {
                     value={address.referenceLocation}
                     maxLength="140"
                   />
-                  {errors.referenceLocation &&
-                    touched.referenceLocation &&
-                    errors.referenceLocation}
+                  <ErrorMessage
+                    name="referenceLocation"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="city">Cidade</SLabel>
@@ -162,7 +176,10 @@ const AddressForm = () => {
                     maxLength="120"
                     width="230px"
                   />
-                  {errors.city && touched.city && errors.city}
+                  <ErrorMessage
+                    name="city"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
                 <SInputGroup>
                   <SLabel htmlFor="state">Estado</SLabel>
@@ -176,29 +193,31 @@ const AddressForm = () => {
                     maxLength="2"
                     width="35px"
                   />
-                  {errors.state && touched.state && errors.state}
+                  <ErrorMessage
+                    name="state"
+                    render={message => <SErrorMessageInput message={message} />}
+                  />
                 </SInputGroup>
-
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100px',
-                    display: 'flex',
-                    justifyContent: 'space-evenly',
-                  }}
-                >
-                  <SButton
-                    width="40%"
-                    type="button"
-                    onClick={() => history.goBack()}
-                  >
-                    VOLTAR
-                  </SButton>
-                  <SButton width="40%" backgroundColor="blue" type="submit">
-                    FINALIZAR
-                  </SButton>
-                </div>
               </SPanel>
+              <div
+                style={{
+                  width: '500px',
+                  height: '100px',
+                  display: 'flex',
+                  justifyContent: 'space-evenly',
+                }}
+              >
+                <SButton
+                  width="25%"
+                  type="button"
+                  onClick={() => history.goBack()}
+                >
+                  VOLTAR
+                </SButton>
+                <SButton width="25%" backgroundColor="blue" type="submit">
+                  FINALIZAR
+                </SButton>
+              </div>
             </SForm>
           );
         }}
