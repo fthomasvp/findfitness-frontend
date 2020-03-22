@@ -17,7 +17,7 @@ SButton.propTypes = {
   alignSelf: PropTypes.string,
   marginTop: PropTypes.string,
   color: PropTypes.string,
-  backgroundColor: PropTypes.string,
+  background: PropTypes.string,
 };
 
 export default SButton;

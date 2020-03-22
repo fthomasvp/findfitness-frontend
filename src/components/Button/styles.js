@@ -9,6 +9,5 @@ export const Button = Styled.button`
   margin-top: ${({ marginTop }) => marginTop || '30px'};
   font-weight: bold;
   color: ${({ color }) => color || 'white'};
-  background-color: ${({ backgroundColor }) =>
-    backgroundColor || 'transparent'};
+  background: ${({ background }) => background || 'transparent'};
 `;
