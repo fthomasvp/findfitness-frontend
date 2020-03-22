@@ -11,7 +11,7 @@ import YupSchema, {
   state,
   zipcode,
 } from '../../validators';
-import { SInputGroup, SPanel, SWrapperFormik } from './styles';
+import { SContainer, SInputGroup, SPanel } from './styles';
 import SForm from '../../../components/Form';
 import SInput from '../../../components/Input';
 import SLabel from '../../../components/Label';
@@ -35,7 +35,7 @@ const AddressForm = () => {
   const { userToCreate } = useSelector(state => state.signUp);
 
   return (
-    <SWrapperFormik>
+    <SContainer>
       <Formik
         initialValues={userToCreate.address}
         onSubmit={values => {
@@ -56,12 +56,9 @@ const AddressForm = () => {
 
           return (
             <SForm onSubmit={handleSubmit} style={{ alignItems: 'center' }}>
-              <h1 style={{ color: 'white', alignSelf: 'center' }}>
-                Para tornar o FindFitness ainda mais seguro...
-              </h1>
-              <h3 style={{ color: 'white', alignSelf: 'center' }}>
-                Precisamos anotar os dados do seu endereço ;-)
-              </h3>
+              <h2 style={{ margin: 0, color: 'white', alignSelf: 'center' }}>
+                Precisamos anotar os dados do seu endereço :)
+              </h2>
               <SPanel>
                 <SInputGroup>
                   <SLabel htmlFor="zipcode">CEP</SLabel>
@@ -198,31 +195,29 @@ const AddressForm = () => {
                     render={message => <SErrorMessageInput message={message} />}
                   />
                 </SInputGroup>
-              </SPanel>
-              <div
-                style={{
-                  width: '500px',
-                  height: '100px',
-                  display: 'flex',
-                  justifyContent: 'space-evenly',
-                }}
-              >
-                <SButton
-                  width="25%"
-                  type="button"
-                  onClick={() => history.goBack()}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-evenly',
+                  }}
                 >
-                  VOLTAR
-                </SButton>
-                <SButton width="25%" backgroundColor="blue" type="submit">
-                  FINALIZAR
-                </SButton>
-              </div>
+                  <SButton
+                    width="33%"
+                    type="button"
+                    onClick={() => history.goBack()}
+                  >
+                    VOLTAR
+                  </SButton>
+                  <SButton width="33%" background="#46c787" type="submit">
+                    FINALIZAR
+                  </SButton>
+                </div>
+              </SPanel>
             </SForm>
           );
         }}
       </Formik>
-    </SWrapperFormik>
+    </SContainer>
   );
 };
 

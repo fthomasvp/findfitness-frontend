@@ -11,7 +11,7 @@ import YupSchema, {
   birthdate,
 } from '../../validators';
 import {
-  SWrapperFormik,
+  SContainer,
   SPanel,
   SInputGroup,
   SToggleButtonGroup,
@@ -62,7 +62,7 @@ const StudentOrPersonalForm = () => {
       textStyle: {},
     },
     {
-      type: 'I',
+      type: 'O',
       isSelected: false,
       toggleStyle: {},
       textStyle: {},
@@ -109,7 +109,7 @@ const StudentOrPersonalForm = () => {
   }, [gender]);
 
   return (
-    <SWrapperFormik>
+    <SContainer>
       <Formik
         initialValues={
           userToCreate.profileType === 'STUDENT'
@@ -166,13 +166,13 @@ const StudentOrPersonalForm = () => {
           const { handleChange, handleSubmit, handleBlur } = formikProps;
 
           return (
-            <SForm onSubmit={handleSubmit} style={{ alignItems: 'center' }}>
-              <h1 style={{ color: 'white', alignSelf: 'center' }}>
+            <SForm
+              onSubmit={handleSubmit}
+              style={{ height: '100%', alignItems: 'center' }}
+            >
+              <h2 style={{ margin: 0, color: 'white', alignSelf: 'center' }}>
                 Hey! Queremos te conhecer melhor...
-              </h1>
-              <h3 style={{ color: 'white', alignSelf: 'center' }}>
-                Poderia nos contar um pouco mais sobre você?
-              </h3>
+              </h2>
 
               <SPanel>
                 {userToCreate.profileType === 'PERSONAL' ? (
@@ -308,7 +308,7 @@ const StudentOrPersonalForm = () => {
                           ? genderStyles[2].toggleStyle
                           : {}
                       }
-                      onClick={() => handleToggleGender('I')}
+                      onClick={() => handleToggleGender('O')}
                     >
                       <p
                         style={
@@ -321,7 +321,7 @@ const StudentOrPersonalForm = () => {
                               }
                         }
                       >
-                        INTERSEXO
+                        OUTRO
                       </p>
                     </SToggleButton>
                   </SToggleButtonGroup>
@@ -374,31 +374,29 @@ const StudentOrPersonalForm = () => {
                     render={message => <SErrorMessageInput message={message} />}
                   />
                 </SInputGroup>
-              </SPanel>
-              <div
-                style={{
-                  width: '500px',
-                  height: '100px',
-                  display: 'flex',
-                  justifyContent: 'space-evenly',
-                }}
-              >
-                <SButton
-                  width="25%"
-                  type="button"
-                  onClick={() => history.goBack()}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-evenly',
+                  }}
                 >
-                  VOLTAR
-                </SButton>
-                <SButton width="25%" backgroundColor="blue" type="submit">
-                  PRÓXIMO
-                </SButton>
-              </div>
+                  <SButton
+                    width="33%"
+                    type="button"
+                    onClick={() => history.goBack()}
+                  >
+                    VOLTAR
+                  </SButton>
+                  <SButton width="33%" background="#46c787" type="submit">
+                    PRÓXIMO
+                  </SButton>
+                </div>
+              </SPanel>
             </SForm>
           );
         }}
       </Formik>
-    </SWrapperFormik>
+    </SContainer>
   );
 };
 

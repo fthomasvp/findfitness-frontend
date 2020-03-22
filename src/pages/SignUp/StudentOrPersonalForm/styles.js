@@ -5,9 +5,13 @@ export const SInputGroup = Styled.div`
   flex-flow: column wrap;
 `;
 
-export const SWrapperFormik = Styled.div`
+export const SContainer = Styled.section`
+  width: 100vw;
+  height: 100vh;
   display: flex;
+  flex-flow: column;
   justify-content: center;
+  align-items: center;
   background: linear-gradient(rgba(40, 20, 150, 1), rgba(120, 70, 255, 0.9));
 `;
 

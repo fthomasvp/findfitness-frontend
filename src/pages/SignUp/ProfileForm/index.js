@@ -40,9 +40,9 @@ const ProfileForm = () => {
 
   return (
     <SContainer>
-      <h1 style={{ color: 'white', alignSelf: 'center' }}>
-        Olá! Vamos criar a sua conta?
-      </h1>
+      <h2 style={{ margin: 0, color: 'white', alignSelf: 'center' }}>
+        Olá, vamos criar a sua conta? <br />
+      </h2>
       <h3 style={{ color: 'white', alignSelf: 'center' }}>
         Primeiro precisamos saber se você é um Personal ou um Estudante.
       </h3>
@@ -64,26 +64,24 @@ const ProfileForm = () => {
             <p style={getTextStyle(!isStudent)}>PERSONAL</p>
           </SToggleButton>
         </SToggleButtonGroup>
-      </SPanel>
-      <div
-        style={{
-          width: '500px',
-          height: '100px',
-          display: 'flex',
-          justifyContent: 'space-evenly',
-        }}
-      >
-        <SButton width="25%" onClick={() => history.goBack()}>
-          VOLTAR
-        </SButton>
-        <SButton
-          width="25%"
-          backgroundColor="blue"
-          onClick={() => handleClickNextButton()}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-evenly',
+          }}
         >
-          PRÓXIMO
-        </SButton>
-      </div>
+          <SButton width="33%" onClick={() => history.goBack()}>
+            VOLTAR
+          </SButton>
+          <SButton
+            width="33%"
+            background="#46c787"
+            onClick={() => handleClickNextButton()}
+          >
+            PRÓXIMO
+          </SButton>
+        </div>
+      </SPanel>
     </SContainer>
   );
 };
