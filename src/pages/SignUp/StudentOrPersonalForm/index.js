@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Formik, ErrorMessage } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { storePersonForm } from '../../../store/ducks/SignUp';
+import { storePersonForm } from '../../../store/ducks/Auth';
 import YupSchema, {
   errorMessages,
   email,
@@ -37,7 +37,7 @@ const StudentOrPersonalForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { userToCreate } = useSelector(state => state.signUp);
+  const { userToCreate } = useSelector(state => state.auth);
   const { gender } =
     userToCreate && userToCreate.profileType === 'STUDENT'
       ? userToCreate.student

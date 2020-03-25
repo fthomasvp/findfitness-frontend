@@ -8,13 +8,13 @@ import {
   SPanel,
 } from './styles';
 import SButton from '../../../components/Button';
-import { storeProfileType } from '../../../store/ducks/SignUp';
+import { storeProfileType } from '../../../store/ducks/Auth';
 
 const ProfileForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { profileType } = useSelector(state => state.signUp.userToCreate);
+  const { profileType } = useSelector(state => state.auth.userToCreate);
 
   const [profileTypeForm, setProfileTypeForm] = useState(profileType);
 

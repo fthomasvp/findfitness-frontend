@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { signInRequest } from '../../store/ducks/SignIn';
+import { signInRequest } from '../../store/ducks/Auth';
 import YupSchema, { email, password } from '../validators';
 import { SContainer, SInputGroup, SPanel } from './styles';
 import SLabel from '../../components/Label';
@@ -22,7 +22,7 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const isAuthenticated = useSelector(state => state.signIn.isAuthenticated);
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
   useEffect(() => {
     // Unmount component

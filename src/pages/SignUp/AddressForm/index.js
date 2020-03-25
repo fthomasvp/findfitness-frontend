@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, ErrorMessage } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { storeAddressForm, signUpRequest } from '../../../store/ducks/SignUp';
+import { storeAddressForm, signUpRequest } from '../../../store/ducks/Auth';
 import YupSchema, {
   street,
   number,
@@ -32,7 +32,7 @@ const AddressForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { userToCreate } = useSelector(state => state.signUp);
+  const { userToCreate } = useSelector(state => state.auth);
 
   return (
     <SContainer>
