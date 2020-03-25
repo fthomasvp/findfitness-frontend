@@ -56,7 +56,7 @@ export const number = Yup.number().typeError(
 export const city = Yup.string()
   .trim('Não pode conter apenas espaços em branco')
   .test('city', 'Não pode conter números ou caracteres especiais', value =>
-    /^[a-zA-Z ]+$/gm.test(value)
+    /^[a-zA-Zà-úÀ-Ú]+$/gm.test(value)
   )
   .required('Preencha o campo apenas com letras');
 
@@ -65,7 +65,7 @@ export const neighborhood = Yup.string()
   .test(
     'neighborhood',
     'Não pode conter números ou caracteres especiais',
-    value => /^[a-zA-Z ]+$/gm.test(value)
+    value => /^[a-zA-Zà-úÀ-Ú]+$/gm.test(value)
   )
   .required('Preencha o campo apenas com letras');
 
