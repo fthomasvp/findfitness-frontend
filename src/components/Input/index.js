@@ -13,6 +13,7 @@ SInput.propTypes = {
   height: PropTypes.string,
   padding: PropTypes.string,
   borderRadius: PropTypes.string,
+  fontSize: PropTypes.string,
 };
 
 export default SInput;
