@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import { Input } from './styles';
 
 const SInput = props => {
-  const { maxLength } = props;
-
-  return <Input maxLength={maxLength} {...props} />;
+  return <Input {...props} />;
 };
 
 SInput.propTypes = {
-  maxLength: PropTypes.string.isRequired,
+  maxLength: PropTypes.string,
   height: PropTypes.string,
+  width: PropTypes.string,
   padding: PropTypes.string,
   borderRadius: PropTypes.string,
   fontSize: PropTypes.string,

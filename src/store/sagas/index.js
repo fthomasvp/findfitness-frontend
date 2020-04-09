@@ -5,8 +5,8 @@ import { all } from 'redux-saga/effects';
 // takeEvery: fará a requisição de todos os
 //  requests de vários cliques consecutivos
 
-import SignIn from './SignIn';
+import Auth from './Auth';
 
 export default function* rootSaga() {
-  return yield all([SignIn]);
+  return yield all([Auth]);
 }
