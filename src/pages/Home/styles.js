@@ -23,28 +23,40 @@ export const SContainerUpsideLeft = Styled.section`
   background-color: white;
 `;
 
-export const SContainerUpsideLeftProfile = Styled.section`
+export const SProfile = Styled.section`
   height: 30%;
   display: flex;
   flex-flow: row wrap;
   background-color: lightgreen;
 `;
 
-export const SContainerUpsideLeftMenu = Styled.section`
+export const SMenu = Styled.section`
+  width: 100%;
   height: 70%;
   display: flex;
   flex-flow: column wrap;
+  justify-content: center;
+  align-content: center;
   background-color: orange;
+`;
+
+export const SMenuOption = Styled.div`
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 10px;
+  background-color: gray;
 `;
 
 export const SContainerUpsideRight = Styled.section`
   width: 80%;
-  display: flex;
-  flex-flow: row nowrap;
   background-color: brown;
 `;
 
-export const SContainerDownside = Styled.section`
+export const SContainerFooter = Styled.section`
   width: 100%;
   height: 5%;
   display: flex;

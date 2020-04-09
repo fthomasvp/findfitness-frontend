@@ -1,11 +1,12 @@
 import React from 'react';
 import {
   SContainer,
-  SContainerDownside,
+  SContainerFooter,
   SContainerUpside,
   SContainerUpsideLeft,
-  SContainerUpsideLeftProfile,
-  SContainerUpsideLeftMenu,
+  SProfile,
+  SMenu,
+  SMenuOption,
   SContainerUpsideRight,
 } from './styles';
 
@@ -14,12 +15,22 @@ const Home = () => {
     <SContainer>
       <SContainerUpside>
         <SContainerUpsideLeft>
-          <SContainerUpsideLeftProfile></SContainerUpsideLeftProfile>
-          <SContainerUpsideLeftMenu></SContainerUpsideLeftMenu>
+          <SProfile>
+            <div>Perfil</div>
+          </SProfile>
+          <SMenu>
+            <SMenuOption>Chat</SMenuOption>
+            <SMenuOption>Exercícios</SMenuOption>
+            <SMenuOption>Especializações</SMenuOption>
+            <SMenuOption>Aulas</SMenuOption>
+            <SMenuOption>Logout</SMenuOption>
+          </SMenu>
         </SContainerUpsideLeft>
-        <SContainerUpsideRight></SContainerUpsideRight>
+        <SContainerUpsideRight>MAPA</SContainerUpsideRight>
       </SContainerUpside>
-      <SContainerDownside></SContainerDownside>
+      <SContainerFooter>
+        Oxentech
+      </SContainerFooter>
     </SContainer>
   );
 };
