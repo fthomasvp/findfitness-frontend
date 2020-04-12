@@ -4,20 +4,47 @@ import {
   SContainerFooter,
   SContainerUpside,
   SContainerUpsideLeft,
+  SProfileContainer,
   SProfile,
+  SProfileInformation,
+  SInformation,
   SContainerMenu,
   SMenuOption,
   SContainerUpsideRight,
 } from './styles';
+import user from '../../assets/images/user.webp';
+import oxentechLogo from '../../assets/images/oxentech-bird-logo.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 const Home = () => {
   return (
     <SContainer>
       <SContainerUpside>
         <SContainerUpsideLeft>
-          <SProfile>
-            <div>Perfil</div>
-          </SProfile>
+          <SProfileContainer>
+            <SProfile>
+              <img src={user} alt="User" />
+              <p>Fellipe Thomás</p>
+            </SProfile>
+            <SProfileInformation>
+              <SInformation>
+                <FontAwesomeIcon
+                  icon={faStar}
+                  style={{ height: '45px', marginRight: '5px' }}
+                />
+                <p>4.5</p>
+              </SInformation>
+
+              <SInformation>
+                <FontAwesomeIcon
+                  icon={faUsers}
+                  style={{ height: '45px', marginRight: '5px' }}
+                />
+                <p>Qtd aulas</p>
+              </SInformation>
+            </SProfileInformation>
+          </SProfileContainer>
           <SContainerMenu>
             <div>
               <SMenuOption>Aulas</SMenuOption>
@@ -25,8 +52,8 @@ const Home = () => {
               <SMenuOption>Exercícios</SMenuOption>
               <SMenuOption>Especializações</SMenuOption>
             </div>
-            <div>
-              <SMenuOption>Logout</SMenuOption>
+            <div style={{ width: '80%' }}>
+              <SMenuOption secondary>Sair</SMenuOption>
             </div>
           </SContainerMenu>
         </SContainerUpsideLeft>
@@ -35,7 +62,7 @@ const Home = () => {
         </SContainerUpsideRight>
       </SContainerUpside>
       <SContainerFooter>
-        <div>Oxentech</div>
+        <img src={oxentechLogo} alt="Logo da Empresa Oxentech" />
       </SContainerFooter>
     </SContainer>
   );
