@@ -5,6 +5,7 @@ import SignIn from '../pages/SignIn';
 import ProfileForm from '../pages/SignUp/ProfileForm';
 import StudentOrPersonalForm from '../pages/SignUp/StudentOrPersonalForm';
 import AddressForm from '../pages/SignUp/AddressForm';
+import Home from '../pages/Home';
 
 const Routes = () => {
   return (
@@ -30,7 +31,7 @@ const Routes = () => {
 
         {/* Home */}
         <Route exact path="/home">
-          <h1>Home</h1>
+          <Home />
         </Route>
       </Switch>
     </BrowserRouter>
