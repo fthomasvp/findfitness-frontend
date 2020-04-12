@@ -186,7 +186,7 @@ const StudentOrPersonalForm = () => {
                       onBlur={handleBlur}
                       value={user.cref}
                       maxLength="11"
-                      width="90px"
+                      width="120px"
                       autoFocus
                     />
                     <ErrorMessage
@@ -224,7 +224,7 @@ const StudentOrPersonalForm = () => {
                     onBlur={handleBlur}
                     value={user.phone}
                     maxLength="11"
-                    width="105px"
+                    width="115px"
                   />
                   <ErrorMessage
                     name="phone"
@@ -241,7 +241,7 @@ const StudentOrPersonalForm = () => {
                     onBlur={handleBlur}
                     value={user.cpf}
                     maxLength="11"
-                    width="110px"
+                    width="120px"
                   />
                   <ErrorMessage
                     name="cpf"
@@ -335,7 +335,7 @@ const StudentOrPersonalForm = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={user.birthdate}
-                    width="130px"
+                    width="135px"
                   />
                   <ErrorMessage
                     name="birthdate"
