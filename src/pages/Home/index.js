@@ -5,7 +5,7 @@ import {
   SContainerUpside,
   SContainerUpsideLeft,
   SProfile,
-  SMenu,
+  SContainerMenu,
   SMenuOption,
   SContainerUpsideRight,
 } from './styles';
@@ -18,18 +18,24 @@ const Home = () => {
           <SProfile>
             <div>Perfil</div>
           </SProfile>
-          <SMenu>
-            <SMenuOption>Chat</SMenuOption>
-            <SMenuOption>Exercícios</SMenuOption>
-            <SMenuOption>Especializações</SMenuOption>
-            <SMenuOption>Aulas</SMenuOption>
-            <SMenuOption>Logout</SMenuOption>
-          </SMenu>
+          <SContainerMenu>
+            <div>
+              <SMenuOption>Aulas</SMenuOption>
+              <SMenuOption>Chat</SMenuOption>
+              <SMenuOption>Exercícios</SMenuOption>
+              <SMenuOption>Especializações</SMenuOption>
+            </div>
+            <div>
+              <SMenuOption>Logout</SMenuOption>
+            </div>
+          </SContainerMenu>
         </SContainerUpsideLeft>
-        <SContainerUpsideRight>MAPA</SContainerUpsideRight>
+        <SContainerUpsideRight>
+          <div>MAPA</div>
+        </SContainerUpsideRight>
       </SContainerUpside>
       <SContainerFooter>
-        Oxentech
+        <div>Oxentech</div>
       </SContainerFooter>
     </SContainer>
   );

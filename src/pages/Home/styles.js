@@ -5,60 +5,76 @@ export const SContainer = Styled.section`
   height: 100vh;
   display: flex;
   flex-flow: column wrap;
+  padding: 10px;
   background-color: lightblue;
 `;
 
 export const SContainerUpside = Styled.section`
-  width: 100%;
-  height: 95%;
+  width: calc(100% - 10px);
+  height: calc(95% - 10px);
   display: flex;
   flex-flow: row wrap;
-  background-color: yellow;
+  margin: 5px;
+  // background-color: yellow;
 `;
 
 export const SContainerUpsideLeft = Styled.section`
   width: 20%;
   display: flex;
   flex-flow: column wrap;
-  background-color: white;
+  // background-color: white;
 `;
 
 export const SProfile = Styled.section`
-  height: 30%;
+  height: calc(30% - 10px);
   display: flex;
   flex-flow: row wrap;
+  border-radius: 5px;
+  margin: 5px;
   background-color: lightgreen;
 `;
 
-export const SMenu = Styled.section`
-  width: 100%;
-  height: 70%;
+export const SContainerMenu = Styled.section`
+  width: calc(100% - 10px);
+  height: calc(70% - 10px);
   display: flex;
   flex-flow: column wrap;
-  justify-content: center;
+  justify-content: space-between;
   align-content: center;
+  border-radius: 5px;
+  margin: 5px;
   background-color: orange;
 `;
 
 export const SMenuOption = Styled.div`
-  width: 100%;
+  width: calc(100% - 10px);
   height: 50px;
   display: flex;
   flex-flow: column wrap;
   justify-content: center;
   text-align: center;
-  margin-bottom: 10px;
+  border-radius: 30px;
+  margin: 10px;
   background-color: gray;
+
+  &:hover {
+    cursor: pointer;
+    color: white;
+  }
 `;
 
 export const SContainerUpsideRight = Styled.section`
-  width: 80%;
+  width: calc(80% - 10px);
+  border-radius: 5px;
+  margin: 5px;
   background-color: brown;
 `;
 
-export const SContainerFooter = Styled.section`
-  width: 100%;
-  height: 5%;
+export const SContainerFooter = Styled.footer`
+  width: calc(100% - 10px);
+  height: calc(5% - 10px);
   display: flex;
-  background-color: red;
+  border-radius: 5px;
+  margin: 5px;
+  background-color: purple;
 `;
