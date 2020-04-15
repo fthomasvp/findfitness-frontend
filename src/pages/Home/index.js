@@ -16,6 +16,7 @@ import user from '../../assets/images/user.webp';
 import oxentechLogo from '../../assets/images/oxentech-bird-logo.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
+import STextLink from '../../components/TextLink';
 
 const Home = () => {
   return (
@@ -47,13 +48,23 @@ const Home = () => {
           </SProfileContainer>
           <SContainerMenu>
             <div>
-              <SMenuOption>Aulas</SMenuOption>
-              <SMenuOption>Chat</SMenuOption>
-              <SMenuOption>Exercícios</SMenuOption>
-              <SMenuOption>Especializações</SMenuOption>
+              <SMenuOption>
+                <STextLink to="/studentgroup">Aulas</STextLink>
+              </SMenuOption>
+              <SMenuOption>
+                <STextLink to="/chat">Chat</STextLink>
+              </SMenuOption>
+              <SMenuOption>
+                <STextLink to="/exercise">Exercícios</STextLink>
+              </SMenuOption>
+              <SMenuOption>
+                <STextLink to="/specialization">Especializações</STextLink>
+              </SMenuOption>
             </div>
             <div style={{ width: '80%' }}>
-              <SMenuOption secondary>Sair</SMenuOption>
+              <SMenuOption secondary>
+                <STextLink to="/">Sair</STextLink>
+              </SMenuOption>
             </div>
           </SContainerMenu>
         </SContainerUpsideLeft>
