@@ -30,7 +30,8 @@ export const street = Yup.string()
   .required('Preencha o campo apenas com números');
 
 export const state = Yup.string()
-  .min(2, 'Deve conter pelo menos 2 letras')
+  .min(2, 'Deve conter duas letras')
+  .max(2, 'Não pode ter mais do que duas letras')
   .test(
     'state',
     'Não pode conter números, espaços em branco ou caracteres especiais',
@@ -54,19 +55,11 @@ export const number = Yup.number().typeError(
 );
 
 export const city = Yup.string()
-  .trim('Não pode conter apenas espaços em branco')
-  .test('city', 'Não pode conter números ou caracteres especiais', value =>
-    /^[a-zA-Zà-úÀ-Ú]+$/gm.test(value)
-  )
+  .max(120, 'Não pode ultrapassar 120 caracteres')
   .required('Preencha o campo apenas com letras');
 
 export const neighborhood = Yup.string()
-  .trim('Não pode conter apenas espaços em branco')
-  .test(
-    'neighborhood',
-    'Não pode conter números ou caracteres especiais',
-    value => /^[a-zA-Zà-úÀ-Ú]+$/gm.test(value)
-  )
+  .max(120, 'Não pode ultrapassar 120 caracteres')
   .required('Preencha o campo apenas com letras');
 
 const YupSchema = fields => {

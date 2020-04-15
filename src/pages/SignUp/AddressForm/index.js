@@ -70,7 +70,7 @@ const AddressForm = () => {
                     onBlur={handleBlur}
                     value={address.zipcode}
                     maxLength="8"
-                    width="75px"
+                    width="90px"
                     autoFocus
                   />
                   <ErrorMessage
@@ -102,6 +102,7 @@ const AddressForm = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={address.neighborhood}
+                    maxLength="120"
                     width="205px"
                   />
                   <ErrorMessage
@@ -136,7 +137,7 @@ const AddressForm = () => {
                     onBlur={handleBlur}
                     value={address.complement}
                     maxLength="14"
-                    width="110px"
+                    width="120px"
                   />
                   <ErrorMessage
                     name="complement"
@@ -188,7 +189,7 @@ const AddressForm = () => {
                     onBlur={handleBlur}
                     value={address.state}
                     maxLength="2"
-                    width="35px"
+                    width="50px"
                   />
                   <ErrorMessage
                     name="state"
