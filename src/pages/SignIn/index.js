@@ -27,7 +27,7 @@ const SignIn = () => {
   useEffect(() => {
     // Unmount component
     if (isAuthenticated) {
-      return history.replace('/home');
+      return history.replace('/studentgroup');
     }
   });
 
