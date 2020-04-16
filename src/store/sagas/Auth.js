@@ -23,7 +23,7 @@ export function* signUp(action) {
       yield put(signUpSuccess());
     }
   } catch (error) {
-    yield put(signUpFail(error.response.data));
+    yield put(signUpFail(error.response || error));
   }
 }
 
@@ -38,7 +38,7 @@ export function* signIn(action) {
       yield put(signInSuccess(response));
     }
   } catch (error) {
-    yield put(signInFail(error.response.data));
+    yield put(signInFail(error.response || error));
   }
 }
 

@@ -16,53 +16,21 @@ export const SContainerUpside = Styled.section`
   display: flex;
   flex-flow: row wrap;
   margin: 5px;
-  // background-color: yellow;
 `;
 
 export const SContainerUpsideLeft = Styled.section`
   width: 20%;
   display: flex;
   flex-flow: column wrap;
-  // background-color: white;
 `;
 
-export const SProfileContainer = Styled.section`
+export const SContainerProfile = Styled.section`
   height: calc(20% - 10px);
   display: flex;
   flex-flow: row wrap;
   border-radius: 5px;
   margin: 5px;
   background-color: lightgreen;
-`;
-
-export const SProfile = Styled.div`
-  width: 100%;
-  height: 50%;
-  display: flex;
-  justify-content: flex-start;
-  padding: 20px;
-  border-bottom: 1px solid #ABABAB;
-  cursor: pointer;
-
-  & img {
-    width: 45px;
-    height: 45px;
-    border-radius: 30px;
-    margin-right: 15px;
-  }
-`;
-
-export const SProfileInformation = Styled.div`
-  width: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  padding: 20px;
-`;
-
-export const SInformation = Styled.div`
-  display: flex;
-  flex-flow: row wrap;
 `;
 
 export const SContainerMenu = Styled.section`
@@ -77,25 +45,7 @@ export const SContainerMenu = Styled.section`
   background-color: orange;
 `;
 
-export const SMenuOption = Styled.div`
-  width: calc(100% - 10px);
-  height: 50px;
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-  text-align: center;
-  border-radius: 30px;
-  margin: 10px;
-  background-color: ${({ secondary }) => (secondary ? 'none' : 'gray')};
-  border: ${({ secondary }) => (secondary ? '1px solid #ABABAB' : '')};
-
-  &:hover {
-    cursor: pointer;
-    color: white;
-  }
-`;
-
-export const SContainerUpsideRight = Styled.section`
+export const SContainerAside = Styled.section`
   width: calc(80% - 10px);
   border-radius: 5px;
   margin: 5px;

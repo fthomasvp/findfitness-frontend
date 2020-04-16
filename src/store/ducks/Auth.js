@@ -82,7 +82,7 @@ export const signInFail = error => {
 /**
  * Reducer
  * */
-const initialState = {
+const INITIAL_STATE = {
   loading: false,
   user: {},
   isAuthenticated: false,
@@ -121,7 +121,7 @@ const initialState = {
   error: null,
 };
 
-export const auth = (state = initialState, action) => {
+export const auth = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case STORE_PROFILE_TYPE: {
       return {
@@ -167,38 +167,7 @@ export const auth = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        userToCreate: {
-          profileType: 'STUDENT',
-          personal: {
-            name: '',
-            cref: '',
-            phone: '',
-            cpf: '',
-            password: '',
-            gender: 'M',
-            birthdate: '',
-            email: '',
-          },
-          student: {
-            name: '',
-            phone: '',
-            cpf: '',
-            password: '',
-            gender: 'M',
-            birthdate: '',
-            email: '',
-          },
-          address: {
-            street: '',
-            number: '',
-            complement: '',
-            neighborhood: '',
-            referenceLocation: '',
-            city: '',
-            state: '',
-            zipcode: '',
-          },
-        },
+        userToCreate: INITIAL_STATE.userToCreate,
       };
     }
 
@@ -206,7 +175,8 @@ export const auth = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        error: { ...action.error },
+        userToCreate: INITIAL_STATE.userToCreate,
+        error: action.error,
       };
     }
 
@@ -232,7 +202,7 @@ export const auth = (state = initialState, action) => {
         ...state,
         loading: false,
         isAuthenticated: false,
-        error: { ...action.error, description: 'Email ou Senha inválido' },
+        error: action.error,
       };
 
     default:
