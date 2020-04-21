@@ -136,7 +136,7 @@ const StudentOrPersonalForm = () => {
             errors.cpf = requiredNumericField;
           } else if (/\D/.test(cpf)) {
             errors.cpf = specialCharactersField;
-          } else if (cpf.replace(/\D/, '').length < 11) {
+          } else if (cpf.replace(/\D/, '').length !== 11) {
             errors.cpf = 'Não possui 11 dígitos';
           }
 
@@ -144,14 +144,14 @@ const StudentOrPersonalForm = () => {
             errors.phone = requiredNumericField;
           } else if (/\D/.test(phone)) {
             errors.phone = specialCharactersField;
-          } else if (phone.replace(/\D/, '').length < 11) {
+          } else if (phone.replace(/\D/, '').length !== 11) {
             errors.phone = 'Não possui 11 dígitos';
           }
 
           if (userToCreate.profileType === 'PERSONAL') {
             if (!cref) {
               errors.cref = 'Preencha o campo';
-            } else if (cref.length < 11) {
+            } else if (cref.length !== 11) {
               errors.cref = 'Deve conter 11 caracteres';
             } else if (!/^[0-9]{6}-[A-Z]{1}\/[A-Z]{2}/gm.test(cref)) {
               errors.cref = 'Precisa seguir o seguinte padrão: 000000-X/XX';

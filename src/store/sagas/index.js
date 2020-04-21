@@ -6,7 +6,8 @@ import { all } from 'redux-saga/effects';
 //  requests de vários cliques consecutivos
 
 import Auth from './Auth';
+import StudentGroup from './StudentGroup';
 
 export default function* rootSaga() {
-  return yield all([Auth]);
+  return yield all([Auth, StudentGroup]);
 }
