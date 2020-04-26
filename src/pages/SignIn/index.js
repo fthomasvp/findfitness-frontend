@@ -29,7 +29,7 @@ const SignIn = () => {
     if (isAuthenticated) {
       return history.replace('/studentgroup');
     }
-  });
+  }, [history, isAuthenticated]);
 
   return (
     <SContainer>
