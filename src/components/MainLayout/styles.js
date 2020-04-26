@@ -7,7 +7,6 @@ export const SContainer = Styled.section`
   display: flex;
   flex-flow: column wrap;
   padding: 10px;
-  background-color: lightblue;
 `;
 
 export const SContainerUpside = Styled.section`
@@ -38,11 +37,10 @@ export const SContainerMenu = Styled.section`
   height: calc(50% - 10px);
   display: flex;
   flex-flow: column wrap;
-  justify-content: space-between;
   align-content: center;
+  border: 1px solid whitesmoke;
   border-radius: 5px;
   margin: 5px;
-  background-color: orange;
 `;
 
 export const SContainerAside = Styled.section`
@@ -61,7 +59,6 @@ export const SContainerFooter = Styled.footer`
   align-items: center;
   border-radius: 5px;
   margin: 5px;
-  background-color: purple;
 
   & img {
     width: 30px;
