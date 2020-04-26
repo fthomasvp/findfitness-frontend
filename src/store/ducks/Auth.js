@@ -13,6 +13,8 @@ export const SIGN_IN_REQUEST = '@auth/SIGN_IN_REQUEST';
 export const SIGN_IN_SUCCESS = '@auth/SIGN_IN_SUCCESS';
 export const SIGN_IN_FAIL = '@auth/SIGN_IN_FAIL';
 
+export const SIGN_OUT = '@auth/SIGN_OUT';
+
 /**
  * Action Creators
  * */
@@ -76,6 +78,12 @@ export const signInFail = error => {
   return {
     type: SIGN_IN_FAIL,
     error,
+  };
+};
+
+export const signOut = () => {
+  return {
+    type: SIGN_OUT,
   };
 };
 
@@ -207,6 +215,9 @@ export const auth = (state = INITIAL_STATE, action) => {
         isAuthenticated: false,
         error: action.error,
       };
+
+    case SIGN_OUT:
+      return INITIAL_STATE;
 
     default:
       return state;
