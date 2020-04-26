@@ -9,12 +9,9 @@ export const WrapperLink = Styled.div`
 export const SLink = Styled(Link)`
   font-size: 1.1em;
   color: ${({ color }) => color || '#F8F8FF'};
+  text-decoration: none;
 
   &:hover {
     color: lightblue;
   }
-
-  // &:visited {
-  //   color: purple;
-  // }
 `;
