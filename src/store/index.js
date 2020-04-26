@@ -9,7 +9,7 @@ import Reactotron from '../config/ReactotronConfig';
 const persistConfig = {
   key: 'findfitness',
   storage: session,
-  whitelist: ['auth', 'studentGroup'],
+  whitelist: ['auth'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
