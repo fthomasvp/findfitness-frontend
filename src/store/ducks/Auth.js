@@ -186,16 +186,19 @@ export const auth = (state = INITIAL_STATE, action) => {
         loading: true,
       };
 
-    case SIGN_IN_SUCCESS:
+    case SIGN_IN_SUCCESS: {
       return {
         ...state,
         loading: false,
         user: {
-          email: action.data.email,
+          id: action.data.id,
           profile: action.data.authorities[0].authority,
+          email: action.data.email,
+          token: action.headers.authorization,
         },
         isAuthenticated: true,
       };
+    }
 
     case SIGN_IN_FAIL:
       return {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import SignIn from '../pages/SignIn';
 import ProfileForm from '../pages/SignUp/ProfileForm';
@@ -13,7 +14,15 @@ import Exercise from '../pages/Exercise';
 import MainLayout from '../components/MainLayout';
 import Menu from '../components/Menu';
 
+import API from '../services/API';
+
 const Routes = () => {
+  const { token } = useSelector(state => state.auth.user);
+
+  if (token && token.length > 0) {
+    API.defaults.headers.common['Authorization'] = token;
+  }
+
   return (
     <BrowserRouter>
       <Switch>
