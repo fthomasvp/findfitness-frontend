@@ -1,6 +1,6 @@
 import React from 'react';
-import { useHistory } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -10,9 +10,11 @@ import ChatIcon from '@material-ui/icons/Chat';
 import ClassIcon from '@material-ui/icons/Class';
 import SchoolIcon from '@material-ui/icons/School';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { signOut } from '../../store/ducks/Auth';
 
 const Menu = () => {
   let history = useHistory();
+  const dispatch = useDispatch();
 
   const { profile } = useSelector(state => state.auth.user);
 
@@ -30,6 +32,12 @@ const Menu = () => {
     } else {
       history.push('/specialization');
     }
+  };
+
+  const handleLogoutClick = async () => {
+    await dispatch(signOut());
+
+    await history.replace('/');
   };
 
   return (
@@ -84,7 +92,7 @@ const Menu = () => {
       </div>
       <div style={{ width: '100%', height: '15%' }}>
         <List>
-          <ListItem button onClick={() => history.push('/')}>
+          <ListItem button onClick={() => handleLogoutClick()}>
             <ListItemIcon>
               <ExitToAppIcon />
             </ListItemIcon>

@@ -12,9 +12,7 @@ import {
 import Profile from '../Profile';
 import Footer from '../Footer';
 
-const MainLayout = props => {
-  const { menuArea: Menu, asideArea: Page } = props;
-
+const MainLayout = ({ menuArea: Menu, asideArea: Page }) => {
   return (
     <SContainer>
       <SContainerUpside>

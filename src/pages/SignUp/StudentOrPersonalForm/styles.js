@@ -17,7 +17,7 @@ export const SContainer = Styled.section`
 
 export const SPanel = Styled.div`
   width: 500px;
-  height: 80vh;
+  height: 90vh;
   display: flex;
   flex-flow: column wrap;
   justify-content: space-evenly;
