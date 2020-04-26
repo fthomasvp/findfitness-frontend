@@ -1,10 +1,10 @@
 import React from 'react';
-import oxentechLogo from '../../assets/images/oxentech-bird-logo.png';
+import Typography from '@material-ui/core/Typography';
 
 const Footer = () => {
   return (
     <>
-      <img src={oxentechLogo} alt="Logo da Empresa Oxentech" />
+      <Typography>&copy; 2020 Oxentech</Typography>
     </>
   );
 };
