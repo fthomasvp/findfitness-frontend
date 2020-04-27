@@ -179,10 +179,19 @@ const Marker = ({ studentGroup }) => {
           <Typography variant="h6" align="center">
             {personal.name}
           </Typography>
-          <Typography align="center">
-            <PhoneIcon />
-            {Utils.formatPhone(contactPhone)}
-          </Typography>
+          <div
+            style={{
+              display: 'flex',
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <PhoneIcon style={{marginRight: '3px'}} />
+            <Typography align="center">
+              {Utils.formatPhone(contactPhone)}
+            </Typography>
+          </div>
           <Typography align="center">CREF: {personal.cref}</Typography>
         </DialogContent>
 
