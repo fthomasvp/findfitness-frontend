@@ -10,6 +10,7 @@
 
 # production
 /build
+/src/config/ReactotronConfig.js
 
 # misc
 .DS_Store
