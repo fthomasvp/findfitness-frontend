@@ -10,7 +10,7 @@ import SInput from '../../components/Input';
 import SButton from '../../components/Button';
 import STextLink from '../../components/TextLink';
 import SForm from '../../components/Form';
-import logo from '../../assets/images/logo@3x.png';
+import OxentechLogo from '../../assets/images/oxentech_logo.png';
 
 // Yup Fields Schema
 const SignInSchema = YupSchema({
@@ -49,10 +49,10 @@ const SignIn = () => {
             return (
               <SForm onSubmit={handleSubmit}>
                 <img
-                  src={logo}
+                  src={OxentechLogo}
                   alt="FindFitness_Logo"
                   style={{
-                    width: '100px',
+                    width: '300px',
                     height: '70px',
                     display: 'flex',
                     alignSelf: 'center',
