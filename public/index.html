@@ -24,9 +24,26 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <style>
+      @font-face {
+        font-family: Roboto-Regular;
+        src: url('../src/assets/fonts/Roboto-Regular.ttf') format('ttf');
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        font-family: 'Roboto-Regular', sans-serif;
+        scroll-behavior: smooth;
+      }
+    </style>
+    <title>FindFitness</title>
   </head>
-  <body>
+
+  <body style="margin: 0px;">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
