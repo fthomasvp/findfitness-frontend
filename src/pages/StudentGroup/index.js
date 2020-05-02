@@ -5,7 +5,7 @@ import { searchStudentGroupRequest } from '../../store/ducks/StudentGroup';
 import Marker from '../../components/Marker';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import Dialog from '@material-ui/core/Dialog';
+import DialogAddStudentGroup from './DialogAddStudentGroup';
 
 const StudentGroup = () => {
   const MAP_CENTER_POSITION = { lat: -8.05428, lng: -34.8813 };
@@ -18,6 +18,10 @@ const StudentGroup = () => {
 
   // Persistir estado no Redux
   const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     (async () => {
@@ -53,11 +57,11 @@ const StudentGroup = () => {
           top: '80%',
           left: '90%',
         }}
-        onClick={() => setOpen(true)}
+        onClick={handleOpen}
       >
         <AddIcon />
       </Fab>
-      <Dialog open={open} onBackdropClick={() => setOpen(false)}></Dialog>
+      <DialogAddStudentGroup open={open} handleClose={handleClose} />
     </div>
   );
 };

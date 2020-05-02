@@ -107,6 +107,7 @@ const Marker = ({ studentGroup }) => {
       <Dialog
         open={open}
         onClose={handleClose}
+        onBackdropClick={() => setOpen(false)}
         aria-labelledby="student_group-details"
         maxWidth={'md'}
         fullWidth
@@ -199,7 +200,7 @@ const Marker = ({ studentGroup }) => {
           <Button autoFocus onClick={handleClose} color="secondary">
             Cancelar
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button variant="contained" onClick={handleClose} color="primary">
             Entrar
           </Button>
         </DialogActions>
