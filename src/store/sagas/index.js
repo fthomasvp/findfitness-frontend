@@ -7,7 +7,9 @@ import { all } from 'redux-saga/effects';
 
 import Auth from './Auth';
 import StudentGroup from './StudentGroup';
+import Exercise from './Exercise';
+import Localization from './Localization';
 
 export default function* rootSaga() {
-  return yield all([Auth, StudentGroup]);
+  return yield all([Auth, StudentGroup, Exercise, Localization]);
 }
