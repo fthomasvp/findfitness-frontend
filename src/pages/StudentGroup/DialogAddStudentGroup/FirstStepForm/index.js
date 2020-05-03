@@ -1,6 +1,7 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { Formik } from 'formik';
-import SForm from '../../../../components/Form';
 import TextField from '@material-ui/core/TextField';
 import {
   MuiPickersUtilsProvider,
@@ -11,50 +12,57 @@ import MomentUtils from '@date-io/moment';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
 
-// Importante !
-// Mínimo de 3 pessoas | Máximo de 10 pessoas
-// Quando: 08/06/2020 - 17:30
-// Valor: R$120
+import SForm from '../../../../components/Form';
+import { storeFirstStepForm } from '../../../../store/ducks/StudentGroup';
 
-const FirstStepForm = ({ activeStep, handleBack, handleNext }) => {
+const FirstStepForm = ({ handleBack, handleNext }) => {
+  const dispatch = useDispatch();
+
+  const { activeStep, createStudentGroup } = useSelector(
+    state => state.studentGroup
+  );
+  const { firstStepData } = createStudentGroup;
+
   return (
     <Formik
-      initialValues={{
-        minQtyStudents: 1,
-        maxQtyStudents: 100,
-        eventPrice: 0,
-        selectedDate: Date.now(),
-      }}
-      onSubmit={({
-        minQtyStudents,
-        maxQtyStudents,
-        eventPrice,
-        selectedDate,
-      }) => {
-        console.log(minQtyStudents, maxQtyStudents, eventPrice, selectedDate);
+      initialValues={firstStepData}
+      onSubmit={firstStepData => {
+        dispatch(storeFirstStepForm(firstStepData));
+        handleNext();
       }}
       // validationSchema={SignInSchema}
     >
       {({ values, ...formikProps }) => {
-        const { handleChange, handleSubmit, handleBlur } = formikProps;
-        const { minQtyStudents, maxQtyStudents, eventPrice, selectedDate } = values;
-        const { errors, touched } = formikProps;
+        const {
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          setFieldValue,
+        } = formikProps;
+
+        const {
+          minQtyStudents,
+          maxQtyStudents,
+          selectedDateTime,
+          eventPrice,
+        } = values;
 
         return (
           <SForm onSubmit={handleSubmit}>
             <TextField
               id="minQtyStudents"
-              label="Quantidade mínima de pessoas"
+              label="Quantidade mínima de alunos"
               type="number"
               variant="outlined"
               value={minQtyStudents}
               onChange={handleChange}
               onBlur={handleBlur}
               InputLabelProps={{ style: { color: 'white' } }}
+              style={{ marginBottom: '20px' }}
             />
             <TextField
               id="maxQtyStudents"
-              label="Quantidade máxima de pessoas"
+              label="Quantidade máxima de alunos"
               type="number"
               variant="outlined"
               value={maxQtyStudents}
@@ -69,38 +77,36 @@ const FirstStepForm = ({ activeStep, handleBack, handleNext }) => {
                   width: '100%',
                   display: 'flex',
                   justifyContent: 'space-between',
+                  marginBottom: '20px',
                 }}
               >
                 <div>
                   <KeyboardDatePicker
                     disableToolbar
+                    id="selectedDateTime"
                     format="DD/MM/YYYY"
                     margin="normal"
                     size="small"
-                    id="date-picker-inline"
                     label="Data"
-                    value={selectedDate}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    KeyboardButtonProps={{
-                      'aria-label': 'change date',
+                    minDate={Date.now()}
+                    value={selectedDateTime}
+                    onChange={value => {
+                      setFieldValue('selectedDateTime', value);
                     }}
                     InputLabelProps={{ style: { color: 'white' } }}
                   />
                 </div>
                 <div>
                   <KeyboardTimePicker
+                    id="selectedDateTime"
                     margin="normal"
                     size="small"
-                    id="time-picker"
                     label="Hora"
-                    value={selectedDate}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    InputLabelProps={{ style: { color: 'white' } }}
-                    KeyboardButtonProps={{
-                      'aria-label': 'change time',
+                    value={selectedDateTime}
+                    onChange={value => {
+                      setFieldValue('selectedDateTime', value);
                     }}
+                    InputLabelProps={{ style: { color: 'white' } }}
                   />
                 </div>
               </div>
@@ -119,6 +125,7 @@ const FirstStepForm = ({ activeStep, handleBack, handleNext }) => {
                   <InputAdornment position="start">R$</InputAdornment>
                 ),
               }}
+              style={{ marginBottom: '20px' }}
             />
 
             {/* Step Control Buttons */}

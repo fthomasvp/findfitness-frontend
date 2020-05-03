@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import GoogleMapReact from 'google-map-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchStudentGroupRequest } from '../../store/ducks/StudentGroup';
-import Marker from '../../components/Marker';
+
+import GoogleMapReact from 'google-map-react';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+
 import DialogAddStudentGroup from './DialogAddStudentGroup';
+import Marker from '../../components/Marker';
+import {
+  searchStudentGroupRequest,
+  clearCreateStudentGroupData,
+} from '../../store/ducks/StudentGroup';
+import { searchExercisesRequest } from '../../store/ducks/Exercise';
 
 const StudentGroup = () => {
   const MAP_CENTER_POSITION = { lat: -8.05428, lng: -34.8813 };
@@ -16,12 +22,24 @@ const StudentGroup = () => {
     state => state.studentGroup
   );
 
+  const { pagination: exercisePagination } = useSelector(
+    state => state.exercise
+  );
+
   // Persistir estado no Redux
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = async () => {
+    await dispatch(searchExercisesRequest(exercisePagination));
 
-  const handleClose = () => setOpen(false);
+    await setOpen(true);
+  };
+
+  const handleClose = async () => {
+    await setOpen(false);
+
+    await dispatch(clearCreateStudentGroupData());
+  };
 
   useEffect(() => {
     (async () => {

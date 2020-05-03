@@ -1,17 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
-import MuiDialogActions from '@material-ui/core/DialogActions';
+// import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+
 import FirstStepForm from './FirstStepForm';
+import SecondStepForm from './SecondStepForm';
+import {
+  handleNextStep,
+  handleBackStep,
+} from '../../../store/ducks/StudentGroup';
+import ThirdStepForm from './ThirdStepForm';
 
 const styles = theme => ({
   root: {
@@ -51,23 +60,29 @@ const DialogContent = withStyles(theme => ({
   },
 }))(MuiDialogContent);
 
-const DialogActions = withStyles(theme => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(1),
-  },
-}))(MuiDialogActions);
+// const DialogActions = withStyles(theme => ({
+//   root: {
+//     margin: 0,
+//     padding: theme.spacing(1),
+//   },
+// }))(MuiDialogActions);
 
 const DialogAddStudentGroup = ({ open, handleClose }) => {
-  const [activeStep, setActiveStep] = useState(0);
+  const { activeStep } = useSelector(state => state.studentGroup);
+  const { exercises } = useSelector(state => state.exercise);
 
-  const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
+  const dispatch = useDispatch();
 
+  /**
+   * Stepper Info
+   */
+  const handleNext = () => dispatch(handleNextStep(activeStep));
   const handleBack = () => {
     if (activeStep === 0) {
       return handleClose();
     }
-    return setActiveStep(prevActiveStep => prevActiveStep - 1);
+
+    return dispatch(handleBackStep(activeStep));
   };
 
   const steps = ['Importante !', 'Exercícios', 'Localização'];
@@ -78,7 +93,7 @@ const DialogAddStudentGroup = ({ open, handleClose }) => {
       onClose={handleClose}
       onBackdropClick={handleClose}
       aria-labelledby="add-student_group"
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
     >
       <DialogTitle
@@ -103,21 +118,43 @@ const DialogAddStudentGroup = ({ open, handleClose }) => {
 
         {/* Step Forms */}
         {activeStep === 0 && (
-          <FirstStepForm activeStep={activeStep} handleBack={handleBack} handleNext={handleNext} />
+          <FirstStepForm
+            activeStep={activeStep}
+            handleBack={handleBack}
+            handleNext={handleNext}
+          />
         )}
+
+        {activeStep === 1 && (
+          <SecondStepForm
+            activeStep={activeStep}
+            handleBack={handleBack}
+            handleNext={handleNext}
+            exercisesData={exercises}
+          />
+        )}
+
+        {activeStep === 2 && (
+          <ThirdStepForm
+            activeStep={activeStep}
+            handleBack={handleBack}
+            handleNext={handleNext}
+          />
+        )}
+
+        {activeStep === 3 && <p>FINSH</p>}
       </DialogContent>
 
-      <DialogActions>
-        <Button autoFocus onClick={handleBack} color="secondary">
-          Cancelar
+      {/* <DialogActions>
+        <Button
+          autoFocus
+          onClick={handleClose}
+          variant={activeStep === 3 ? "contained" : "text"}
+          color={activeStep === 3 ? 'primary' : 'secondary'}
+        >
+          {activeStep === 3 ? 'Fechar' : 'Cancelar'}
         </Button>
-        {/* <Button autoFocus onClick={handleBack} color="secondary">
-          {activeStep === 0 ? 'Cancelar' : 'Voltar'}
-        </Button> */}
-        {/* <Button variant="contained" color="primary" onClick={handleNext}>
-          {activeStep === steps.length - 1 ? 'Marcar' : 'Próximo'}
-        </Button> */}
-      </DialogActions>
+      </DialogActions> */}
     </Dialog>
   );
 };
