@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -59,13 +60,6 @@ const DialogContent = withStyles(theme => ({
     padding: theme.spacing(2),
   },
 }))(MuiDialogContent);
-
-// const DialogActions = withStyles(theme => ({
-//   root: {
-//     margin: 0,
-//     padding: theme.spacing(1),
-//   },
-// }))(MuiDialogActions);
 
 const DialogAddStudentGroup = ({ open, handleClose }) => {
   const { activeStep } = useSelector(state => state.studentGroup);
@@ -157,6 +151,11 @@ const DialogAddStudentGroup = ({ open, handleClose }) => {
       </DialogActions> */}
     </Dialog>
   );
+};
+
+DialogAddStudentGroup.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };
 
 export default DialogAddStudentGroup;
