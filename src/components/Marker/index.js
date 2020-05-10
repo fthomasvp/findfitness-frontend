@@ -64,7 +64,7 @@ const DialogActions = withStyles(theme => ({
   },
 }))(MuiDialogActions);
 
-const Marker = ({ studentGroup }) => {
+const Marker = React.memo(function Marker({ studentGroup }) {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => setOpen(false);
@@ -188,7 +188,7 @@ const Marker = ({ studentGroup }) => {
               justifyContent: 'center',
             }}
           >
-            <PhoneIcon style={{marginRight: '3px'}} />
+            <PhoneIcon style={{ marginRight: '3px' }} />
             <Typography align="center">
               {Utils.formatPhone(contactPhone)}
             </Typography>
@@ -207,7 +207,7 @@ const Marker = ({ studentGroup }) => {
       </Dialog>
     </>
   );
-};
+});
 
 Marker.propTypes = {
   studentGroup: PropTypes.shape({
