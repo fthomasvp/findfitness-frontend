@@ -110,10 +110,11 @@ const INITIAL_STATE = {
   activeStep: 0,
   createStudentGroup: {
     firstStepData: {
-      minQtyStudents: 0,
-      maxQtyStudents: 0,
+      minQtyStudents: 1,
+      maxQtyStudents: 1,
       eventPrice: 0,
-      selectedDateTime: Date.now(),
+      selectedBeginDateTime: Date.now(),
+      selectedEndDateTime: Date.now(),
     },
     secondStepData: [],
     thirdStepData: {
