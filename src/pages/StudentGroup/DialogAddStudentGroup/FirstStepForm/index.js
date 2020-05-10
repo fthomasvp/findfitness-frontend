@@ -1,19 +1,18 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
 import TextField from '@material-ui/core/TextField';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
 
 import SForm from '../../../../components/Form';
 import { storeFirstStepForm } from '../../../../store/ducks/StudentGroup';
+import { errorMessages } from '../../../validators';
+import Utils from '../../../../utils';
 
 const FirstStepForm = ({ handleBack, handleNext }) => {
   const dispatch = useDispatch();
@@ -30,7 +29,42 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
         dispatch(storeFirstStepForm(firstStepData));
         handleNext();
       }}
-      // validationSchema={SignInSchema}
+      validate={values => {
+        const {
+          minQtyStudents,
+          maxQtyStudents,
+          selectedBeginDateTime,
+          selectedEndDateTime,
+        } = values;
+        const { studentGroupAmount, requiredNumericField } = errorMessages;
+        const errors = {};
+
+        if (!minQtyStudents) {
+          errors.minQtyStudents = requiredNumericField;
+        } else if (minQtyStudents > maxQtyStudents) {
+          errors.minQtyStudents = studentGroupAmount;
+        }
+
+        if (!maxQtyStudents) {
+          errors.maxQtyStudents = requiredNumericField;
+        } else if (maxQtyStudents < minQtyStudents) {
+          errors.maxQtyStudents = studentGroupAmount;
+        }
+
+        // IF isValidRangeDateTime=false, means the date range is incorrect
+        if (
+          !Utils.isBeginDateTimeBeforeEndDateTime(
+            selectedBeginDateTime,
+            selectedEndDateTime
+          )
+        ) {
+          errors.selectedBeginDateTime =
+            'A aula não pode começar após terminar';
+          errors.selectedEndDateTime = 'A aula não pode começar após terminar';
+        }
+
+        return errors;
+      }}
     >
       {({ values, ...formikProps }) => {
         const {
@@ -38,12 +72,14 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
           handleBlur,
           handleSubmit,
           setFieldValue,
+          errors,
         } = formikProps;
 
         const {
           minQtyStudents,
           maxQtyStudents,
-          selectedDateTime,
+          selectedBeginDateTime,
+          selectedEndDateTime,
           eventPrice,
         } = values;
 
@@ -58,7 +94,10 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
               onChange={handleChange}
               onBlur={handleBlur}
               InputLabelProps={{ style: { color: 'white' } }}
+              inputProps={{ min: 1 }}
               style={{ marginBottom: '20px' }}
+              error={errors && errors.minQtyStudents ? true : false}
+              helperText={errors.minQtyStudents || ''}
             />
             <TextField
               id="maxQtyStudents"
@@ -69,6 +108,9 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
               onChange={handleChange}
               onBlur={handleBlur}
               InputLabelProps={{ style: { color: 'white' } }}
+              inputProps={{ min: 1 }}
+              error={errors && errors.maxQtyStudents ? true : false}
+              helperText={errors.maxQtyStudents || ''}
             />
 
             <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -81,32 +123,39 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 }}
               >
                 <div>
-                  <KeyboardDatePicker
-                    disableToolbar
-                    id="selectedDateTime"
-                    format="DD/MM/YYYY"
+                  <DateTimePicker
+                    id="selectedBeginDateTime"
+                    label="Começa em"
+                    format="DD/MM/YYYY HH:mm"
                     margin="normal"
                     size="small"
-                    label="Data"
                     minDate={Date.now()}
-                    value={selectedDateTime}
+                    value={selectedBeginDateTime}
                     onChange={value => {
-                      setFieldValue('selectedDateTime', value);
+                      setFieldValue('selectedBeginDateTime', value);
                     }}
                     InputLabelProps={{ style: { color: 'white' } }}
+                    error={
+                      errors && errors.selectedBeginDateTime ? true : false
+                    }
+                    helperText={errors.selectedBeginDateTime || ''}
                   />
                 </div>
                 <div>
-                  <KeyboardTimePicker
-                    id="selectedDateTime"
+                  <DateTimePicker
+                    id="selectedEndDateTime"
+                    label="Termina em"
+                    format="DD/MM/YYYY HH:mm"
                     margin="normal"
                     size="small"
-                    label="Hora"
-                    value={selectedDateTime}
+                    minDate={Date.now()}
+                    value={selectedEndDateTime}
                     onChange={value => {
-                      setFieldValue('selectedDateTime', value);
+                      setFieldValue('selectedEndDateTime', value);
                     }}
                     InputLabelProps={{ style: { color: 'white' } }}
+                    error={errors && errors.selectedEndDateTime ? true : false}
+                    helperText={errors.selectedEndDateTime || ''}
                   />
                 </div>
               </div>
@@ -125,6 +174,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                   <InputAdornment position="start">R$</InputAdornment>
                 ),
               }}
+              inputProps={{ min: 0 }}
               style={{ marginBottom: '20px' }}
             />
 
@@ -156,6 +206,11 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
       }}
     </Formik>
   );
+};
+
+FirstStepForm.propTypes = {
+  handleBack: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired,
 };
 
 export default FirstStepForm;
