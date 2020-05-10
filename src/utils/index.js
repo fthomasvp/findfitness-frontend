@@ -56,6 +56,10 @@ const Utils = {
 
     return formatedDateTime;
   },
+
+  isBeginDateTimeBeforeEndDateTime: (beginDateTime, endDateTime) => {
+    return moment(beginDateTime).isBefore(moment(endDateTime));
+  },
 };
 
 export default Utils;
