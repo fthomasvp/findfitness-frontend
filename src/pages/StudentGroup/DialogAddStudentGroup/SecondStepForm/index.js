@@ -1,7 +1,8 @@
-import React, { forwardRef } from 'react';
+/* eslint-disable react/display-name */
+import React, { forwardRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { Formik } from 'formik';
 import MaterialTable from 'material-table';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -17,7 +18,6 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import Button from '@material-ui/core/Button';
 
-import SForm from '../../../../components/Form';
 import { storeSecondStepForm } from '../../../../store/ducks/StudentGroup';
 
 const tableIcons = {
@@ -48,7 +48,9 @@ const SecondStepForm = ({
   exercisesData,
 }) => {
   const { createStudentGroup } = useSelector(state => state.studentGroup);
-  const { secondStepData = [] } = createStudentGroup;
+  const { secondStepData } = createStudentGroup;
+
+  const [exerciseIds, setExerciseIds] = useState(secondStepData);
 
   const dispatch = useDispatch();
 
@@ -61,74 +63,70 @@ const SecondStepForm = ({
       field: 'name',
     },
     { title: 'DESCRIÇÃO', field: 'description', sorting: false },
-    // {
-    //   title: 'DURAÇÃO (minutos)',
-    //   field: 'duration',
-    //   type: 'numeric',
-    // },
   ];
 
+  const handleSelection = rows => {
+    setExerciseIds(rows);
+  };
+
+  const handleClickNext = async () => {
+    await dispatch(storeSecondStepForm(exerciseIds));
+    handleNext();
+  };
+
   return (
-    <Formik
-      initialValues={secondStepData}
-      onSubmit={({ secondStepData }) => {
-        dispatch(storeSecondStepForm(secondStepData));
-        handleNext();
-      }}
-    >
-      {({ values, ...formikProps }) => {
-        const { handleSubmit, setFieldValue } = formikProps;
-        const { secondStepData } = values;
+    <div>
+      <MaterialTable
+        icons={tableIcons}
+        title="Selecione os exercícios"
+        columns={columns}
+        data={exercisesData}
+        options={{
+          selection: true, // Enable Checkbox
+          pageSizeOptions: [], // Don't show Row size option
+          padding: 'dense',
+        }}
+        onSelectionChange={rows => handleSelection(rows)}
+        style={{ marginBottom: '20px' }}
+      />
 
-        return (
-          <SForm onSubmit={handleSubmit}>
-            <MaterialTable
-              icons={tableIcons}
-              title="Selecione os exercícios"
-              columns={columns}
-              data={exercisesData}
-              options={{
-                selection: true, // Enable Checkbox
-                pageSizeOptions: [], // Don't show Row size option
-                padding: 'dense',
-              }}
-              onSelectionChange={rows => setFieldValue('secondStepData', rows)}
-              style={{ marginBottom: '20px' }}
-            />
-
-            {/* Step Control Buttons */}
-            <div
-              style={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'space-around',
-              }}
-            >
-              <div>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  disabled={!secondStepData || secondStepData.length === 0}
-                >
-                  Próximo
-                </Button>
-              </div>
-              <div>
-                <Button
-                  disabled={activeStep === 0}
-                  color="secondary"
-                  onClick={handleBack}
-                >
-                  Voltar
-                </Button>
-              </div>
-            </div>
-          </SForm>
-        );
-      }}
-    </Formik>
+      {/* Step Control Buttons */}
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-around',
+        }}
+      >
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleClickNext}
+            disabled={!exerciseIds || exerciseIds.length === 0}
+          >
+            Próximo
+          </Button>
+        </div>
+        <div>
+          <Button
+            disabled={activeStep === 0}
+            color="secondary"
+            onClick={handleBack}
+          >
+            Voltar
+          </Button>
+        </div>
+      </div>
+    </div>
   );
+};
+
+SecondStepForm.propTypes = {
+  activeStep: PropTypes.number.isRequired,
+  handleBack: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired,
+  exercisesData: PropTypes.array.isRequired,
 };
 
 export default SecondStepForm;
