@@ -100,21 +100,21 @@ const SecondStepForm = ({
       >
         <div>
           <Button
+            disabled={activeStep === 0}
+            color="secondary"
+            onClick={handleBack}
+          >
+            Voltar
+          </Button>
+        </div>
+        <div>
+          <Button
             variant="contained"
             color="primary"
             onClick={handleClickNext}
             disabled={!exerciseIds || exerciseIds.length === 0}
           >
             Próximo
-          </Button>
-        </div>
-        <div>
-          <Button
-            disabled={activeStep === 0}
-            color="secondary"
-            onClick={handleBack}
-          >
-            Voltar
           </Button>
         </div>
       </div>

@@ -187,17 +187,17 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
               }}
             >
               <div>
-                <Button variant="contained" color="primary" type="submit">
-                  Próximo
-                </Button>
-              </div>
-              <div>
                 <Button
                   disabled={activeStep === 0}
                   color="secondary"
                   onClick={handleBack}
                 >
                   Voltar
+                </Button>
+              </div>
+              <div>
+                <Button variant="contained" color="primary" type="submit">
+                  Próximo
                 </Button>
               </div>
             </div>
