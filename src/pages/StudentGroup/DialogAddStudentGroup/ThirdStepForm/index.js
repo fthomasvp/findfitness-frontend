@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
 import Button from '@material-ui/core/Button';
@@ -16,6 +17,22 @@ import {
   searchAddressByZipcodeRequest,
   fetchCitiesByStateIdRequest,
 } from '../../../../store/ducks/Localization';
+import YupSchema, {
+  street,
+  number,
+  neighborhood,
+  city,
+  zipcode,
+} from '../../../validators';
+
+// Yup Fields Schema
+const ThirdStepSchema = YupSchema({
+  street,
+  number,
+  neighborhood,
+  city,
+  zipcode,
+});
 
 const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
   const { createStudentGroup } = useSelector(state => state.studentGroup);
@@ -26,11 +43,15 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
   const dispatch = useDispatch();
 
   const handleClickFindAddressByZipcode = (zipcode, states) => {
-    const regexZipcode = /\d{5}-\d{3}/;
-    if (regexZipcode.test(zipcode)) {
-      dispatch(searchAddressByZipcodeRequest(zipcode, states));
+    if (zipcode) {
+      const firstPart = zipcode.slice(0, 5);
+      const secondPart = zipcode.slice(5);
+
+      const formatedZipCode = `${firstPart}-${secondPart}`;
+
+      dispatch(searchAddressByZipcodeRequest(formatedZipCode, states));
     } else {
-      console.log('Padrão do CEP Incorreto (e.g 99999-999)');
+      console.warn('Padrão do CEP Incorreto (e.g. 99999-999)');
     }
   };
 
@@ -47,7 +68,7 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
         await dispatch(storeThirdStepForm(thirdStepData));
         await handleNext();
       }}
-      // validationSchema={AddressSchema}
+      validationSchema={ThirdStepSchema}
       enableReinitialize
     >
       {({ values, ...formikProps }) => {
@@ -56,6 +77,7 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
           handleChange,
           handleBlur,
           handleSubmit,
+          errors,
         } = formikProps;
 
         const {
@@ -94,7 +116,9 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
                   </InputAdornment>
                 ),
               }}
-              style={{ marginBottom: '20px' }}
+              style={{ marginBottom: '20px', width: '25%' }}
+              error={errors && errors.zipcode ? true : false}
+              helperText={errors.zipcode || ''}
             />
             <TextField
               id="street"
@@ -105,6 +129,8 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
               onBlur={handleBlur}
               InputLabelProps={{ style: { color: 'white' } }}
               style={{ marginBottom: '20px' }}
+              error={errors && errors.street ? true : false}
+              helperText={errors.street || ''}
             />
             <TextField
               id="neighborhood"
@@ -114,17 +140,23 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
               onChange={handleChange}
               onBlur={handleBlur}
               InputLabelProps={{ style: { color: 'white' } }}
-              style={{ marginBottom: '20px' }}
+              style={{ marginBottom: '20px', width: '50%' }}
+              error={errors && errors.neighborhood ? true : false}
+              helperText={errors.neighborhood || ''}
             />
             <TextField
               id="number"
               label="N°"
+              type="number"
               variant="outlined"
               value={number}
               onChange={handleChange}
               onBlur={handleBlur}
               InputLabelProps={{ style: { color: 'white' } }}
-              style={{ marginBottom: '20px' }}
+              inputProps={{ min: 1 }}
+              style={{ marginBottom: '20px', width: '10%' }}
+              error={errors && errors.number ? true : false}
+              helperText={errors.number || ''}
             />
 
             <TextField
@@ -150,27 +182,6 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
 
             {/* Serão Select Fields */}
             <TextField
-              id="city"
-              select
-              label="Cidade"
-              variant="outlined"
-              value={city}
-              onChange={evt => setFieldValue('city', evt.target.value)}
-              InputLabelProps={{ style: { color: 'white' } }}
-              style={{ marginBottom: '20px' }}
-            >
-              {citiesByState && citiesByState.length > 0 ? (
-                citiesByState.map(city => (
-                  <MenuItem key={city.id} value={city.name}>
-                    {city.name}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem value={city}>{city}</MenuItem>
-              )}
-            </TextField>
-
-            <TextField
               id="state"
               select
               label="Estado"
@@ -186,7 +197,12 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
                 );
               }}
               InputLabelProps={{ style: { color: 'white' } }}
-              style={{ marginBottom: '20px' }}
+              SelectProps={{
+                autoWidth: true,
+              }}
+              style={{ marginBottom: '20px', width: '10%' }}
+              error={errors && errors.state ? true : false}
+              helperText={errors.state || ''}
             >
               {states &&
                 states.map(state => (
@@ -194,6 +210,32 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
                     {state.initials}
                   </MenuItem>
                 ))}
+            </TextField>
+
+            <TextField
+              id="city"
+              select
+              label="Cidade"
+              variant="outlined"
+              value={city}
+              onChange={evt => setFieldValue('city', evt.target.value)}
+              InputLabelProps={{ style: { color: 'white' } }}
+              SelectProps={{
+                autoWidth: true,
+              }}
+              style={{ marginBottom: '20px', width: '35%' }}
+              error={errors && errors.city ? true : false}
+              helperText={errors.city || ''}
+            >
+              {citiesByState && citiesByState.length > 0 ? (
+                citiesByState.map(city => (
+                  <MenuItem key={city.id} value={city.name}>
+                    {city.name}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value={city}>{city}</MenuItem>
+              )}
             </TextField>
 
             {/* Step Control Buttons */}
@@ -205,11 +247,6 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
               }}
             >
               <div>
-                <Button variant="contained" color="primary" type="submit">
-                  Concluir
-                </Button>
-              </div>
-              <div>
                 <Button
                   disabled={activeStep === 0}
                   color="secondary"
@@ -218,12 +255,23 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
                   Voltar
                 </Button>
               </div>
+              <div>
+                <Button variant="contained" color="primary" type="submit">
+                  Concluir
+                </Button>
+              </div>
             </div>
           </SForm>
         );
       }}
     </Formik>
   );
+};
+
+ThirdStepForm.propTypes = {
+  activeStep: PropTypes.number.isRequired,
+  handleBack: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired,
 };
 
 export default ThirdStepForm;
