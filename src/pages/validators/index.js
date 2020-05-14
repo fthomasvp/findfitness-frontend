@@ -5,6 +5,8 @@ export const errorMessages = {
   requiredNumericField: 'Preencha o campo apenas com números',
   specialCharactersField:
     'Não pode conter letras, espaços em branco ou caracteres especiais',
+  studentGroupAmount:
+    'A Quantidade mínima não pode ultrapassar a Quantidade máxima de alunos e vice-versa',
 };
 
 export const email = Yup.string()

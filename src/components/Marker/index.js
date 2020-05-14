@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,7 +17,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PhoneIcon from '@material-ui/icons/Phone';
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
-import Pin from '../../assets/images/google_maps_pin.png';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
+import PersonIcon from '@material-ui/icons/Person';
+import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+
 import Utils from '../../utils';
 
 const styles = theme => ({
@@ -64,7 +69,7 @@ const DialogActions = withStyles(theme => ({
   },
 }))(MuiDialogActions);
 
-const Marker = ({ studentGroup }) => {
+const Marker = React.memo(function Marker({ studentGroup }) {
   const [open, setOpen] = useState(false);
 
   const handleClose = () => setOpen(false);
@@ -72,8 +77,8 @@ const Marker = ({ studentGroup }) => {
   const {
     completeAddress,
     exercises,
-    eventDate,
-    eventDuration,
+    eventDateTimeBegin,
+    eventDateTimeEnd,
     eventPrice,
     maxStudentGroupAmount,
     minStudentGroupAmount,
@@ -97,16 +102,13 @@ const Marker = ({ studentGroup }) => {
         }}
         onClick={() => setOpen(true)}
       >
-        <img
-          alt="Pin icon"
-          src={Pin}
-          style={{ width: '25px', height: '30px' }}
-        />
+        <LocationOnIcon color="secondary" fontSize="large" />
       </div>
 
       <Dialog
         open={open}
         onClose={handleClose}
+        onBackdropClick={() => setOpen(false)}
         aria-labelledby="student_group-details"
         maxWidth={'md'}
         fullWidth
@@ -119,59 +121,9 @@ const Marker = ({ studentGroup }) => {
           Detalhes da aula
         </DialogTitle>
         <DialogContent dividers>
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: '50%' }}>
-              <Typography gutterBottom variant="h6">
-                Endereço
-              </Typography>
-              <Typography>
-                {formatedAddress.street}, {formatedAddress.number} -{' '}
-                {formatedAddress.complemento}
-              </Typography>
-              <Typography>{formatedAddress.referenceLocation}</Typography>
-              <Typography>
-                {formatedAddress.neighboor}, {formatedAddress.city} -{' '}
-                {formatedAddress.state}
-              </Typography>
-            </div>
-            <div style={{ width: '50%' }}>
-              <Typography gutterBottom variant="h6">
-                Importante !
-              </Typography>
-              <Typography>
-                Mínimo de {minStudentGroupAmount} pessoas | Máximo de{' '}
-                {maxStudentGroupAmount} pessoas
-              </Typography>
-              <Typography>
-                Quando: {Utils.formatDateTime(eventDate)} | Duração:{' '}
-                {eventDuration} minutos
-              </Typography>
-              <Typography>Valor: R${eventPrice}</Typography>
-            </div>
-          </div>
-
-          <Divider style={{ marginBottom: '5px' }} />
-
-          <Typography gutterBottom variant="h6">
-            Exercícios
-          </Typography>
-          <div style={{ marginTop: '10px' }}>
-            {exercises.map(({ name, description }, index) => (
-              <ExpansionPanel key={index}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>{name}</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                  <Typography variant="subtitle1">{description}</Typography>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-            ))}
-          </div>
-
-          <Divider style={{ marginBottom: '5px' }} />
-
+          {/* Personal info */}
           <Typography gutterBottom variant="h6" align="center">
-            Personal
+            <PersonIcon /> Personal
           </Typography>
           <Avatar alt={'Personal profile'} style={{ marginLeft: '48%' }}>
             {personal.name[0]}
@@ -187,33 +139,94 @@ const Marker = ({ studentGroup }) => {
               justifyContent: 'center',
             }}
           >
-            <PhoneIcon style={{marginRight: '3px'}} />
+            <PhoneIcon style={{ marginRight: '3px' }} />
             <Typography align="center">
               {Utils.formatPhone(contactPhone)}
             </Typography>
           </div>
-          <Typography align="center">CREF: {personal.cref}</Typography>
+          <Typography align="center" style={{ marginBottom: '20px' }}>
+            CREF: {personal.cref}
+          </Typography>
+
+          <Divider style={{ marginBottom: '20px' }} />
+
+          {/* Localization and StudentGroup info */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-around',
+              marginBottom: '20px',
+            }}
+          >
+            <div style={{ display: 'flex', flexFlow: 'column wrap' }}>
+              <Typography gutterBottom variant="h6">
+                <LocationOnIcon /> Endereço
+              </Typography>
+              <Typography>
+                {formatedAddress.street}, {formatedAddress.number} -{' '}
+                {formatedAddress.complemento}
+              </Typography>
+              <Typography>{formatedAddress.referenceLocation}</Typography>
+              <Typography>
+                {formatedAddress.neighboor}, {formatedAddress.city} -{' '}
+                {formatedAddress.state}
+              </Typography>
+            </div>
+            <div style={{ display: 'flex', flexFlow: 'column wrap' }}>
+              <Typography gutterBottom variant="h6">
+                <PriorityHighIcon /> Importante !
+              </Typography>
+              <Typography>
+                Mín. de {minStudentGroupAmount} pessoas e Máx. de{' '}
+                {maxStudentGroupAmount} pessoas
+              </Typography>
+              <Typography>
+                Quando: {Utils.formatDateTime(eventDateTimeBegin)}h ~{' '}
+                {Utils.formatDateTime(eventDateTimeEnd)}h
+              </Typography>
+              <Typography>Valor: R${eventPrice}</Typography>
+            </div>
+          </div>
+
+          <Divider style={{ marginBottom: '20px' }} />
+
+          {/* Exercises info */}
+          <Typography gutterBottom variant="h6">
+            <FitnessCenterIcon /> Exercícios
+          </Typography>
+          <div style={{ marginTop: '10px' }}>
+            {exercises.map(({ name, description }, index) => (
+              <ExpansionPanel key={index}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>{name}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails>
+                  <Typography variant="subtitle1">{description}</Typography>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            ))}
+          </div>
         </DialogContent>
 
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="secondary">
             Cancelar
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button variant="contained" onClick={handleClose} color="primary">
             Entrar
           </Button>
         </DialogActions>
       </Dialog>
     </>
   );
-};
+});
 
 Marker.propTypes = {
   studentGroup: PropTypes.shape({
     completeAddress: PropTypes.string.isRequired,
     contactPhone: PropTypes.string.isRequired,
-    eventDate: PropTypes.string.isRequired,
-    eventDuration: PropTypes.number.isRequired,
+    eventDateTimeBegin: PropTypes.string.isRequired,
+    eventDateTimeEnd: PropTypes.string.isRequired,
     eventPrice: PropTypes.number.isRequired,
     exercises: PropTypes.arrayOf(
       PropTypes.shape({
