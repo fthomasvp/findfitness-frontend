@@ -34,7 +34,7 @@ const Utils = {
     let formatedDateTime = '';
 
     if (dateTimeString && typeof dateTimeString === 'string') {
-      formatedDateTime = moment(dateTimeString).format('DD/MM/YYYY - HH:mm');
+      formatedDateTime = moment(dateTimeString).format('DD/MM/YYYY HH:mm');
     }
 
     return formatedDateTime;
@@ -51,7 +51,7 @@ const Utils = {
     let formatedDateTime = '';
 
     if (dateTime) {
-      formatedDateTime = moment(dateTime).format('YYYY-MM-DDTHH:mm:ss');
+      formatedDateTime = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
     }
 
     return formatedDateTime;
