@@ -69,8 +69,8 @@ const SecondStepForm = ({
     setExerciseIds(rows);
   };
 
-  const handleClickNext = async () => {
-    await dispatch(storeSecondStepForm(exerciseIds));
+  const handleClickNext = () => {
+    dispatch(storeSecondStepForm(exerciseIds));
     handleNext();
   };
 

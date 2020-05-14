@@ -8,6 +8,7 @@ import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
+import PhoneIcon from '@material-ui/icons/Phone';
 
 import SForm from '../../../../components/Form';
 import { storeFirstStepForm } from '../../../../store/ducks/StudentGroup';
@@ -26,11 +27,20 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
     <Formik
       initialValues={firstStepData}
       onSubmit={firstStepData => {
+        const { selectedBeginDateTime, selectedEndDateTime } = firstStepData;
+        firstStepData.selectedBeginDateTime = Utils.formatDateTimeToDatabase(
+          selectedBeginDateTime
+        );
+        firstStepData.selectedEndDateTime = Utils.formatDateTimeToDatabase(
+          selectedEndDateTime
+        );
+
         dispatch(storeFirstStepForm(firstStepData));
         handleNext();
       }}
       validate={values => {
         const {
+          contactPhone,
           minQtyStudents,
           maxQtyStudents,
           selectedBeginDateTime,
@@ -63,6 +73,12 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
           errors.selectedEndDateTime = 'A aula não pode começar após terminar';
         }
 
+        if (!contactPhone) {
+          errors.contactPhone = requiredNumericField;
+        } else if (contactPhone && String(contactPhone).length !== 11) {
+          errors.contactPhone = 'Número precisa conter 11 dígitos';
+        }
+
         return errors;
       }}
     >
@@ -76,6 +92,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
         } = formikProps;
 
         const {
+          contactPhone,
           minQtyStudents,
           maxQtyStudents,
           selectedBeginDateTime,
@@ -160,6 +177,29 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 </div>
               </div>
             </MuiPickersUtilsProvider>
+
+            <TextField
+              id="contactPhone"
+              label="Número para contato"
+              type="number"
+              variant="outlined"
+              value={contactPhone}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              InputLabelProps={{ style: { color: 'white' } }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PhoneIcon />
+                  </InputAdornment>
+                ),
+              }}
+              inputProps={{ min: 0 }}
+              error={errors && errors.contactPhone ? true : false}
+              helperText={errors.contactPhone || ''}
+              style={{ marginBottom: '20px' }}
+            />
+
             <TextField
               id="eventPrice"
               label="Valor"
@@ -174,7 +214,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                   <InputAdornment position="start">R$</InputAdornment>
                 ),
               }}
-              inputProps={{ min: 0 }}
+              inputProps={{ min: 0, step: '.01' }}
               style={{ marginBottom: '20px' }}
             />
 

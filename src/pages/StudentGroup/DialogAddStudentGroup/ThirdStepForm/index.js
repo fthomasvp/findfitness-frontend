@@ -64,9 +64,9 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
   return (
     <Formik
       initialValues={thirdStepData}
-      onSubmit={async thirdStepData => {
-        await dispatch(storeThirdStepForm(thirdStepData));
-        await handleNext();
+      onSubmit={thirdStepData => {
+        dispatch(storeThirdStepForm(thirdStepData));
+        handleNext();
       }}
       validationSchema={ThirdStepSchema}
       enableReinitialize

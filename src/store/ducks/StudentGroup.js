@@ -22,6 +22,15 @@ export const UPDATE_THIRD_STEP_STATE_FIELD =
 export const CLEAR_CREATE_STUDENT_GROUP_DATA =
   '@studentGroup/CLEAR_CREATE_STUDENT_GROUP_DATA';
 
+export const CREATE_STUDENT_GROUP_REQUEST =
+  '@studentGroup/CREATE_STUDENT_GROUP_REQUEST';
+
+export const CREATE_STUDENT_GROUP_SUCCESS =
+  '@studentGroup/CREATE_STUDENT_GROUP_SUCCESS';
+
+export const CREATE_STUDENT_GROUP_FAIL =
+  '@studentGroup/CREATE_STUDENT_GROUP_FAIL';
+
 /**
  * Action Creators
  * */
@@ -102,6 +111,26 @@ export const clearCreateStudentGroupData = () => {
   };
 };
 
+export const createStudentGroupRequest = studentGroup => {
+  return {
+    type: CREATE_STUDENT_GROUP_REQUEST,
+    studentGroup,
+  };
+};
+
+export const createStudentGroupSucess = () => {
+  return {
+    type: CREATE_STUDENT_GROUP_SUCCESS,
+  };
+};
+
+export const createStudentGroupFail = error => {
+  return {
+    type: CREATE_STUDENT_GROUP_FAIL,
+    error,
+  };
+};
+
 /**
  * Reducer
  * */
@@ -110,6 +139,7 @@ const INITIAL_STATE = {
   activeStep: 0,
   createStudentGroup: {
     firstStepData: {
+      contactPhone: '',
       minQtyStudents: 1,
       maxQtyStudents: 1,
       eventPrice: 0,
@@ -131,7 +161,7 @@ const INITIAL_STATE = {
   studentGroups: [],
   pagination: {
     page: 0,
-    size: 10,
+    size: 20,
   },
   error: null,
 };
@@ -250,6 +280,28 @@ export const studentGroup = (state = INITIAL_STATE, action) => {
         ...state,
         activeStep: INITIAL_STATE.activeStep,
         createStudentGroup: INITIAL_STATE.createStudentGroup,
+      };
+    }
+
+    case CREATE_STUDENT_GROUP_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case CREATE_STUDENT_GROUP_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+      };
+    }
+
+    case CREATE_STUDENT_GROUP_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
       };
     }
 
