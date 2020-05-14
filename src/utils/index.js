@@ -3,18 +3,26 @@ import moment from 'moment';
 const Utils = {
   formatAddress: completeAddress => {
     const splitedAddress = completeAddress.split('|');
+    const nullRegex = /null/i;
 
     const formatedAddress = {
       street: splitedAddress[0],
-      number: splitedAddress[1] !== 'null' ? splitedAddress[1] : 'Sem Número',
-      complemento:
-        splitedAddress[2] !== 'null' ? splitedAddress[2] : 'Sem Complemento',
-      neighboor:
-        splitedAddress[3] !== 'null' ? splitedAddress[3] : 'Sem Bairro',
-      referenceLocation:
-        splitedAddress[4] !== 'null'
-          ? splitedAddress[4]
-          : 'Sem Ponto de Referência',
+      number: nullRegex.test(splitedAddress[1])
+        ? 'Sem Número'
+        : splitedAddress[1],
+
+      complemento: nullRegex.test(splitedAddress[2])
+        ? 'Sem Complemento'
+        : splitedAddress[2],
+
+      neighboor: nullRegex.test(splitedAddress[3])
+        ? 'Sem Bairro'
+        : splitedAddress[3],
+
+      referenceLocation: nullRegex.test(splitedAddress[4])
+        ? 'Sem Ponto de Referência'
+        : splitedAddress[4],
+
       city: splitedAddress[5],
       state: splitedAddress[6],
     };
@@ -26,7 +34,7 @@ const Utils = {
     let formatedDateTime = '';
 
     if (dateTimeString && typeof dateTimeString === 'string') {
-      formatedDateTime = moment(dateTimeString).format('DD/MM/YYYY - HH:mm');
+      formatedDateTime = moment(dateTimeString).format('DD/MM/YYYY HH:mm');
     }
 
     return formatedDateTime;
@@ -37,6 +45,20 @@ const Utils = {
     const number = `${phoneString.slice(2, 7)}-${phoneString.slice(7)}`;
 
     return `(${DDD}) ${number}`;
+  },
+
+  formatDateTimeToDatabase: dateTime => {
+    let formatedDateTime = '';
+
+    if (dateTime) {
+      formatedDateTime = moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
+    }
+
+    return formatedDateTime;
+  },
+
+  isBeginDateTimeBeforeEndDateTime: (beginDateTime, endDateTime) => {
+    return moment(beginDateTime).isBefore(moment(endDateTime));
   },
 };
 
