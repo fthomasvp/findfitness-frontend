@@ -26,6 +26,8 @@ const StudentGroup = () => {
     state => state.exercise
   );
 
+  const { user } = useSelector(state => state.auth);
+
   // Persistir estado no Redux
   const [open, setOpen] = useState(false);
 
@@ -68,17 +70,19 @@ const StudentGroup = () => {
         })}
       </GoogleMapReact>
 
-      <Fab
-        aria-label="add"
-        style={{
-          position: 'absolute',
-          top: '80%',
-          left: '90%',
-        }}
-        onClick={handleOpen}
-      >
-        <AddIcon />
-      </Fab>
+      {user.profile !== 'ROLE_STUDENT' && (
+        <Fab
+          aria-label="add"
+          style={{
+            position: 'absolute',
+            top: '80%',
+            left: '90%',
+          }}
+          onClick={handleOpen}
+        >
+          <AddIcon />
+        </Fab>
+      )}
       <DialogAddStudentGroup open={open} handleClose={handleClose} />
     </div>
   );
