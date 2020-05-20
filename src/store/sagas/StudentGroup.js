@@ -29,7 +29,7 @@ export function* searchStudentGroup(action) {
 export function* createStudentGroup(action) {
   const { studentGroup } = action;
 
-  const requestBody = _makeCreateStudentGroupRequestBody(studentGroup);
+  const requestBody = _makeStudentGroupBodyRequest(studentGroup);
 
   try {
     const response = yield call(API.post, `/student_groups`, requestBody);
@@ -47,7 +47,7 @@ export default all([
   takeLatest(CREATE_STUDENT_GROUP_REQUEST, createStudentGroup),
 ]);
 
-function _makeCreateStudentGroupRequestBody(studentGroup) {
+function _makeStudentGroupBodyRequest(studentGroup) {
   const { firstStepData, secondStepData, thirdStepData } = studentGroup;
 
   // Get Personal id
@@ -62,6 +62,9 @@ function _makeCreateStudentGroupRequestBody(studentGroup) {
   const address = {
     ...thirdStepData,
     state: thirdStepData.state.initials,
+    number: thirdStepData.number || null,
+    complement: thirdStepData.complement || null,
+    referenceLocation: thirdStepData.referenceLocation || null,
   };
   const firstPart = address.zipcode.slice(0, 5);
   const secondPart = address.zipcode.slice(5);

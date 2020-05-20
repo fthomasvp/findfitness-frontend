@@ -17,6 +17,7 @@ import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import Button from '@material-ui/core/Button';
+import Radio from '@material-ui/core/Radio';
 
 import { storeSecondStepForm } from '../../../../store/ducks/StudentGroup';
 
@@ -47,17 +48,28 @@ const SecondStepForm = ({
   handleNext,
   exercisesData,
 }) => {
+  const dispatch = useDispatch();
+
   const { createStudentGroup } = useSelector(state => state.studentGroup);
   const { secondStepData } = createStudentGroup;
 
   const [exerciseIds, setExerciseIds] = useState(secondStepData);
 
-  const dispatch = useDispatch();
+  const [selectedValue, setSelectedValue] = React.useState(0);
 
   /**
    * Table Columns
    */
   const columns = [
+    {
+      render: rowData => (
+        <Radio
+          checked={selectedValue === rowData.id}
+          value={selectedValue}
+          name="radio_button"
+        />
+      ),
+    },
     {
       title: 'NOME',
       field: 'name',
@@ -65,12 +77,8 @@ const SecondStepForm = ({
     { title: 'DESCRIÇÃO', field: 'description', sorting: false },
   ];
 
-  const handleSelection = rows => {
-    setExerciseIds(rows);
-  };
-
   const handleClickNext = () => {
-    dispatch(storeSecondStepForm(exerciseIds));
+    dispatch(storeSecondStepForm([exerciseIds]));
     handleNext();
   };
 
@@ -78,15 +86,17 @@ const SecondStepForm = ({
     <div>
       <MaterialTable
         icons={tableIcons}
-        title="Selecione os exercícios"
+        title="Selecione uma atividade"
         columns={columns}
         data={exercisesData}
         options={{
-          selection: true, // Enable Checkbox
           pageSizeOptions: [], // Don't show Row size option
           padding: 'dense',
         }}
-        onSelectionChange={rows => handleSelection(rows)}
+        onRowClick={(event, rowData) => {
+          setSelectedValue(rowData.id);
+          setExerciseIds(rowData);
+        }}
         style={{ marginBottom: '20px' }}
       />
 
