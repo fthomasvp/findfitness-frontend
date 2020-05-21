@@ -54,6 +54,19 @@ const Menu = () => {
             </ListItemIcon>
             <ListItemText primary="Aulas" />
           </ListItem>
+          {profile && profile !== 'ROLE_STUDENT' && (
+            <ListItem
+              button
+              selected={selectedIndex === 2}
+              onClick={event => handleListItemClick(event, 2)}
+            >
+              <ListItemIcon>
+                <FitnessCenterIcon />
+              </ListItemIcon>
+              <ListItemText primary="Atividades" />
+            </ListItem>
+          )}
+
           <ListItem
             button
             selected={selectedIndex === 1}
@@ -65,28 +78,16 @@ const Menu = () => {
             <ListItemText primary="Chat" />
           </ListItem>
           {profile && profile !== 'ROLE_STUDENT' && (
-            <>
-              <ListItem
-                button
-                selected={selectedIndex === 2}
-                onClick={event => handleListItemClick(event, 2)}
-              >
-                <ListItemIcon>
-                  <FitnessCenterIcon />
-                </ListItemIcon>
-                <ListItemText primary="Exercícios" />
-              </ListItem>
-              <ListItem
-                button
-                selected={selectedIndex === 3}
-                onClick={event => handleListItemClick(event, 3)}
-              >
-                <ListItemIcon>
-                  <SchoolIcon />
-                </ListItemIcon>
-                <ListItemText primary="Especializações" />
-              </ListItem>
-            </>
+            <ListItem
+              button
+              selected={selectedIndex === 3}
+              onClick={event => handleListItemClick(event, 3)}
+            >
+              <ListItemIcon>
+                <SchoolIcon />
+              </ListItemIcon>
+              <ListItemText primary="Especializações" />
+            </ListItem>
           )}
         </List>
       </div>
