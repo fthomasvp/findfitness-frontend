@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+
 import {
   SContainer,
-  SToggleButton,
-  SToggleButtonGroup,
   SPanel,
-} from './styles';
-import SButton from '../../../components/Button';
+  SPanelTitle,
+  SPanelContent,
+  SPanelActions,
+} from '../styles';
 import { storeProfileType } from '../../../store/ducks/Auth';
 
 const ProfileForm = () => {
@@ -18,8 +26,7 @@ const ProfileForm = () => {
 
   const [profileTypeForm, setProfileTypeForm] = useState(profileType);
 
-  const handleToggleProfileType = profileTypeForm =>
-    setProfileTypeForm(profileTypeForm);
+  const [tab, setTab] = React.useState(profileType === 'STUDENT' ? 0 : 1);
 
   const handleClickNextButton = () => {
     dispatch(storeProfileType(profileTypeForm));
@@ -27,61 +34,65 @@ const ProfileForm = () => {
     history.push('/signup/userform');
   };
 
-  const isStudent = profileTypeForm === 'STUDENT';
+  const handleChangeTab = (event, tabValue) => {
+    setTab(tabValue);
 
-  const getToggleStyle = isStudent =>
-    isStudent ? { backgroundColor: '#10097a' } : {};
-
-  const getTextStyle = isStudent => ({
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: isStudent ? '#fff' : '#bbb',
-  });
+    if (tabValue === 0) {
+      setProfileTypeForm('STUDENT');
+    } else {
+      setProfileTypeForm('PERSONAL');
+    }
+  };
 
   return (
     <SContainer>
-      <h2 style={{ margin: 0, color: 'white', alignSelf: 'center' }}>
-        Olá, vamos criar a sua conta? <br />
-      </h2>
-      <h3 style={{ color: 'white', alignSelf: 'center' }}>
-        Primeiro precisamos saber se você é um Personal ou um Estudante.
-      </h3>
-      <SPanel>
-        <h4 style={{ color: 'white', alignSelf: 'center' }}>
-          Por favor, selecione uma das opções abaixo:
-        </h4>
-        <SToggleButtonGroup>
-          <SToggleButton
-            style={getToggleStyle(isStudent)}
-            onClick={() => handleToggleProfileType('STUDENT')}
-          >
-            <p style={getTextStyle(isStudent)}>ESTUDANTE</p>
-          </SToggleButton>
-          <SToggleButton
-            style={getToggleStyle(!isStudent)}
-            onClick={() => handleToggleProfileType('PERSONAL')}
-          >
-            <p style={getTextStyle(!isStudent)}>PERSONAL</p>
-          </SToggleButton>
-        </SToggleButtonGroup>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-evenly',
-          }}
-        >
-          <SButton width="33%" onClick={() => history.goBack()}>
-            VOLTAR
-          </SButton>
-          <SButton
-            width="33%"
-            background="#46c787"
-            onClick={() => handleClickNextButton()}
-          >
-            PRÓXIMO
-          </SButton>
-        </div>
-      </SPanel>
+      <Paper variant="outlined">
+        <SPanel id="SPanel">
+          <SPanelTitle id="SPanelTitle1">
+            <Typography variant="h4">Olá, vamos criar a sua conta?</Typography>
+          </SPanelTitle>
+
+          <SPanelTitle id="SPanelTitle2">
+            <Typography variant="h5">
+              Primeiro precisamos saber o seu tipo de perfil!
+            </Typography>
+          </SPanelTitle>
+
+          <SPanelTitle id="SPanelTitle3">
+            <Typography variant="h5">
+              Por favor, selecione uma das opções abaixo:
+            </Typography>
+          </SPanelTitle>
+
+          <SPanelContent id="SPanelContent">
+            <AppBar position="relative" color="default">
+              <Tabs
+                value={tab}
+                onChange={handleChangeTab}
+                indicatorColor="primary"
+                textColor="primary"
+                centered
+              >
+                <Tab label="ESTUDANTE" />
+                <Tab label="PERSONAL" />
+              </Tabs>
+            </AppBar>
+          </SPanelContent>
+
+          <SPanelActions id="sPanelActions">
+            <Button color="secondary" onClick={() => history.goBack()}>
+              Voltar
+            </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={handleClickNextButton}
+            >
+              Próximo
+            </Button>
+          </SPanelActions>
+        </SPanel>
+      </Paper>
     </SContainer>
   );
 };
