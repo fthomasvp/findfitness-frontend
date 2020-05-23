@@ -40,11 +40,12 @@ export const fetchStatesFail = error => {
   };
 };
 
-export const searchAddressByZipcodeRequest = (zipcode, states) => {
+export const searchAddressByZipcodeRequest = (zipcode, states, fromPage) => {
   return {
     type: SEARCH_ADDRESS_BY_ZIPCODE_REQUEST,
     zipcode,
     states,
+    fromPage,
   };
 };
 

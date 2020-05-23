@@ -16,8 +16,10 @@ export function* signUp(action) {
 
   const resource = profileType === 'STUDENT' ? 'students' : 'personals';
 
+  const requestBody = _makeUserBodyRequest(action.userToCreate);
+
   try {
-    const response = yield call(API.post, `/${resource}`, action.userToCreate);
+    const response = yield call(API.post, `/${resource}`, requestBody);
 
     if (response && response.status === 201) {
       yield put(signUpSuccess());
@@ -43,3 +45,40 @@ export default all([
   takeLatest(SIGN_UP_REQUEST, signUp),
   takeLatest(SIGN_IN_REQUEST, signIn),
 ]);
+
+function _makeUserBodyRequest(userToCreate) {
+  const {
+    profileType,
+    personal,
+    student,
+    address: addressFromForm,
+  } = userToCreate;
+
+  let requestBody = {};
+
+  if (profileType === 'STUDENT') {
+    requestBody = {
+      student,
+    };
+  } else {
+    requestBody = {
+      personal,
+    };
+  }
+
+  // Get Address data
+  const address = {
+    ...addressFromForm,
+    state: addressFromForm.state.initials,
+    number: addressFromForm.number || '',
+    complement: addressFromForm.complement || '',
+    referenceLocation: addressFromForm.referenceLocation || '',
+  };
+
+  requestBody = {
+    ...requestBody,
+    address,
+  };
+
+  return requestBody;
+}

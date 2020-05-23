@@ -15,6 +15,7 @@ import {
   updateThirdStepData,
   updateThirdStepStateField,
 } from '../ducks/StudentGroup';
+import { updateAddressData } from '../ducks/Auth';
 
 export function* fetchStates() {
   try {
@@ -30,12 +31,18 @@ export function* fetchStates() {
 
 export function* searchAddressByZipCode(action) {
   try {
-    const { zipcode, states } = action;
+    const { zipcode, states, fromPage = '' } = action;
 
     const response = yield call(API.get, `/localizations?cep=${zipcode}`);
 
     if (response && response.status === 200) {
-      yield put(updateThirdStepData(response, states));
+      if (fromPage === 'signup') {
+        yield put(updateAddressData(response, states));
+      }
+
+      if (fromPage === 'studentgroup') {
+        yield put(updateThirdStepData(response, states));
+      }
     }
   } catch (error) {
     yield put(searchAddressByZipcodeFail(error.response || error));

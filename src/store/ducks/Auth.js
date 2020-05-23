@@ -15,6 +15,8 @@ export const SIGN_IN_FAIL = '@auth/SIGN_IN_FAIL';
 
 export const SIGN_OUT = '@auth/SIGN_OUT';
 
+export const UPDATE_ADDRESS_DATA = '@auth/UPDATE_ADDRESS_DATA';
+
 /**
  * Action Creators
  * */
@@ -87,6 +89,14 @@ export const signOut = () => {
   };
 };
 
+export const updateAddressData = ({ data }, states) => {
+  return {
+    type: UPDATE_ADDRESS_DATA,
+    data,
+    states,
+  };
+};
+
 /**
  * Reducer
  * */
@@ -102,16 +112,17 @@ const INITIAL_STATE = {
       phone: '',
       cpf: '',
       password: '',
-      gender: 'M',
+      gender: '',
       birthdate: '',
       email: '',
+      validCref: false,
     },
     student: {
       name: '',
       phone: '',
       cpf: '',
       password: '',
-      gender: 'M',
+      gender: '',
       birthdate: '',
       email: '',
     },
@@ -218,6 +229,32 @@ export const auth = (state = INITIAL_STATE, action) => {
 
     case SIGN_OUT:
       return INITIAL_STATE;
+
+    case UPDATE_ADDRESS_DATA: {
+      // // Find the state object to return
+      const myState = action.states.find(
+        state => state.name === action.data.state
+      );
+
+      let addressFromAPI = {
+        street: action.data.street,
+        neighborhood: action.data.neighborhood,
+        city: action.data.city,
+        state: myState,
+        zipcode: action.data.zipcode,
+      };
+
+      return {
+        ...state,
+        userToCreate: {
+          ...state.userToCreate,
+          address: {
+            ...state.userToCreate.address,
+            ...addressFromAPI,
+          },
+        },
+      };
+    }
 
     default:
       return state;
