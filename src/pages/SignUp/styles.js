@@ -11,7 +11,7 @@ export const SContainer = Styled.section`
 `;
 
 export const SPanel = Styled.div`
-  width: 600px;
+  width: 650px;
   height: 88vh;
   display: flex;
   flex-flow: column;
@@ -23,15 +23,14 @@ export const SPanelTitle = Styled.div`
   display: flex;
   flex-flow: row;
   justify-content: space-evenly;
-  padding: 10px;
+  margin-bottom: 10px;
 `;
 
 export const SPanelContent = Styled.div`
   display: flex;
   flex-flow: column;
-  justify-content: space-evenly;
   overflow-y: auto;
-  padding: 20px 10px 10px 10px;
+  padding: 10px;
 `;
 
 export const SPanelActions = Styled.div`

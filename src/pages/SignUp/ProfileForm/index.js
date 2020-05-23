@@ -65,12 +65,11 @@ const ProfileForm = () => {
           </SPanelTitle>
 
           <SPanelContent id="SPanelContent">
-            <AppBar position="relative" color="default">
+            <AppBar position="relative" color="transparent">
               <Tabs
                 value={tab}
                 onChange={handleChangeTab}
                 indicatorColor="primary"
-                textColor="primary"
                 centered
               >
                 <Tab label="ESTUDANTE" />

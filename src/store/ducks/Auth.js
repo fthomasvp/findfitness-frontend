@@ -105,6 +105,7 @@ const INITIAL_STATE = {
       gender: '',
       birthdate: '',
       email: '',
+      validCref: false,
     },
     student: {
       name: '',
