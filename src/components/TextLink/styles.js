@@ -7,7 +7,7 @@ export const WrapperLink = Styled.div`
 `;
 
 export const SLink = Styled(Link)`
-  font-size: 1.1em;
+  font-size: 1.1rem;
   color: ${({ color }) => color || '#F8F8FF'};
   text-decoration: none;
 
