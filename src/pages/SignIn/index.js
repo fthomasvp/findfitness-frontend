@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -6,6 +6,10 @@ import { Formik } from 'formik';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 import { signInRequest } from '../../store/ducks/Auth';
 import YupSchema, { email, password } from '../validators';
@@ -31,6 +35,8 @@ const SignIn = () => {
   const history = useHistory();
 
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+
+  const [toggleVisibilityIcon, setToggleVisibilityIcon] = useState(false);
 
   useEffect(() => {
     // Unmount component
@@ -102,13 +108,34 @@ const SignIn = () => {
                     <TextField
                       id="password"
                       label="Senha"
-                      type="password"
+                      type={toggleVisibilityIcon ? "text" : "password"}
                       variant="outlined"
                       value={password}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
                         style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            {!toggleVisibilityIcon ? (
+                              <IconButton
+                                aria-label="show password text"
+                                onClick={() => setToggleVisibilityIcon(true)}
+                              >
+                                <VisibilityIcon />
+                              </IconButton>
+                            ) : (
+                              <IconButton
+                                aria-label="hide password text"
+                                onClick={() => setToggleVisibilityIcon(false)}
+                              >
+                                <VisibilityOffIcon />
+                              </IconButton>
+                            )}
+                          </InputAdornment>
+                        ),
                       }}
                       style={{ marginBottom: '40px' }}
                       error={errors.password && touched.password ? true : false}
@@ -121,7 +148,7 @@ const SignIn = () => {
                         style: { width: 'max-content', fontSize: '1.1rem' },
                       }}
                     />
-                    <Button variant="contained" color="primary" type="submit">
+                    <Button variant="contained" color="primary" size="large" type="submit">
                       Acessar conta
                     </Button>
                   </SPanelContent>
