@@ -49,7 +49,11 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
 
       const formatedZipCode = `${firstPart}-${secondPart}`;
 
-      dispatch(searchAddressByZipcodeRequest(formatedZipCode, states));
+      const fromPage = 'studentgroup';
+
+      dispatch(
+        searchAddressByZipcodeRequest(formatedZipCode, states, fromPage)
+      );
     } else {
       console.warn('Padrão do CEP Incorreto (e.g. 99999-999)');
     }

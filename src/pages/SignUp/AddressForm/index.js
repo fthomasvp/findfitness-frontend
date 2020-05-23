@@ -1,22 +1,39 @@
-import React from 'react';
-import { Formik, ErrorMessage } from 'formik';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+
+import { Formik } from 'formik';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import Search from '@material-ui/icons/Search';
+import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+
 import { storeAddressForm, signUpRequest } from '../../../store/ducks/Auth';
+import {
+  fetchStatesRequest,
+  searchAddressByZipcodeRequest,
+  fetchCitiesByStateIdRequest,
+} from '../../../store/ducks/Localization';
 import YupSchema, {
   street,
   number,
   neighborhood,
   city,
-  state,
   zipcode,
 } from '../../validators';
-import { SContainer, SInputGroup, SPanel } from './styles';
+import {
+  SContainer,
+  SPanel,
+  SPanelTitle,
+  SPanelContent,
+  SPanelActions,
+} from '../styles';
 import SForm from '../../../components/Form';
-import SInput from '../../../components/Input';
-import SLabel from '../../../components/Label';
-import SButton from '../../../components/Button';
-import SErrorMessageInput from '../../../components/Form/ErrorMessageInput';
 
 // Yup Fields Schema
 const AddressSchema = YupSchema({
@@ -24,7 +41,6 @@ const AddressSchema = YupSchema({
   number,
   neighborhood,
   city,
-  state,
   zipcode,
 });
 
@@ -32,192 +48,295 @@ const AddressForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const { states, citiesByState } = useSelector(state => state.localization);
+
   const { userToCreate } = useSelector(state => state.auth);
+
+  const handleClickFindAddressByZipcode = (zipcode, states) => {
+    if (zipcode) {
+      const firstPart = zipcode.slice(0, 5);
+      const secondPart = zipcode.slice(5);
+
+      const formatedZipCode = `${firstPart}-${secondPart}`;
+
+      const fromPage = 'signup';
+
+      dispatch(
+        searchAddressByZipcodeRequest(formatedZipCode, states, fromPage)
+      );
+    } else {
+      console.warn('Padrão do CEP Incorreto (e.g. 99999-999)');
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      await dispatch(fetchStatesRequest());
+    })();
+  }, [dispatch]);
 
   return (
     <SContainer>
-      <Formik
-        initialValues={userToCreate.address}
-        onSubmit={values => {
-          const address = values;
+      <Paper>
+        <Formik
+          initialValues={userToCreate.address}
+          onSubmit={values => {
+            const address = values;
 
-          userToCreate.address = address;
+            userToCreate.address = address;
 
-          dispatch(storeAddressForm(address));
-          dispatch(signUpRequest(userToCreate));
+            dispatch(storeAddressForm(address));
+            dispatch(signUpRequest(userToCreate));
 
-          history.replace('/login');
-        }}
-        validationSchema={AddressSchema}
-      >
-        {({ values, ...formikProps }) => {
-          const address = values;
-          const { handleChange, handleSubmit, handleBlur } = formikProps;
+            history.replace('/login');
+          }}
+          validationSchema={AddressSchema}
+          enableReinitialize
+        >
+          {({ values, ...formikProps }) => {
+            const {
+              setFieldValue,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              touched,
+              errors,
+            } = formikProps;
 
-          return (
-            <SForm onSubmit={handleSubmit} style={{ alignItems: 'center' }}>
-              <h2 style={{ margin: 0, color: 'white', alignSelf: 'center' }}>
-                Precisamos anotar os dados do seu endereço :)
-              </h2>
-              <SPanel>
-                <SInputGroup>
-                  <SLabel htmlFor="zipcode">CEP</SLabel>
-                  <SInput
-                    id="zipcode"
-                    type="text"
-                    name="zipcode"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={address.zipcode}
-                    maxLength="8"
-                    width="90px"
-                    autoFocus
-                  />
-                  <ErrorMessage
-                    name="zipcode"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="street">Rua</SLabel>
-                  <SInput
-                    id="street"
-                    type="text"
-                    name="street"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={address.street}
-                  />
-                  <ErrorMessage
-                    name="street"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="neighborhood">Bairro</SLabel>
-                  <SInput
-                    id="neighborhood"
-                    type="text"
-                    name="neighborhood"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={address.neighborhood}
-                    maxLength="120"
-                    width="205px"
-                  />
-                  <ErrorMessage
-                    name="neighborhood"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="number">N°</SLabel>
-                  <SInput
-                    id="number"
-                    type="text"
-                    name="number"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={address.number}
-                    maxLength="10"
-                    width="80px"
-                  />
-                  <ErrorMessage
-                    name="number"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="complement">Complemento</SLabel>
-                  <SInput
-                    id="complement"
-                    type="text"
-                    name="complement"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={address.complement}
-                    maxLength="14"
-                    width="120px"
-                  />
-                  <ErrorMessage
-                    name="complement"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="referenceLocation">
-                    Ponto de Referência
-                  </SLabel>
-                  <SInput
-                    id="referenceLocation"
-                    type="text"
-                    name="referenceLocation"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={address.referenceLocation}
-                    maxLength="140"
-                  />
-                  <ErrorMessage
-                    name="referenceLocation"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="city">Cidade</SLabel>
-                  <SInput
-                    id="city"
-                    type="text"
-                    name="city"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={address.city}
-                    maxLength="120"
-                    width="230px"
-                  />
-                  <ErrorMessage
-                    name="city"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="state">Estado</SLabel>
-                  <SInput
-                    id="state"
-                    type="text"
-                    name="state"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={address.state}
-                    maxLength="2"
-                    width="50px"
-                  />
-                  <ErrorMessage
-                    name="state"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-evenly',
-                  }}
-                >
-                  <SButton
-                    width="33%"
-                    type="button"
-                    onClick={() => history.goBack()}
-                  >
-                    VOLTAR
-                  </SButton>
-                  <SButton width="33%" background="#46c787" type="submit">
-                    FINALIZAR
-                  </SButton>
-                </div>
-              </SPanel>
-            </SForm>
-          );
-        }}
-      </Formik>
+            const {
+              zipcode,
+              street,
+              neighborhood,
+              number,
+              complement,
+              referenceLocation,
+              city,
+              state,
+            } = values;
+
+            return (
+              <SForm onSubmit={handleSubmit}>
+                <SPanel>
+                  <SPanelTitle>
+                    <Typography variant="h5">
+                      Precisamos anotar os dados do seu endereço :)
+                    </Typography>
+                  </SPanelTitle>
+
+                  <Divider style={{ marginBottom: '20px' }} />
+
+                  <SPanelContent>
+                    <TextField
+                      autoFocus
+                      id="zipcode"
+                      label="CEP"
+                      variant="outlined"
+                      value={zipcode}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="find address by zipcode"
+                              onClick={() =>
+                                handleClickFindAddressByZipcode(zipcode, states)
+                              }
+                            >
+                              <Search />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      style={{ marginBottom: '20px', width: '30%' }}
+                      error={errors.zipcode && touched.zipcode ? true : false}
+                      helperText={
+                        errors.zipcode && touched.zipcode ? errors.zipcode : ''
+                      }
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    />
+                    <TextField
+                      id="street"
+                      label="Rua"
+                      variant="outlined"
+                      value={street}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      style={{ marginBottom: '20px' }}
+                      error={errors.street && touched.street ? true : false}
+                      helperText={
+                        errors.street && touched.street ? errors.street : ''
+                      }
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    />
+                    <TextField
+                      id="neighborhood"
+                      label="Bairro"
+                      variant="outlined"
+                      value={neighborhood}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      style={{ marginBottom: '20px', width: '50%' }}
+                      error={
+                        errors.neighborhood && touched.neighborhood
+                          ? true
+                          : false
+                      }
+                      helperText={
+                        errors.neighborhood && touched.neighborhood
+                          ? errors.neighborhood
+                          : ''
+                      }
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    />
+                    <TextField
+                      id="number"
+                      label="N°"
+                      type="number"
+                      variant="outlined"
+                      value={number}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      inputProps={{ min: 1 }}
+                      style={{ marginBottom: '20px', width: '18%' }}
+                      error={errors.number && touched.number ? true : false}
+                      helperText={
+                        errors.number && touched.number ? errors.number : ''
+                      }
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    />
+
+                    <TextField
+                      id="complement"
+                      label="Complemento"
+                      variant="outlined"
+                      value={complement}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      style={{ marginBottom: '20px' }}
+                    />
+                    <TextField
+                      id="referenceLocation"
+                      label="Ponto de Referência"
+                      variant="outlined"
+                      value={referenceLocation}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      style={{ marginBottom: '20px' }}
+                    />
+
+                    <TextField
+                      id="state"
+                      select
+                      label="Estado"
+                      variant="outlined"
+                      value={state}
+                      onChange={async evt => {
+                        const selectedState = evt.target.value;
+
+                        await setFieldValue('state', selectedState);
+
+                        return await dispatch(
+                          fetchCitiesByStateIdRequest(selectedState)
+                        );
+                      }}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      SelectProps={{
+                        autoWidth: true,
+                      }}
+                      style={{ marginBottom: '20px', width: '18%' }}
+                      error={errors.state && touched.state ? true : false}
+                      helperText={
+                        errors.state && touched.state ? errors.state : ''
+                      }
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    >
+                      {states &&
+                        states.map(state => (
+                          <MenuItem key={state.id} value={state}>
+                            {state.initials}
+                          </MenuItem>
+                        ))}
+                    </TextField>
+
+                    <TextField
+                      id="city"
+                      select
+                      label="Cidade"
+                      variant="outlined"
+                      value={city}
+                      onChange={evt => setFieldValue('city', evt.target.value)}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      SelectProps={{
+                        autoWidth: true,
+                      }}
+                      style={{ marginBottom: '20px', width: '50%' }}
+                      error={errors.city && touched.city ? true : false}
+                      helperText={
+                        errors.city && touched.city ? errors.city : ''
+                      }
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    >
+                      {citiesByState && citiesByState.length > 0 ? (
+                        citiesByState.map(city => (
+                          <MenuItem key={city.id} value={city.name}>
+                            {city.name}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem value={city}>{city}</MenuItem>
+                      )}
+                    </TextField>
+                  </SPanelContent>
+
+                  <SPanelActions>
+                    <Button color="secondary" onClick={() => history.goBack()}>
+                      VOLTAR
+                    </Button>
+                    <Button color="primary" variant="contained" type="submit">
+                      FINALIZAR
+                    </Button>
+                  </SPanelActions>
+                </SPanel>
+              </SForm>
+            );
+          }}
+        </Formik>
+      </Paper>
     </SContainer>
   );
 };
