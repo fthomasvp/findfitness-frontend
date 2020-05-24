@@ -22,6 +22,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import Badge from '@material-ui/core/Badge';
 import GroupIcon from '@material-ui/icons/Group';
+import PersonalPicture from '../../assets/images/guilian-fremaux-personal.jpg';
 
 import Utils from '../../utils';
 
@@ -126,9 +127,11 @@ const Marker = React.memo(function Marker({ studentGroup }) {
           <Typography gutterBottom variant="h5" align="center">
             <PersonIcon /> PERSONAL
           </Typography>
-          <Avatar alt={'Personal profile'} style={{ marginLeft: '48%' }}>
-            {personal.name[0]}
-          </Avatar>
+          <Avatar
+            src={PersonalPicture} // Mock picture
+            alt={'Personal profile'}
+            style={{ marginLeft: '48%', width: '48px', height: '48px' }}
+          />
           <Typography
             variant="h6"
             align="center"
