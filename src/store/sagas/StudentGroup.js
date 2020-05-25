@@ -1,4 +1,5 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
+
 import API from '../../services/API';
 import {
   SEARCH_STUDENT_GROUP_REQUEST,
@@ -7,6 +8,9 @@ import {
   CREATE_STUDENT_GROUP_REQUEST,
   createStudentGroupSucess,
   createStudentGroupFail,
+  ENROLL_STUDENT_GROUP_REQUEST,
+  enrollStudentGroupSuccess,
+  enrollStudentGroupFail,
 } from '../ducks/StudentGroup';
 
 export function* searchStudentGroup(action) {
@@ -42,9 +46,27 @@ export function* createStudentGroup(action) {
   }
 }
 
+export function* enrollStudent(action) {
+  const { idStudent, idStudentGroup } = action;
+
+  try {
+    const response = yield call(
+      API.post,
+      `/student_groups/${idStudentGroup}/enroll/${idStudent}`
+    );
+
+    if (response && response.status === 201) {
+      yield put(enrollStudentGroupSuccess());
+    }
+  } catch (error) {
+    yield put(enrollStudentGroupFail(error.response || error));
+  }
+}
+
 export default all([
   takeLatest(SEARCH_STUDENT_GROUP_REQUEST, searchStudentGroup),
   takeLatest(CREATE_STUDENT_GROUP_REQUEST, createStudentGroup),
+  takeLatest(ENROLL_STUDENT_GROUP_REQUEST, enrollStudent),
 ]);
 
 function _makeStudentGroupBodyRequest(studentGroup) {
