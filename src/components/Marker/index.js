@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -25,6 +26,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import PersonalPicture from '../../assets/images/guilian-fremaux-personal.jpg';
 
 import Utils from '../../utils';
+import DialogEnrollStudentGroup from '../../pages/StudentGroup/DialogEnrollStudentGroup';
 
 const styles = theme => ({
   root: {
@@ -89,6 +91,26 @@ const Marker = React.memo(function Marker({ studentGroup }) {
   } = studentGroup;
 
   const formatedAddress = Utils.formatAddress(completeAddress);
+
+  const { profile } = useSelector(state => state.auth.user);
+
+  // This will be valid only if the user is a Student
+  const idStudent = useSelector(state => state.auth.user.id);
+
+  /**
+   * Variables and functions to DialogEnrollStudentGroup
+   */
+  const [openDialogEnroll, setOpenDialogEnroll] = useState(false);
+
+  const handleCloseDialogEnroll = () => setOpenDialogEnroll(false);
+
+  const isEnrolledStudent = () => {
+    const hasStudent = studentGroup.students.filter(
+      student => student.id === idStudent
+    );
+
+    return hasStudent.length > 0;
+  };
 
   return (
     <>
@@ -297,12 +319,28 @@ const Marker = React.memo(function Marker({ studentGroup }) {
 
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="secondary">
-            Cancelar
+            {!isEnrolledStudent() ? 'Cancelar' : 'Voltar'}
           </Button>
-          <Button variant="contained" onClick={handleClose} color="primary">
-            Participar
-          </Button>
+          {profile === 'ROLE_STUDENT' && !isEnrolledStudent() && (
+            <Button
+              variant="contained"
+              onClick={() => setOpenDialogEnroll(true)}
+              color="primary"
+            >
+              Participar
+            </Button>
+          )}
         </DialogActions>
+
+        {/* Exibir apenas quando o usuário clicar no botão de PARTICIPAR */}
+        <DialogEnrollStudentGroup
+          openDialogEnroll={openDialogEnroll}
+          setOpenDialogEnroll={setOpenDialogEnroll}
+          handleCloseDialogEnroll={handleCloseDialogEnroll}
+          handleClose={handleClose}
+          idStudentGroup={studentGroup.id}
+          idStudent={idStudent}
+        />
       </Dialog>
     </>
   );
