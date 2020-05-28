@@ -1,13 +1,25 @@
-import React, { useEffect } from 'react';
-import { Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+
+import { Formik } from 'formik';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+
 import { signInRequest } from '../../store/ducks/Auth';
 import YupSchema, { email, password } from '../validators';
-import { SContainer, SInputGroup, SPanel } from './styles';
-import SLabel from '../../components/Label';
-import SInput from '../../components/Input';
-import SButton from '../../components/Button';
+import {
+  SContainer,
+  SPanel,
+  SPanelTitle,
+  SPanelContent,
+  SPanelActions,
+} from './styles';
 import STextLink from '../../components/TextLink';
 import SForm from '../../components/Form';
 import OxentechLogo from '../../assets/images/oxentech_logo.png';
@@ -24,6 +36,8 @@ const SignIn = () => {
 
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
+  const [toggleVisibilityIcon, setToggleVisibilityIcon] = useState(false);
+
   useEffect(() => {
     // Unmount component
     if (isAuthenticated) {
@@ -33,68 +47,121 @@ const SignIn = () => {
 
   return (
     <SContainer>
-      <SPanel>
+      <Paper>
         <Formik
           initialValues={{ email: '', password: '' }}
           onSubmit={({ email, password }) => {
             dispatch(signInRequest(email, password));
           }}
           validationSchema={SignInSchema}
+          validateOnChange={false}
         >
           {({ values, ...formikProps }) => {
-            const { handleChange, handleSubmit, handleBlur } = formikProps;
             const { email, password } = values;
-            const { errors, touched } = formikProps;
+            const {
+              handleChange,
+              handleSubmit,
+              handleBlur,
+              errors,
+              touched,
+            } = formikProps;
 
             return (
               <SForm onSubmit={handleSubmit}>
-                <img
-                  src={OxentechLogo}
-                  alt="FindFitness_Logo"
-                  style={{
-                    width: '300px',
-                    height: '70px',
-                    display: 'flex',
-                    alignSelf: 'center',
-                  }}
-                />
-                <SInputGroup>
-                  <SLabel htmlFor="email">Email</SLabel>
-                  <SInput
-                    id="email"
-                    type="email"
-                    name="email"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={email}
-                    maxLength="140"
-                    autoFocus
-                  />
-                  {errors.email && touched.email && errors.email}
-                </SInputGroup>
+                <SPanel>
+                  <SPanelTitle>
+                    <img
+                      src={OxentechLogo}
+                      alt="FindFitness_Logo"
+                      style={{
+                        width: '300px',
+                        height: '70px',
+                        display: 'flex',
+                        alignSelf: 'center',
+                      }}
+                    />
+                  </SPanelTitle>
 
-                <SInputGroup>
-                  <SLabel htmlFor="password">Senha</SLabel>
-                  <SInput
-                    id="password"
-                    type="password"
-                    name="password"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={password}
-                    maxLength="40"
-                  />
-                  {errors.password && touched.password && errors.password}
-                </SInputGroup>
+                  <SPanelContent>
+                    <TextField
+                      id="email"
+                      autoFocus
+                      label="Email"
+                      type="email"
+                      variant="outlined"
+                      value={email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      style={{ marginBottom: '40px' }}
+                      error={errors.email && touched.email ? true : false}
+                      helperText={
+                        errors.email && touched.email ? errors.email : ''
+                      }
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    />
 
-                <SButton type="submit">Acessar conta</SButton>
+                    <TextField
+                      id="password"
+                      label="Senha"
+                      type={toggleVisibilityIcon ? "text" : "password"}
+                      variant="outlined"
+                      value={password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            {!toggleVisibilityIcon ? (
+                              <IconButton
+                                aria-label="show password text"
+                                onClick={() => setToggleVisibilityIcon(true)}
+                              >
+                                <VisibilityIcon />
+                              </IconButton>
+                            ) : (
+                              <IconButton
+                                aria-label="hide password text"
+                                onClick={() => setToggleVisibilityIcon(false)}
+                              >
+                                <VisibilityOffIcon />
+                              </IconButton>
+                            )}
+                          </InputAdornment>
+                        ),
+                      }}
+                      style={{ marginBottom: '40px' }}
+                      error={errors.password && touched.password ? true : false}
+                      helperText={
+                        errors.password && touched.password
+                          ? errors.password
+                          : ''
+                      }
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    />
+                    <Button variant="contained" color="primary" size="large" type="submit">
+                      Acessar conta
+                    </Button>
+                  </SPanelContent>
 
-                <STextLink to="/signup">Crie uma conta gratuita</STextLink>
+                  <SPanelActions>
+                    <STextLink to="/signup">Crie uma conta gratuita</STextLink>
+                  </SPanelActions>
+                </SPanel>
               </SForm>
             );
           }}
         </Formik>
-      </SPanel>
+      </Paper>
     </SContainer>
   );
 };

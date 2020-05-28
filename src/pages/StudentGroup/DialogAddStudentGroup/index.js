@@ -95,7 +95,7 @@ const DialogAddStudentGroup = ({ open, handleClose }) => {
     }
   }, [dispatch, activeStep, createStudentGroup]);
 
-  const steps = ['Importante !', 'Exercícios', 'Localização'];
+  const steps = ['Importante !', 'Atividade', 'Localização'];
 
   return (
     <Dialog

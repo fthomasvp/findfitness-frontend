@@ -31,6 +31,15 @@ export const CREATE_STUDENT_GROUP_SUCCESS =
 export const CREATE_STUDENT_GROUP_FAIL =
   '@studentGroup/CREATE_STUDENT_GROUP_FAIL';
 
+export const ENROLL_STUDENT_GROUP_REQUEST =
+  '@studentGroup/ENROLL_STUDENT_GROUP_REQUEST';
+
+export const ENROLL_STUDENT_GROUP_SUCCESS =
+  '@studentGroup/ENROLL_STUDENT_GROUP_SUCCESS';
+
+export const ENROLL_STUDENT_GROUP_FAIL =
+  '@studentGroup/ENROLL_STUDENT_GROUP_FAIL';
+
 /**
  * Action Creators
  * */
@@ -127,6 +136,27 @@ export const createStudentGroupSucess = () => {
 export const createStudentGroupFail = error => {
   return {
     type: CREATE_STUDENT_GROUP_FAIL,
+    error,
+  };
+};
+
+export const enrollStudentGroupRequest = (idStudentGroup, idStudent) => {
+  return {
+    type: ENROLL_STUDENT_GROUP_REQUEST,
+    idStudentGroup,
+    idStudent,
+  };
+};
+
+export const enrollStudentGroupSuccess = () => {
+  return {
+    type: ENROLL_STUDENT_GROUP_SUCCESS,
+  };
+};
+
+export const enrollStudentGroupFail = error => {
+  return {
+    type: ENROLL_STUDENT_GROUP_FAIL,
     error,
   };
 };
@@ -298,6 +328,28 @@ export const studentGroup = (state = INITIAL_STATE, action) => {
     }
 
     case CREATE_STUDENT_GROUP_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+      };
+    }
+
+    case ENROLL_STUDENT_GROUP_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case ENROLL_STUDENT_GROUP_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+      };
+    }
+
+    case ENROLL_STUDENT_GROUP_FAIL: {
       return {
         ...state,
         loading: false,

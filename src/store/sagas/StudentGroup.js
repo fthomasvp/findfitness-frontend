@@ -1,4 +1,5 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
+
 import API from '../../services/API';
 import {
   SEARCH_STUDENT_GROUP_REQUEST,
@@ -7,6 +8,9 @@ import {
   CREATE_STUDENT_GROUP_REQUEST,
   createStudentGroupSucess,
   createStudentGroupFail,
+  ENROLL_STUDENT_GROUP_REQUEST,
+  enrollStudentGroupSuccess,
+  enrollStudentGroupFail,
 } from '../ducks/StudentGroup';
 
 export function* searchStudentGroup(action) {
@@ -29,7 +33,7 @@ export function* searchStudentGroup(action) {
 export function* createStudentGroup(action) {
   const { studentGroup } = action;
 
-  const requestBody = _makeCreateStudentGroupRequestBody(studentGroup);
+  const requestBody = _makeStudentGroupBodyRequest(studentGroup);
 
   try {
     const response = yield call(API.post, `/student_groups`, requestBody);
@@ -42,12 +46,30 @@ export function* createStudentGroup(action) {
   }
 }
 
+export function* enrollStudent(action) {
+  const { idStudent, idStudentGroup } = action;
+
+  try {
+    const response = yield call(
+      API.post,
+      `/student_groups/${idStudentGroup}/enroll/${idStudent}`
+    );
+
+    if (response && response.status === 201) {
+      yield put(enrollStudentGroupSuccess());
+    }
+  } catch (error) {
+    yield put(enrollStudentGroupFail(error.response || error));
+  }
+}
+
 export default all([
   takeLatest(SEARCH_STUDENT_GROUP_REQUEST, searchStudentGroup),
   takeLatest(CREATE_STUDENT_GROUP_REQUEST, createStudentGroup),
+  takeLatest(ENROLL_STUDENT_GROUP_REQUEST, enrollStudent),
 ]);
 
-function _makeCreateStudentGroupRequestBody(studentGroup) {
+function _makeStudentGroupBodyRequest(studentGroup) {
   const { firstStepData, secondStepData, thirdStepData } = studentGroup;
 
   // Get Personal id
@@ -62,6 +84,9 @@ function _makeCreateStudentGroupRequestBody(studentGroup) {
   const address = {
     ...thirdStepData,
     state: thirdStepData.state.initials,
+    number: thirdStepData.number || null,
+    complement: thirdStepData.complement || null,
+    referenceLocation: thirdStepData.referenceLocation || null,
   };
   const firstPart = address.zipcode.slice(0, 5);
   const secondPart = address.zipcode.slice(5);

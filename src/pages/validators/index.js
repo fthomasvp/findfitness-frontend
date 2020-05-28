@@ -23,8 +23,8 @@ export const name = Yup.string()
   .required('Preencha o campo');
 
 export const birthdate = Yup.date()
-  .max(moment().subtract(18, 'years'), 'Precisa ter pelo menos 18 anos ')
-  .required('Preencha o campo');
+  .max(moment().subtract(18, 'years'), 'Precisa ter pelo menos 18 anos')
+  .required('Precisa ter pelo menos 18 anos');
 
 export const street = Yup.string()
   .min(4, 'Deve conter pelo menos 4 caracteres')

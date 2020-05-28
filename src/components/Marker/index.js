@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -13,7 +14,6 @@ import Typography from '@material-ui/core/Typography';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PhoneIcon from '@material-ui/icons/Phone';
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
@@ -21,8 +21,12 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 import PersonIcon from '@material-ui/icons/Person';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import Badge from '@material-ui/core/Badge';
+import GroupIcon from '@material-ui/icons/Group';
+import PersonalPicture from '../../assets/images/guilian-fremaux-personal.jpg';
 
 import Utils from '../../utils';
+import DialogEnrollStudentGroup from '../../pages/StudentGroup/DialogEnrollStudentGroup';
 
 const styles = theme => ({
   root: {
@@ -81,12 +85,32 @@ const Marker = React.memo(function Marker({ studentGroup }) {
     eventDateTimeEnd,
     eventPrice,
     maxStudentGroupAmount,
-    minStudentGroupAmount,
     personal,
+    students,
     contactPhone,
   } = studentGroup;
 
   const formatedAddress = Utils.formatAddress(completeAddress);
+
+  const { profile } = useSelector(state => state.auth.user);
+
+  // This will be valid only if the user is a Student
+  const idStudent = useSelector(state => state.auth.user.id);
+
+  /**
+   * Variables and functions to DialogEnrollStudentGroup
+   */
+  const [openDialogEnroll, setOpenDialogEnroll] = useState(false);
+
+  const handleCloseDialogEnroll = () => setOpenDialogEnroll(false);
+
+  const isEnrolledStudent = () => {
+    const hasStudent = studentGroup.students.filter(
+      student => student.id === idStudent
+    );
+
+    return hasStudent.length > 0;
+  };
 
   return (
     <>
@@ -122,13 +146,21 @@ const Marker = React.memo(function Marker({ studentGroup }) {
         </DialogTitle>
         <DialogContent dividers>
           {/* Personal info */}
-          <Typography gutterBottom variant="h6" align="center">
-            <PersonIcon /> Personal
+          <Typography gutterBottom variant="h5" align="center">
+            <PersonIcon /> PERSONAL
           </Typography>
-          <Avatar alt={'Personal profile'} style={{ marginLeft: '48%' }}>
-            {personal.name[0]}
-          </Avatar>
-          <Typography variant="h6" align="center">
+          <Avatar
+            src={PersonalPicture} // Mock picture
+            alt={'Personal profile'}
+            style={{ marginLeft: '48%', width: '48px', height: '48px' }}
+          />
+          <Typography
+            variant="h6"
+            align="center"
+            style={{
+              fontSize: '1.2em',
+            }}
+          >
             {personal.name}
           </Typography>
           <div
@@ -140,11 +172,19 @@ const Marker = React.memo(function Marker({ studentGroup }) {
             }}
           >
             <PhoneIcon style={{ marginRight: '3px' }} />
-            <Typography align="center">
+            <Typography
+              align="center"
+              style={{
+                fontSize: '1.2em',
+              }}
+            >
               {Utils.formatPhone(contactPhone)}
             </Typography>
           </div>
-          <Typography align="center" style={{ marginBottom: '20px' }}>
+          <Typography
+            align="center"
+            style={{ marginBottom: '20px', fontSize: '1.2em' }}
+          >
             CREF: {personal.cref}
           </Typography>
 
@@ -159,49 +199,118 @@ const Marker = React.memo(function Marker({ studentGroup }) {
             }}
           >
             <div style={{ display: 'flex', flexFlow: 'column wrap' }}>
-              <Typography gutterBottom variant="h6">
-                <LocationOnIcon /> Endereço
+              <Typography gutterBottom variant="h5">
+                <LocationOnIcon /> ENDEREÇO
               </Typography>
-              <Typography>
+              <Typography
+                variant="button"
+                display="block"
+                gutterBottom
+                style={{
+                  fontSize: '1.2em',
+                }}
+              >
                 {formatedAddress.street}, {formatedAddress.number} -{' '}
                 {formatedAddress.complemento}
               </Typography>
-              <Typography>{formatedAddress.referenceLocation}</Typography>
-              <Typography>
+              <Typography
+                variant="button"
+                display="block"
+                gutterBottom
+                style={{
+                  fontSize: '1.2em',
+                }}
+              >
+                {formatedAddress.referenceLocation}
+              </Typography>
+              <Typography
+                variant="button"
+                display="block"
+                gutterBottom
+                style={{
+                  fontSize: '1.2em',
+                }}
+              >
                 {formatedAddress.neighboor}, {formatedAddress.city} -{' '}
                 {formatedAddress.state}
               </Typography>
             </div>
             <div style={{ display: 'flex', flexFlow: 'column wrap' }}>
-              <Typography gutterBottom variant="h6">
-                <PriorityHighIcon /> Importante !
+              <Typography gutterBottom variant="h5" style={{ color: 'gold' }}>
+                <PriorityHighIcon /> IMPORTANTE
               </Typography>
-              <Typography>
-                Mín. de {minStudentGroupAmount} pessoas e Máx. de{' '}
-                {maxStudentGroupAmount} pessoas
+
+              <Typography
+                variant="button"
+                display="block"
+                gutterBottom
+                style={{
+                  width: '60%',
+                  fontSize: '1.2em',
+                }}
+              >
+                Vagas restantes:{' '}
+                {students && students.length > 0 ? (
+                  <Badge
+                    badgeContent={maxStudentGroupAmount - students.length}
+                    color="primary"
+                  >
+                    <GroupIcon />
+                  </Badge>
+                ) : (
+                  <Badge badgeContent={maxStudentGroupAmount} color="primary">
+                    <GroupIcon />
+                  </Badge>
+                )}
               </Typography>
-              <Typography>
-                Quando: {Utils.formatDateTime(eventDateTimeBegin)}h ~{' '}
-                {Utils.formatDateTime(eventDateTimeEnd)}h
+
+              <Typography
+                variant="button"
+                display="block"
+                gutterBottom
+                style={{
+                  fontSize: '1.2em',
+                }}
+              >
+                Quando: {Utils.formatDateTime(eventDateTimeBegin)} ~{' '}
+                {Utils.formatDateTime(eventDateTimeEnd)}
               </Typography>
-              <Typography>Valor: R${eventPrice}</Typography>
+              <Typography
+                variant="button"
+                display="block"
+                gutterBottom
+                style={{
+                  fontSize: '1.2em',
+                }}
+              >
+                Valor: R${eventPrice}
+              </Typography>
             </div>
           </div>
 
           <Divider style={{ marginBottom: '20px' }} />
 
           {/* Exercises info */}
-          <Typography gutterBottom variant="h6">
-            <FitnessCenterIcon /> Exercícios
+          <Typography gutterBottom variant="h5">
+            <FitnessCenterIcon /> ATIVIDADE
           </Typography>
           <div style={{ marginTop: '10px' }}>
             {exercises.map(({ name, description }, index) => (
-              <ExpansionPanel key={index}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>{name}</Typography>
+              <ExpansionPanel expanded key={index}>
+                <ExpansionPanelSummary>
+                  <Typography variant="h6" gutterBottom>
+                    {name}
+                  </Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                  <Typography variant="subtitle1">{description}</Typography>
+                  <Typography
+                    variant="h6"
+                    style={{
+                      fontSize: '1.2em',
+                    }}
+                  >
+                    {description}
+                  </Typography>
                 </ExpansionPanelDetails>
               </ExpansionPanel>
             ))}
@@ -210,12 +319,28 @@ const Marker = React.memo(function Marker({ studentGroup }) {
 
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="secondary">
-            Cancelar
+            {!isEnrolledStudent() ? 'Cancelar' : 'Voltar'}
           </Button>
-          <Button variant="contained" onClick={handleClose} color="primary">
-            Entrar
-          </Button>
+          {profile === 'ROLE_STUDENT' && !isEnrolledStudent() && (
+            <Button
+              variant="contained"
+              onClick={() => setOpenDialogEnroll(true)}
+              color="primary"
+            >
+              Participar
+            </Button>
+          )}
         </DialogActions>
+
+        {/* Exibir apenas quando o usuário clicar no botão de PARTICIPAR */}
+        <DialogEnrollStudentGroup
+          openDialogEnroll={openDialogEnroll}
+          setOpenDialogEnroll={setOpenDialogEnroll}
+          handleCloseDialogEnroll={handleCloseDialogEnroll}
+          handleClose={handleClose}
+          idStudentGroup={studentGroup.id}
+          idStudent={idStudent}
+        />
       </Dialog>
     </>
   );
@@ -243,6 +368,7 @@ Marker.propTypes = {
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
     }).isRequired,
+    students: PropTypes.array,
   }).isRequired,
 };
 

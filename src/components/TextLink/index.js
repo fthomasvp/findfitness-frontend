@@ -1,6 +1,9 @@
 import React from 'react';
-import { WrapperLink, SLink } from './styles';
 import PropTypes from 'prop-types';
+
+import Typography from '@material-ui/core/Typography';
+
+import { WrapperLink, SLink } from './styles';
 
 const STextLink = props => {
   const { children, to, color } = props;
@@ -8,7 +11,7 @@ const STextLink = props => {
   return (
     <WrapperLink>
       <SLink to={to} color={color}>
-        {children}
+        <Typography variant="subtitle1">{children}</Typography>
       </SLink>
     </WrapperLink>
   );

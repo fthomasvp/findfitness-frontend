@@ -1,7 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Formik, ErrorMessage } from 'formik';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+
+import { Formik } from 'formik';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
+import Divider from '@material-ui/core/Divider';
+
 import { storePersonForm } from '../../../store/ducks/Auth';
 import YupSchema, {
   errorMessages,
@@ -13,15 +25,11 @@ import YupSchema, {
 import {
   SContainer,
   SPanel,
-  SInputGroup,
-  SToggleButtonGroup,
-  SToggleButton,
-} from './styles';
+  SPanelTitle,
+  SPanelContent,
+  SPanelActions,
+} from '../styles';
 import SForm from '../../../components/Form';
-import SLabel from '../../../components/Label';
-import SInput from '../../../components/Input';
-import SButton from '../../../components/Button';
-import SErrorMessageInput from '../../../components/Form/ErrorMessageInput';
 
 /**
  * Yup Fields Schema
@@ -43,359 +51,366 @@ const StudentOrPersonalForm = () => {
       ? userToCreate.student
       : userToCreate.personal;
 
-  const [genderForm, setGenderForm] = useState(gender);
-  const [genderStyles, setGenderStyles] = useState([
-    {
-      type: 'M',
-      isSelected: true,
-      toggleStyle: { backgroundColor: '#10097a' },
-      textStyle: {
-        fontWeight: 'bold',
-        fontSize: 16,
-        color: '#fff',
-      },
-    },
-    {
-      type: 'F',
-      isSelected: false,
-      toggleStyle: {},
-      textStyle: {},
-    },
-    {
-      type: 'O',
-      isSelected: false,
-      toggleStyle: {},
-      textStyle: {},
-    },
-  ]);
-
   /**
-   * ToggleGender
+   * Obtém o "gender" salvo na Store e o
+   * referencia no useState da Tab
    */
-  const handleToggleGender = genderForm => {
-    const newGenderStyles = genderStyles.map(gender => {
-      if (gender.type === genderForm) {
-        const toggleStyleToApply = { backgroundColor: '#10097a' };
-        const textStyleToApply = {
-          fontWeight: 'bold',
-          fontSize: 16,
-          color: '#fff',
-        };
-
-        gender.isSelected = true;
-        gender.toggleStyle = toggleStyleToApply;
-        gender.textStyle = textStyleToApply;
-      } else {
-        gender.isSelected = false;
-        gender.toggleStyle = {};
-        gender.textStyle = {
-          fontWeight: 'bold',
-          fontSize: 16,
-          color: '#bbb',
-        };
-      }
-
-      return gender;
-    });
-
-    setGenderForm(genderForm);
-    setGenderStyles(newGenderStyles);
+  const _getSelectedTab = gender => {
+    if (!gender || gender === 'F') {
+      return 0;
+    } else if (gender === 'M') {
+      return 1;
+    } else {
+      return 2;
+    }
   };
 
-  useEffect(() => {
-    handleToggleGender(gender);
+  const [tab, setTab] = React.useState(_getSelectedTab(gender));
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gender]);
+  const [userGender, setUserGender] = useState(gender);
+
+  const handleChangeTab = (event, tabValue) => {
+    setTab(tabValue);
+
+    if (tabValue === 0) {
+      setUserGender('F');
+    } else if (tabValue === 1) {
+      setUserGender('M');
+    } else {
+      setUserGender('O');
+    }
+  };
 
   return (
     <SContainer>
-      <Formik
-        initialValues={
-          userToCreate.profileType === 'STUDENT'
-            ? userToCreate.student
-            : userToCreate.personal
-        }
-        onSubmit={values => {
-          const person = { ...values, gender: genderForm };
-
-          dispatch(storePersonForm(person));
-
-          history.push('/signup/addressform');
-        }}
-        validationSchema={StudentOrPersonalSchema}
-        validate={values => {
-          const { cpf, phone, cref } = values;
-          const {
-            requiredNumericField,
-            specialCharactersField,
-          } = errorMessages;
-          const errors = {};
-
-          if (!cpf) {
-            errors.cpf = requiredNumericField;
-          } else if (/\D/.test(cpf)) {
-            errors.cpf = specialCharactersField;
-          } else if (cpf.replace(/\D/, '').length !== 11) {
-            errors.cpf = 'Não possui 11 dígitos';
+      <Paper>
+        <Formik
+          initialValues={
+            userToCreate.profileType === 'STUDENT'
+              ? userToCreate.student
+              : userToCreate.personal
           }
+          onSubmit={values => {
+            const person = { ...values, gender: userGender };
 
-          if (!phone) {
-            errors.phone = requiredNumericField;
-          } else if (/\D/.test(phone)) {
-            errors.phone = specialCharactersField;
-          } else if (phone.replace(/\D/, '').length !== 11) {
-            errors.phone = 'Não possui 11 dígitos';
-          }
+            dispatch(storePersonForm(person));
 
-          if (userToCreate.profileType === 'PERSONAL') {
-            if (!cref) {
-              errors.cref = 'Preencha o campo';
-            } else if (cref.length !== 11) {
-              errors.cref = 'Deve conter 11 caracteres';
-            } else if (!/^[0-9]{6}-[A-Z]{1}\/[A-Z]{2}/gm.test(cref)) {
-              errors.cref = 'Precisa seguir o seguinte padrão: 000000-X/XX';
+            history.push('/signup/addressform');
+          }}
+          validationSchema={StudentOrPersonalSchema}
+          validate={values => {
+            const { cpf, phone, cref, validCref } = values;
+            const {
+              requiredNumericField,
+              specialCharactersField,
+            } = errorMessages;
+            const errors = {};
+
+            if (!cpf) {
+              errors.cpf = requiredNumericField;
+            } else if (/\D/.test(cpf)) {
+              errors.cpf = specialCharactersField;
+            } else if (cpf.replace(/\D/, '').length !== 11) {
+              errors.cpf = 'Não possui 11 dígitos';
             }
-          }
 
-          return errors;
-        }}
-      >
-        {({ values, ...formikProps }) => {
-          const user = values;
-          const { handleChange, handleSubmit, handleBlur } = formikProps;
+            if (!phone) {
+              errors.phone = requiredNumericField;
+            } else if (/\D/.test(phone)) {
+              errors.phone = specialCharactersField;
+            } else if (phone.replace(/\D/, '').length !== 11) {
+              errors.phone = 'Não possui 11 dígitos';
+            }
 
-          return (
-            <SForm
-              onSubmit={handleSubmit}
-              style={{ height: '100%', alignItems: 'center' }}
-            >
-              <h2 style={{ margin: 0, color: 'white', alignSelf: 'center' }}>
-                Hey! Queremos te conhecer melhor...
-              </h2>
+            if (userToCreate.profileType === 'PERSONAL') {
+              if (!cref) {
+                errors.cref = 'Preencha o campo';
+              } else if (cref.length !== 11) {
+                errors.cref = 'Deve conter 11 caracteres';
+              } else if (!/^[0-9]{6}-[A-Z]{1}\/[A-Z]{2}/gm.test(cref)) {
+                errors.cref = 'Precisa seguir o padrão: 000000-X/XX';
+              } else if (!validCref) {
+                errors.cref = 'CREF não está registrado na CONFEF';
+              }
+            }
 
-              <SPanel>
-                {userToCreate.profileType === 'PERSONAL' ? (
-                  <SInputGroup>
-                    <SLabel htmlFor="cref">CREF</SLabel>
-                    <SInput
-                      id="cref"
-                      type="text"
-                      name="cref"
+            return errors;
+          }}
+        >
+          {({ values, ...formikProps }) => {
+            const {
+              birthdate,
+              cpf,
+              cref,
+              email,
+              name,
+              password,
+              phone,
+            } = values;
+
+            const {
+              setFieldError,
+              setFieldValue,
+              handleChange,
+              handleSubmit,
+              handleBlur,
+              touched,
+              errors,
+            } = formikProps;
+
+            return (
+              <SForm onSubmit={handleSubmit}>
+                <SPanel>
+                  <SPanelTitle>
+                    <Typography variant="h5">
+                      Hey! Queremos te conhecer melhor{' '}
+                      <span role="img" aria-label="Blink emoction">
+                        &#128521;
+                      </span>
+                    </Typography>
+                  </SPanelTitle>
+
+                  <Divider style={{ marginBottom: '20px' }} />
+
+                  <SPanelContent>
+                    {userToCreate.profileType === 'PERSONAL' && (
+                      <TextField
+                        autoFocus
+                        id="cref"
+                        label="CREF"
+                        variant="outlined"
+                        value={cref}
+                        onChange={handleChange}
+                        onBlur={evt => {
+                          if (/^[0-9]{6}-[A-Z]{1}\/[A-Z]{2}/gm.test(cref)) {
+                            fetch(
+                              // eslint-disable-next-line no-undef
+                              `${process.env.REACT_APP_AXIOS_BASE_URL}/personals/search?cref=${cref}`
+                            )
+                              .then(response => {
+                                return response.status;
+                              })
+                              .then(status => {
+                                if (status !== 200) {
+                                  setFieldError(
+                                    'cref',
+                                    'CREF não está registrado na CONFEF'
+                                  );
+
+                                  setFieldValue('validCref', false);
+                                } else {
+                                  setFieldValue('validCref', true);
+                                }
+                              });
+                          }
+
+                          handleBlur(evt);
+                        }}
+                        InputLabelProps={{
+                          style: { color: 'white', fontSize: '1.2rem' },
+                        }}
+                        style={{
+                          marginBottom: '20px',
+                          width: '25%',
+                        }}
+                        error={errors.cref && touched.cref ? true : false}
+                        helperText={
+                          errors.cref && touched.cref ? errors.cref : ''
+                        }
+                        FormHelperTextProps={{
+                          style: { width: 'max-content', fontSize: '1.1rem' },
+                        }}
+                      />
+                    )}
+
+                    <TextField
+                      autoFocus={userToCreate.profileType === 'STUDENT'}
+                      id="name"
+                      label="Nome"
+                      variant="outlined"
+                      value={name}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={user.cref}
-                      maxLength="11"
-                      width="120px"
-                      autoFocus
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      style={{ marginBottom: '20px' }}
+                      error={errors.name && touched.name ? true : false}
+                      helperText={
+                        errors.name && touched.name ? errors.name : ''
+                      }
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
                     />
-                    <ErrorMessage
-                      name="cref"
-                      render={message => (
-                        <SErrorMessageInput message={message} />
-                      )}
-                    />
-                  </SInputGroup>
-                ) : null}
-                <SInputGroup>
-                  <SLabel htmlFor="name">Nome</SLabel>
-                  <SInput
-                    id="name"
-                    type="text"
-                    name="name"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={user.name}
-                    autoFocus={userToCreate.profileType === 'STUDENT'}
-                    maxLength="140"
-                  />
-                  <ErrorMessage
-                    name="name"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="phone">Celular</SLabel>
-                  <SInput
-                    id="phone"
-                    type="text"
-                    name="phone"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={user.phone}
-                    maxLength="11"
-                    width="115px"
-                  />
-                  <ErrorMessage
-                    name="phone"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="cpf">CPF</SLabel>
-                  <SInput
-                    id="cpf"
-                    type="text"
-                    name="cpf"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={user.cpf}
-                    maxLength="11"
-                    width="120px"
-                  />
-                  <ErrorMessage
-                    name="cpf"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="gender">Gênero</SLabel>
 
-                  <SToggleButtonGroup>
-                    <SToggleButton
-                      width="33%"
-                      type="button"
-                      style={
-                        genderStyles[0].isSelected
-                          ? genderStyles[0].toggleStyle
-                          : {}
+                    <TextField
+                      id="phone"
+                      label="Celular"
+                      variant="outlined"
+                      value={phone}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      style={{ marginBottom: '20px', width: '140px' }}
+                      error={errors.phone && touched.phone ? true : false}
+                      helperText={
+                        errors.phone && touched.phone ? errors.phone : ''
                       }
-                      onClick={() => handleToggleGender('M')}
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    />
+
+                    <TextField
+                      id="cpf"
+                      label="CPF"
+                      variant="outlined"
+                      value={cpf}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      style={{ marginBottom: '20px', width: '160px' }}
+                      error={errors.cpf && touched.cpf ? true : false}
+                      helperText={errors.cpf && touched.cpf ? errors.cpf : ''}
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    />
+
+                    <Typography
+                      variant="body1"
+                      style={{
+                        marginBottom: '5px',
+                        marginLeft: '13px',
+                        fontSize: '1.2rem',
+                      }}
                     >
-                      <p
-                        style={
-                          genderStyles[0].isSelected
-                            ? genderStyles[0].textStyle
-                            : {
-                                fontWeight: 'bold',
-                                fontSize: 16,
-                                color: '#bbb',
-                              }
-                        }
+                      Gênero
+                    </Typography>
+                    <AppBar
+                      position="relative"
+                      color="transparent"
+                      style={{ marginBottom: '20px' }}
+                    >
+                      <Tabs
+                        value={tab}
+                        onChange={handleChangeTab}
+                        indicatorColor="primary"
+                        centered
                       >
-                        MASCULINO
-                      </p>
-                    </SToggleButton>
-                    <SToggleButton
-                      width="33%"
-                      type="button"
-                      style={
-                        genderStyles[1].isSelected
-                          ? genderStyles[1].toggleStyle
-                          : {}
+                        <Tab label="FEMININO" />
+                        <Tab label="MASCULINO" />
+                        <Tab label="OUTRO" />
+                      </Tabs>
+                    </AppBar>
+
+                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                      <div
+                        style={{
+                          width: '100%',
+                          display: 'flex',
+                          marginBottom: '20px',
+                        }}
+                      >
+                        <div>
+                          <DatePicker
+                            id="birthdate"
+                            label="Data de Nascimento"
+                            format="DD/MM/YYYY"
+                            margin="normal"
+                            size="medium"
+                            value={birthdate}
+                            onChange={value => {
+                              setFieldValue('birthdate', value);
+                            }}
+                            InputLabelProps={{
+                              style: { color: 'white', fontSize: '1.2rem' },
+                            }}
+                            error={
+                              errors.birthdate && touched.birthdate
+                                ? true
+                                : false
+                            }
+                            helperText={
+                              errors.birthdate && touched.birthdate
+                                ? errors.birthdate
+                                : ''
+                            }
+                            FormHelperTextProps={{
+                              style: {
+                                width: 'max-content',
+                                fontSize: '1.1rem',
+                              },
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </MuiPickersUtilsProvider>
+
+                    <TextField
+                      id="email"
+                      label="Email"
+                      type="email"
+                      variant="outlined"
+                      value={email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      style={{ marginBottom: '20px' }}
+                      error={errors.email && touched.email ? true : false}
+                      helperText={
+                        errors.email && touched.email ? errors.email : ''
                       }
-                      onClick={() => handleToggleGender('F')}
-                    >
-                      <p
-                        style={
-                          genderStyles[1].isSelected
-                            ? genderStyles[1].textStyle
-                            : {
-                                fontWeight: 'bold',
-                                fontSize: 16,
-                                color: '#bbb',
-                              }
-                        }
-                      >
-                        FEMININO
-                      </p>
-                    </SToggleButton>
-                    <SToggleButton
-                      width="33%"
-                      type="button"
-                      style={
-                        genderStyles[2].isSelected
-                          ? genderStyles[2].toggleStyle
-                          : {}
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    />
+
+                    <TextField
+                      id="password"
+                      label="Senha"
+                      type="password"
+                      variant="outlined"
+                      value={password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      InputLabelProps={{
+                        style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      style={{ marginBottom: '20px' }}
+                      error={errors.password && touched.password ? true : false}
+                      helperText={
+                        errors.password && touched.password
+                          ? errors.password
+                          : ''
                       }
-                      onClick={() => handleToggleGender('O')}
-                    >
-                      <p
-                        style={
-                          genderStyles[2].isSelected
-                            ? genderStyles[2].textStyle
-                            : {
-                                fontWeight: 'bold',
-                                fontSize: 16,
-                                color: '#bbb',
-                              }
-                        }
-                      >
-                        OUTRO
-                      </p>
-                    </SToggleButton>
-                  </SToggleButtonGroup>
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="birthdate">Data de Nascimento</SLabel>
-                  <SInput
-                    id="birthdate"
-                    type="date"
-                    name="birthdate"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={user.birthdate}
-                    width="135px"
-                  />
-                  <ErrorMessage
-                    name="birthdate"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="email">Email</SLabel>
-                  <SInput
-                    id="email"
-                    type="email"
-                    name="email"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={user.email}
-                    maxLength="140"
-                  />
-                  <ErrorMessage
-                    name="email"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <SInputGroup>
-                  <SLabel htmlFor="password">Senha</SLabel>
-                  <SInput
-                    id="password"
-                    type="password"
-                    name="password"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={user.password}
-                    maxLength="30"
-                  />
-                  <ErrorMessage
-                    name="password"
-                    render={message => <SErrorMessageInput message={message} />}
-                  />
-                </SInputGroup>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-evenly',
-                  }}
-                >
-                  <SButton
-                    width="33%"
-                    type="button"
-                    onClick={() => history.goBack()}
-                  >
-                    VOLTAR
-                  </SButton>
-                  <SButton width="33%" background="#46c787" type="submit">
-                    PRÓXIMO
-                  </SButton>
-                </div>
-              </SPanel>
-            </SForm>
-          );
-        }}
-      </Formik>
+                      FormHelperTextProps={{
+                        style: { width: 'max-content', fontSize: '1.1rem' },
+                      }}
+                    />
+                  </SPanelContent>
+
+                  <SPanelActions>
+                    <Button color="secondary" onClick={() => history.goBack()}>
+                      Voltar
+                    </Button>
+                    <Button color="primary" variant="contained" type="submit">
+                      Próximo
+                    </Button>
+                  </SPanelActions>
+                </SPanel>
+              </SForm>
+            );
+          }}
+        </Formik>
+      </Paper>
     </SContainer>
   );
 };
