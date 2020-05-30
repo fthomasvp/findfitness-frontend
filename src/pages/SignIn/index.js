@@ -108,7 +108,7 @@ const SignIn = () => {
                     <TextField
                       id="password"
                       label="Senha"
-                      type={toggleVisibilityIcon ? "text" : "password"}
+                      type={toggleVisibilityIcon ? 'text' : 'password'}
                       variant="outlined"
                       value={password}
                       onChange={handleChange}
@@ -121,17 +121,17 @@ const SignIn = () => {
                           <InputAdornment position="end">
                             {!toggleVisibilityIcon ? (
                               <IconButton
-                                aria-label="show password text"
+                                aria-label="hide password text"
                                 onClick={() => setToggleVisibilityIcon(true)}
                               >
-                                <VisibilityIcon />
+                                <VisibilityOffIcon />
                               </IconButton>
                             ) : (
                               <IconButton
-                                aria-label="hide password text"
+                                aria-label="show password text"
                                 onClick={() => setToggleVisibilityIcon(false)}
                               >
-                                <VisibilityOffIcon />
+                                <VisibilityIcon />
                               </IconButton>
                             )}
                           </InputAdornment>
@@ -148,7 +148,12 @@ const SignIn = () => {
                         style: { width: 'max-content', fontSize: '1.1rem' },
                       }}
                     />
-                    <Button variant="contained" color="primary" size="large" type="submit">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      type="submit"
+                    >
                       Acessar conta
                     </Button>
                   </SPanelContent>
