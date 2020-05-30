@@ -176,7 +176,7 @@ const INITIAL_STATE = {
       selectedBeginDateTime: Date.now(),
       selectedEndDateTime: Date.now(),
     },
-    secondStepData: [],
+    secondStepData: [0],
     thirdStepData: {
       street: '',
       number: '',

@@ -50,12 +50,14 @@ const SecondStepForm = ({
 }) => {
   const dispatch = useDispatch();
 
-  const { createStudentGroup } = useSelector(state => state.studentGroup);
-  const { secondStepData } = createStudentGroup;
+  const secondStepData = useSelector(
+    state => state.studentGroup.createStudentGroup.secondStepData
+  );
 
   const [exerciseIds, setExerciseIds] = useState(secondStepData);
 
-  const [selectedValue, setSelectedValue] = React.useState(0);
+  // Se o usuário voltar um step, o Radio ainda estará marcado
+  const [selectedValue, setSelectedValue] = useState(exerciseIds[0]);
 
   /**
    * Table Columns
