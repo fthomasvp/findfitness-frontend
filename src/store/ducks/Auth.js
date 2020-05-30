@@ -17,6 +17,9 @@ export const SIGN_OUT = '@auth/SIGN_OUT';
 
 export const UPDATE_ADDRESS_DATA = '@auth/UPDATE_ADDRESS_DATA';
 
+export const HANDLE_NEXT_STEP = '@auth/HANDLE_NEXT_STEP';
+export const HANDLE_BACK_STEP = '@auth/HANDLE_BACK_STEP';
+
 /**
  * Action Creators
  * */
@@ -97,12 +100,28 @@ export const updateAddressData = ({ data }, states) => {
   };
 };
 
+export const handleNextStep = activeStep => {
+  return {
+    type: HANDLE_NEXT_STEP,
+    activeStep,
+  };
+};
+
+export const handleBackStep = activeStep => {
+  return {
+    type: HANDLE_BACK_STEP,
+    activeStep,
+  };
+};
+
 /**
  * Reducer
  * */
 const INITIAL_STATE = {
   loading: false,
   user: {},
+  steps: ['Perfil', 'Dados pessoais', 'Endereço'],
+  activeStep: 0,
   isAuthenticated: false,
   userToCreate: {
     profileType: 'STUDENT',
@@ -187,6 +206,7 @@ export const auth = (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
         userToCreate: INITIAL_STATE.userToCreate,
+        activeStep: INITIAL_STATE.activeStep,
       };
     }
 
@@ -195,6 +215,7 @@ export const auth = (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
         userToCreate: INITIAL_STATE.userToCreate,
+        activeStep: INITIAL_STATE.activeStep,
         error: action.error,
       };
     }
@@ -253,6 +274,24 @@ export const auth = (state = INITIAL_STATE, action) => {
             ...addressFromAPI,
           },
         },
+      };
+    }
+
+    case HANDLE_NEXT_STEP: {
+      const newActiveStep = action.activeStep + 1;
+
+      return {
+        ...state,
+        activeStep: newActiveStep,
+      };
+    }
+
+    case HANDLE_BACK_STEP: {
+      const newActiveStep = action.activeStep - 1;
+
+      return {
+        ...state,
+        activeStep: newActiveStep,
       };
     }
 

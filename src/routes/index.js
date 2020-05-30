@@ -1,16 +1,18 @@
 import React from 'react';
-import { BrowserRouter, Redirect, Switch, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+
+import { BrowserRouter, Redirect, Switch, Route } from 'react-router-dom';
+
 import SignIn from '../pages/SignIn';
 import ProfileForm from '../pages/SignUp/ProfileForm';
 import StudentOrPersonalForm from '../pages/SignUp/StudentOrPersonalForm';
 import AddressForm from '../pages/SignUp/AddressForm';
-import Chat from '../pages/Chat';
-import Specialization from '../pages/Specialization';
-import StudentGroup from '../pages/StudentGroup';
-import Exercise from '../pages/Exercise';
 import MainLayout from '../components/MainLayout';
 import Menu from '../components/Menu';
+import Chat from '../pages/Chat';
+import Exercise from '../pages/Exercise';
+import Specialization from '../pages/Specialization';
+import StudentGroup from '../pages/StudentGroup';
 import API from '../services/API';
 
 const Routes = () => {

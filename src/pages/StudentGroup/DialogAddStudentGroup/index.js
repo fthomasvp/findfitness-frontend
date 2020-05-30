@@ -83,10 +83,10 @@ const DialogAddStudentGroup = ({ open, handleClose }) => {
     return dispatch(handleBackStep(activeStep));
   };
 
-  const handleClickDone = async () => {
-    await dispatch(searchStudentGroupRequest(pagination));
+  const handleClickDone = () => {
+    dispatch(searchStudentGroupRequest(pagination));
 
-    await handleClose();
+    handleClose();
   };
 
   useEffect(() => {
