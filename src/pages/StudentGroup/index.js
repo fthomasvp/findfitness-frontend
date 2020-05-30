@@ -26,21 +26,21 @@ const StudentGroup = () => {
     state => state.exercise
   );
 
-  const { user } = useSelector(state => state.auth);
+  const user = useSelector(state => state.auth.user);
 
   // Persistir estado no Redux
   const [open, setOpen] = useState(false);
 
-  const handleOpen = async () => {
-    await dispatch(searchExercisesRequest(exercisePagination));
+  const handleOpen = () => {
+    dispatch(searchExercisesRequest(exercisePagination));
 
-    await setOpen(true);
+    setOpen(true);
   };
 
-  const handleClose = async () => {
-    await setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
 
-    await dispatch(clearCreateStudentGroupData());
+    dispatch(clearCreateStudentGroupData());
   };
 
   useEffect(() => {

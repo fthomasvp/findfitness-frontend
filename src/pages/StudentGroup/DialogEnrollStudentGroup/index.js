@@ -123,7 +123,7 @@ DialogEnrollStudentGroup.propTypes = {
   handleCloseDialogEnroll: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
   idStudentGroup: PropTypes.number.isRequired,
-  idStudent: PropTypes.number.isRequired,
+  idStudent: PropTypes.number,
 };
 
 export default DialogEnrollStudentGroup;
