@@ -13,8 +13,15 @@ import Tab from '@material-ui/core/Tab';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import Divider from '@material-ui/core/Divider';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
 
-import { storePersonForm } from '../../../store/ducks/Auth';
+import {
+  storePersonForm,
+  handleBackStep,
+  handleNextStep,
+} from '../../../store/ducks/Auth';
 import YupSchema, {
   errorMessages,
   email,
@@ -81,6 +88,15 @@ const StudentOrPersonalForm = () => {
     }
   };
 
+  /**
+   * Stepper Info
+   */
+  const { activeStep, steps } = useSelector(state => state.auth);
+
+  const handleNext = () => dispatch(handleNextStep(activeStep));
+
+  const handleBack = () => dispatch(handleBackStep(activeStep));
+
   return (
     <SContainer>
       <Paper>
@@ -94,6 +110,8 @@ const StudentOrPersonalForm = () => {
             const person = { ...values, gender: userGender };
 
             dispatch(storePersonForm(person));
+
+            handleNext();
 
             history.push('/signup/addressform');
           }}
@@ -161,6 +179,20 @@ const StudentOrPersonalForm = () => {
             return (
               <SForm onSubmit={handleSubmit}>
                 <SPanel>
+                  <div>
+                    <Stepper activeStep={activeStep} alternativeLabel>
+                      {steps &&
+                        steps.length > 0 &&
+                        steps.map(label => (
+                          <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                          </Step>
+                        ))}
+                    </Stepper>
+                  </div>
+
+                  <Divider style={{ marginBottom: '20px' }} />
+
                   <SPanelTitle>
                     <Typography variant="h5">
                       Hey! Queremos te conhecer melhor{' '}
@@ -169,8 +201,6 @@ const StudentOrPersonalForm = () => {
                       </span>
                     </Typography>
                   </SPanelTitle>
-
-                  <Divider style={{ marginBottom: '20px' }} />
 
                   <SPanelContent>
                     {userToCreate.profileType === 'PERSONAL' && (
@@ -398,7 +428,14 @@ const StudentOrPersonalForm = () => {
                   </SPanelContent>
 
                   <SPanelActions>
-                    <Button color="secondary" onClick={() => history.goBack()}>
+                    <Button
+                      color="secondary"
+                      onClick={() => {
+                        handleBack();
+
+                        history.goBack();
+                      }}
+                    >
                       Voltar
                     </Button>
                     <Button color="primary" variant="contained" type="submit">

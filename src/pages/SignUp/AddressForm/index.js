@@ -12,8 +12,16 @@ import Search from '@material-ui/icons/Search';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
 
-import { storeAddressForm, signUpRequest } from '../../../store/ducks/Auth';
+import {
+  storeAddressForm,
+  signUpRequest,
+  handleBackStep,
+  handleNextStep,
+} from '../../../store/ducks/Auth';
 import {
   fetchStatesRequest,
   searchAddressByZipcodeRequest,
@@ -69,6 +77,18 @@ const AddressForm = () => {
     }
   };
 
+  /**
+   * Stepper functions
+   */
+  const { activeStep, steps } = useSelector(state => state.auth);
+
+  const handleNext = () => dispatch(handleNextStep(activeStep));
+
+  const handleBack = () => dispatch(handleBackStep(activeStep));
+
+  /**
+   * Effects
+   */
   useEffect(() => {
     (async () => {
       await dispatch(fetchStatesRequest());
@@ -84,6 +104,8 @@ const AddressForm = () => {
             const address = values;
 
             userToCreate.address = address;
+
+            handleNext();
 
             dispatch(storeAddressForm(address));
             dispatch(signUpRequest(userToCreate));
@@ -117,13 +139,25 @@ const AddressForm = () => {
             return (
               <SForm onSubmit={handleSubmit}>
                 <SPanel>
+                  <div>
+                    <Stepper activeStep={activeStep} alternativeLabel>
+                      {steps &&
+                        steps.length > 0 &&
+                        steps.map(label => (
+                          <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                          </Step>
+                        ))}
+                    </Stepper>
+                  </div>
+
+                  <Divider style={{ marginBottom: '20px' }} />
+
                   <SPanelTitle>
                     <Typography variant="h5">
                       Precisamos anotar os dados do seu endereço :)
                     </Typography>
                   </SPanelTitle>
-
-                  <Divider style={{ marginBottom: '20px' }} />
 
                   <SPanelContent>
                     <TextField
@@ -324,7 +358,14 @@ const AddressForm = () => {
                   </SPanelContent>
 
                   <SPanelActions>
-                    <Button color="secondary" onClick={() => history.goBack()}>
+                    <Button
+                      color="secondary"
+                      onClick={() => {
+                        handleBack();
+
+                        history.goBack();
+                      }}
+                    >
                       VOLTAR
                     </Button>
                     <Button color="primary" variant="contained" type="submit">
