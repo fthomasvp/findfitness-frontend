@@ -42,7 +42,6 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
     maxStudentGroupAmount,
     payments,
     personal,
-    students,
   } = studentGroup;
 
   const formatedAddress = Utils.formatAddress(completeAddress);
@@ -64,8 +63,8 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
   const handleCloseDialogEnroll = () => setOpenDialogEnroll(false);
 
   const isEnrolledStudent = () => {
-    const hasStudent = studentGroup.students.filter(
-      student => student.id === idStudent
+    const hasStudent = studentGroup.payments.filter(
+      payment => payment.student.id === idStudent
     );
 
     return hasStudent.length > 0;
@@ -90,7 +89,7 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
         >
           <Tab label="Detalhes da aula" />
           <Tab label="Alunos" />
-          <Tab label="Item Three" />
+          <Tab label="Avaliações" />
         </Tabs>
       </AppBar>
 
@@ -213,11 +212,11 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                   }}
                 >
                   Vagas restantes:{' '}
-                  {students && students.length > 0 ? (
+                  {payments && payments.length > 0 ? (
                     <Badge
-                      badgeContent={maxStudentGroupAmount - students.length}
+                      badgeContent={maxStudentGroupAmount - payments.length}
                       color={
-                        maxStudentGroupAmount - students.length !== 0
+                        maxStudentGroupAmount - payments.length !== 0
                           ? 'primary'
                           : 'secondary'
                       }
@@ -303,27 +302,48 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                 </ListItem>
               ))
             ) : (
-              <Typography>
-                Calma... Daqui a pouco aparece alguém por aqui!
-              </Typography>
+              <div
+                style={{
+                  height: '-webkit-fill-available',
+                  display: 'flex',
+                  flexFlow: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: '5px',
+                }}
+              >
+                <Typography variant="h5">
+                  Calma... daqui a pouco alguém aparece por aqui!
+                </Typography>
+              </div>
             )}
           </List>
         )}
       </DialogContent>
 
       <DialogActions>
-        <Button autoFocus onClick={handleClose} color="secondary">
+        <Button
+          autoFocus
+          onClick={() => {
+            setTab(0);
+
+            handleClose();
+          }}
+          color="secondary"
+        >
           Voltar
         </Button>
-        {profile === 'ROLE_STUDENT' && !isEnrolledStudent() && (
-          <Button
-            variant="contained"
-            onClick={() => setOpenDialogEnroll(true)}
-            color="primary"
-          >
-            Participar
-          </Button>
-        )}
+        {profile === 'ROLE_STUDENT' &&
+          !isEnrolledStudent() &&
+          payments.length < maxStudentGroupAmount && (
+            <Button
+              variant="contained"
+              onClick={() => setOpenDialogEnroll(true)}
+              color="primary"
+            >
+              Participar
+            </Button>
+          )}
       </DialogActions>
 
       {/* Exibir apenas quando o usuário clicar no botão de PARTICIPAR */}
@@ -363,7 +383,6 @@ DialogStudentGroupDetails.propTypes = {
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
     }).isRequired,
-    students: PropTypes.array,
     payments: PropTypes.array,
   }).isRequired,
 };
