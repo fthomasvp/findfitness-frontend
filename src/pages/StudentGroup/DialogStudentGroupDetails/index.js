@@ -17,23 +17,31 @@ import PersonIcon from '@material-ui/icons/Person';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import Badge from '@material-ui/core/Badge';
 import GroupIcon from '@material-ui/icons/Group';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ImageIcon from '@material-ui/icons/Image';
 
 import Utils from '../../../utils';
 import PersonalPicture from '../../../assets/images/guilian-fremaux-personal.jpg';
-import { DialogTitle, DialogContent, DialogActions } from './styles';
+import { DialogContent, DialogActions } from './styles';
 import DialogEnrollStudentGroup from '../../StudentGroup/DialogEnrollStudentGroup';
 
 const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
   const {
     completeAddress,
+    contactPhone,
     exercises,
     eventDateTimeBegin,
     eventDateTimeEnd,
     eventPrice,
     maxStudentGroupAmount,
+    payments,
     personal,
-    students,
-    contactPhone,
   } = studentGroup;
 
   const formatedAddress = Utils.formatAddress(completeAddress);
@@ -43,6 +51,10 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
   // This will be valid only if the user is a Student
   const idStudent = useSelector(state => state.auth.user.id);
 
+  const [tab, setTab] = useState(0);
+
+  const handleChangeTab = (event, tabValue) => setTab(tabValue);
+
   /**
    * Variables and functions to DialogEnrollStudentGroup
    */
@@ -51,8 +63,8 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
   const handleCloseDialogEnroll = () => setOpenDialogEnroll(false);
 
   const isEnrolledStudent = () => {
-    const hasStudent = studentGroup.students.filter(
-      student => student.id === idStudent
+    const hasStudent = studentGroup.payments.filter(
+      payment => payment.student.id === idStudent
     );
 
     return hasStudent.length > 0;
@@ -67,208 +79,271 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
       maxWidth={'md'}
       fullWidth
     >
-      <DialogTitle
-        id="student_group-details"
-        onClose={handleClose}
-        style={{ textAlign: 'center' }}
-      >
-        Detalhes da aula
-      </DialogTitle>
-      <DialogContent dividers>
-        {/* Personal info */}
-        <Typography gutterBottom variant="h5" align="center">
-          <PersonIcon /> PERSONAL
-        </Typography>
-        <Avatar
-          src={PersonalPicture} // Mock picture
-          alt={'Personal profile'}
-          style={{ marginLeft: '48%', width: '48px', height: '48px' }}
-        />
-        <Typography
-          variant="h6"
-          align="center"
-          style={{
-            fontSize: '1.2em',
-            color: '#d3d3d3',
-          }}
+      <AppBar position="relative" color="transparent">
+        <Tabs
+          value={tab}
+          onChange={handleChangeTab}
+          indicatorColor="primary"
+          centered
+          aria-label="simple tabs example"
         >
-          {personal.name}
-        </Typography>
-        <div
-          style={{
-            display: 'flex',
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <PhoneIcon style={{ marginRight: '3px' }} />
-          <Typography
-            align="center"
-            style={{
-              fontSize: '1.2em',
-              color: '#d3d3d3',
-            }}
-          >
-            {Utils.formatPhone(contactPhone)}
-          </Typography>
-        </div>
-        <Typography
-          align="center"
-          style={{ marginBottom: '20px', fontSize: '1.2em', color: '#d3d3d3' }}
-        >
-          CREF: {personal.cref}
-        </Typography>
+          <Tab label="Detalhes da aula" />
+          <Tab label="Alunos" />
+          <Tab label="Avaliações" />
+        </Tabs>
+      </AppBar>
 
-        <Divider style={{ marginBottom: '20px' }} />
-
-        {/* Localization and StudentGroup info */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            marginBottom: '20px',
-          }}
-        >
-          <div style={{ display: 'flex', flexFlow: 'column wrap' }}>
-            <Typography gutterBottom variant="h5">
-              <LocationOnIcon /> ENDEREÇO
+      <DialogContent dividers style={{ minHeight: '622px' }}>
+        {/* Show content by Tab */}
+        {tab === 0 && (
+          <>
+            {/* Personal info */}
+            <Typography gutterBottom variant="h5" align="center">
+              <PersonIcon /> PERSONAL
             </Typography>
+            <Avatar
+              src={PersonalPicture} // Mock picture
+              alt={'Personal profile'}
+              style={{ marginLeft: '48%', width: '48px', height: '48px' }}
+            />
             <Typography
-              variant="button"
-              display="block"
-              gutterBottom
+              variant="h6"
+              align="center"
               style={{
                 fontSize: '1.2em',
                 color: '#d3d3d3',
               }}
             >
-              {formatedAddress.street}, {formatedAddress.number} -{' '}
-              {formatedAddress.complemento}
+              {personal.name}
             </Typography>
-            <Typography
-              variant="button"
-              display="block"
-              gutterBottom
+            <div
               style={{
+                display: 'flex',
+                width: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <PhoneIcon style={{ marginRight: '3px' }} />
+              <Typography
+                align="center"
+                style={{
+                  fontSize: '1.2em',
+                  color: '#d3d3d3',
+                }}
+              >
+                {Utils.formatPhone(contactPhone)}
+              </Typography>
+            </div>
+            <Typography
+              align="center"
+              style={{
+                marginBottom: '20px',
                 fontSize: '1.2em',
                 color: '#d3d3d3',
               }}
             >
-              {formatedAddress.referenceLocation}
-            </Typography>
-            <Typography
-              variant="button"
-              display="block"
-              gutterBottom
-              style={{
-                fontSize: '1.2em',
-                color: '#d3d3d3',
-              }}
-            >
-              {formatedAddress.neighboor}, {formatedAddress.city} -{' '}
-              {formatedAddress.state}
-            </Typography>
-          </div>
-          <div style={{ display: 'flex', flexFlow: 'column wrap' }}>
-            <Typography gutterBottom variant="h5" style={{ color: 'gold' }}>
-              <PriorityHighIcon /> IMPORTANTE
+              CREF: {personal.cref}
             </Typography>
 
-            <Typography
-              variant="button"
-              display="block"
-              gutterBottom
+            <Divider style={{ marginBottom: '20px' }} />
+
+            {/* Localization and StudentGroup info */}
+            <div
               style={{
-                width: '60%',
-                fontSize: '1.2em',
-                color: '#d3d3d3',
+                display: 'flex',
+                justifyContent: 'space-around',
+                marginBottom: '20px',
               }}
             >
-              Vagas restantes:{' '}
-              {students && students.length > 0 ? (
-                <Badge
-                  badgeContent={maxStudentGroupAmount - students.length}
-                  color="primary"
-                >
-                  <GroupIcon />
-                </Badge>
-              ) : (
-                <Badge badgeContent={maxStudentGroupAmount} color="primary">
-                  <GroupIcon />
-                </Badge>
-              )}
-            </Typography>
-
-            <Typography
-              variant="button"
-              display="block"
-              gutterBottom
-              style={{
-                fontSize: '1.2em',
-                color: '#d3d3d3',
-              }}
-            >
-              Quando: {Utils.formatDateTime(eventDateTimeBegin)} ~{' '}
-              {Utils.formatDateTime(eventDateTimeEnd)}
-            </Typography>
-            <Typography
-              variant="button"
-              display="block"
-              gutterBottom
-              style={{
-                fontSize: '1.2em',
-                color: '#d3d3d3',
-              }}
-            >
-              Valor: R${eventPrice}
-            </Typography>
-          </div>
-        </div>
-
-        <Divider style={{ marginBottom: '20px' }} />
-
-        {/* Exercises info */}
-        <Typography gutterBottom variant="h5">
-          <FitnessCenterIcon /> ATIVIDADE
-        </Typography>
-        <div style={{ marginTop: '10px' }}>
-          {exercises.map(({ name, description }, index) => (
-            <ExpansionPanel expanded key={index}>
-              <ExpansionPanelSummary>
-                <Typography variant="h6" gutterBottom>
-                  {name}
+              <div style={{ display: 'flex', flexFlow: 'column wrap' }}>
+                <Typography gutterBottom variant="h5">
+                  <LocationOnIcon /> ENDEREÇO
                 </Typography>
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
                 <Typography
-                  variant="h6"
+                  variant="button"
+                  display="block"
+                  gutterBottom
                   style={{
                     fontSize: '1.2em',
                     color: '#d3d3d3',
                   }}
                 >
-                  {description}
+                  {formatedAddress.street}, {formatedAddress.number} -{' '}
+                  {formatedAddress.complemento}
                 </Typography>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-          ))}
-        </div>
+                <Typography
+                  variant="button"
+                  display="block"
+                  gutterBottom
+                  style={{
+                    fontSize: '1.2em',
+                    color: '#d3d3d3',
+                  }}
+                >
+                  {formatedAddress.referenceLocation}
+                </Typography>
+                <Typography
+                  variant="button"
+                  display="block"
+                  gutterBottom
+                  style={{
+                    fontSize: '1.2em',
+                    color: '#d3d3d3',
+                  }}
+                >
+                  {formatedAddress.neighboor}, {formatedAddress.city} -{' '}
+                  {formatedAddress.state}
+                </Typography>
+              </div>
+              <div style={{ display: 'flex', flexFlow: 'column wrap' }}>
+                <Typography gutterBottom variant="h5" style={{ color: 'gold' }}>
+                  <PriorityHighIcon /> IMPORTANTE
+                </Typography>
+
+                <Typography
+                  variant="button"
+                  display="block"
+                  gutterBottom
+                  style={{
+                    width: '60%',
+                    fontSize: '1.2em',
+                    color: '#d3d3d3',
+                  }}
+                >
+                  Vagas restantes:{' '}
+                  {payments && payments.length > 0 ? (
+                    <Badge
+                      badgeContent={maxStudentGroupAmount - payments.length}
+                      color={
+                        maxStudentGroupAmount - payments.length !== 0
+                          ? 'primary'
+                          : 'secondary'
+                      }
+                      showZero
+                    >
+                      <GroupIcon />
+                    </Badge>
+                  ) : (
+                    <Badge badgeContent={maxStudentGroupAmount} color="primary">
+                      <GroupIcon />
+                    </Badge>
+                  )}
+                </Typography>
+
+                <Typography
+                  variant="button"
+                  display="block"
+                  gutterBottom
+                  style={{
+                    fontSize: '1.2em',
+                    color: '#d3d3d3',
+                  }}
+                >
+                  Quando: {Utils.formatDateTime(eventDateTimeBegin)} ~{' '}
+                  {Utils.formatDateTime(eventDateTimeEnd)}
+                </Typography>
+                <Typography
+                  variant="button"
+                  display="block"
+                  gutterBottom
+                  style={{
+                    fontSize: '1.2em',
+                    color: '#d3d3d3',
+                  }}
+                >
+                  Valor: R${eventPrice}
+                </Typography>
+              </div>
+            </div>
+
+            <Divider style={{ marginBottom: '20px' }} />
+
+            {/* Exercises info */}
+            <Typography gutterBottom variant="h5">
+              <FitnessCenterIcon /> ATIVIDADE
+            </Typography>
+            <div style={{ marginTop: '10px' }}>
+              {exercises.map(({ name, description }, index) => (
+                <ExpansionPanel expanded key={index}>
+                  <ExpansionPanelSummary>
+                    <Typography variant="h6" gutterBottom>
+                      {name}
+                    </Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails>
+                    <Typography
+                      variant="h6"
+                      style={{
+                        fontSize: '1.2em',
+                        color: '#d3d3d3',
+                      }}
+                    >
+                      {description}
+                    </Typography>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              ))}
+            </div>
+          </>
+        )}
+
+        {tab === 1 && (
+          <List>
+            {payments && payments.length > 0 ? (
+              payments.map(({ id, student }) => (
+                <ListItem key={id}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <ImageIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={student.name} />
+                </ListItem>
+              ))
+            ) : (
+              <div
+                style={{
+                  height: '-webkit-fill-available',
+                  display: 'flex',
+                  flexFlow: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: '5px',
+                }}
+              >
+                <Typography variant="h5">
+                  Calma... daqui a pouco alguém aparece por aqui!
+                </Typography>
+              </div>
+            )}
+          </List>
+        )}
       </DialogContent>
 
       <DialogActions>
-        <Button autoFocus onClick={handleClose} color="secondary">
-          {!isEnrolledStudent() ? 'Cancelar' : 'Voltar'}
+        <Button
+          autoFocus
+          onClick={() => {
+            setTab(0);
+
+            handleClose();
+          }}
+          color="secondary"
+        >
+          Voltar
         </Button>
-        {profile === 'ROLE_STUDENT' && !isEnrolledStudent() && (
-          <Button
-            variant="contained"
-            onClick={() => setOpenDialogEnroll(true)}
-            color="primary"
-          >
-            Participar
-          </Button>
-        )}
+        {profile === 'ROLE_STUDENT' &&
+          !isEnrolledStudent() &&
+          payments.length < maxStudentGroupAmount && (
+            <Button
+              variant="contained"
+              onClick={() => setOpenDialogEnroll(true)}
+              color="primary"
+            >
+              Participar
+            </Button>
+          )}
       </DialogActions>
 
       {/* Exibir apenas quando o usuário clicar no botão de PARTICIPAR */}
@@ -308,7 +383,7 @@ DialogStudentGroupDetails.propTypes = {
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
     }).isRequired,
-    students: PropTypes.array,
+    payments: PropTypes.array,
   }).isRequired,
 };
 
