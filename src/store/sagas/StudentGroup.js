@@ -47,12 +47,11 @@ export function* createStudentGroup(action) {
 }
 
 export function* enrollStudent(action) {
-  const { idStudent, idStudentGroup } = action;
-
   try {
     const response = yield call(
       API.post,
-      `/student_groups/${idStudentGroup}/enroll/${idStudent}`
+      '/student_groups/enroll',
+      action.enrollData
     );
 
     if (response && response.status === 201) {
