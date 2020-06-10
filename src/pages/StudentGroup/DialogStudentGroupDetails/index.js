@@ -93,7 +93,10 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
         </Tabs>
       </AppBar>
 
-      <DialogContent dividers style={{ minHeight: '622px' }}>
+      <DialogContent
+        dividers
+        style={{ minHeight: '645px', maxHeight: '645px' }}
+      >
         {/* Show content by Tab */}
         {tab === 0 && (
           <>
@@ -288,10 +291,10 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
           </>
         )}
 
-        {tab === 1 && (
-          <List>
-            {payments && payments.length > 0 ? (
-              payments.map(({ id, student }) => (
+        {tab === 1 &&
+          (payments && payments.length > 0 ? (
+            <List>
+              {payments.map(({ id, student }) => (
                 <ListItem key={id}>
                   <ListItemAvatar>
                     <Avatar>
@@ -300,25 +303,24 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                   </ListItemAvatar>
                   <ListItemText primary={student.name} />
                 </ListItem>
-              ))
-            ) : (
-              <div
-                style={{
-                  height: '-webkit-fill-available',
-                  display: 'flex',
-                  flexFlow: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  padding: '5px',
-                }}
-              >
-                <Typography variant="h5">
-                  Calma... daqui a pouco alguém aparece por aqui!
-                </Typography>
-              </div>
-            )}
-          </List>
-        )}
+              ))}
+            </List>
+          ) : (
+            <div
+              style={{
+                height: '-webkit-fill-available',
+                display: 'flex',
+                flexFlow: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '5px',
+              }}
+            >
+              <Typography variant="h5">
+                Calma... daqui a pouco alguém aparece por aqui!
+              </Typography>
+            </div>
+          ))}
       </DialogContent>
 
       <DialogActions>
