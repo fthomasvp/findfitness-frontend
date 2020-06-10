@@ -16,6 +16,10 @@ import Divider from '@material-ui/core/Divider';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 import {
   storePersonForm,
@@ -87,6 +91,8 @@ const StudentOrPersonalForm = () => {
       setUserGender('O');
     }
   };
+
+  const [toggleVisibilityIcon, setToggleVisibilityIcon] = useState(false);
 
   /**
    * Stepper Info
@@ -406,13 +412,34 @@ const StudentOrPersonalForm = () => {
                     <TextField
                       id="password"
                       label="Senha"
-                      type="password"
+                      type={toggleVisibilityIcon ? 'text' : 'password'}
                       variant="outlined"
                       value={password}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
                         style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            {!toggleVisibilityIcon ? (
+                              <IconButton
+                                aria-label="hide password text"
+                                onClick={() => setToggleVisibilityIcon(true)}
+                              >
+                                <VisibilityOffIcon />
+                              </IconButton>
+                            ) : (
+                              <IconButton
+                                aria-label="show password text"
+                                onClick={() => setToggleVisibilityIcon(false)}
+                              >
+                                <VisibilityIcon />
+                              </IconButton>
+                            )}
+                          </InputAdornment>
+                        ),
                       }}
                       style={{ marginBottom: '20px' }}
                       error={errors.password && touched.password ? true : false}

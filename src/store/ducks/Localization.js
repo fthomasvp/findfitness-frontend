@@ -17,6 +17,8 @@ export const FETCH_CITIES_BY_STATE_ID_SUCCESS =
 export const FETCH_CITIES_BY_STATE_ID_FAIL =
   '@localization/FETCH_CITIES_BY_STATE_ID_FAIL';
 
+export const CLEAR_SNACKBAR = '@localization/CLEAR_SNACKBAR';
+
 /**
  * Action Creators
  * */
@@ -77,6 +79,12 @@ export const fetchCitiesByStateIdFail = error => {
   };
 };
 
+export const clearSnackbar = () => {
+  return {
+    type: CLEAR_SNACKBAR,
+  };
+};
+
 /**
  * Reducer
  * */
@@ -85,6 +93,7 @@ const INITIAL_STATE = {
   states: [],
   citiesByState: [],
   error: null,
+  response: null,
 };
 
 export const localization = (state = INITIAL_STATE, action) => {
@@ -140,6 +149,13 @@ export const localization = (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
         error: action.error,
+      };
+
+    case CLEAR_SNACKBAR:
+      return {
+        ...state,
+        error: INITIAL_STATE.error,
+        response: INITIAL_STATE.response,
       };
 
     default:
