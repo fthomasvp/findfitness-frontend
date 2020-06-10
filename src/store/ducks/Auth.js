@@ -20,6 +20,8 @@ export const UPDATE_ADDRESS_DATA = '@auth/UPDATE_ADDRESS_DATA';
 export const HANDLE_NEXT_STEP = '@auth/HANDLE_NEXT_STEP';
 export const HANDLE_BACK_STEP = '@auth/HANDLE_BACK_STEP';
 
+export const CLEAR_SNACKBAR = '@auth/CLEAR_SNACKBAR';
+
 /**
  * Action Creators
  * */
@@ -51,9 +53,10 @@ export const signUpRequest = userToCreate => {
   };
 };
 
-export const signUpSuccess = () => {
+export const signUpSuccess = response => {
   return {
     type: SIGN_UP_SUCCESS,
+    response,
   };
 };
 
@@ -114,6 +117,12 @@ export const handleBackStep = activeStep => {
   };
 };
 
+export const clearSnackbar = () => {
+  return {
+    type: CLEAR_SNACKBAR,
+  };
+};
+
 /**
  * Reducer
  * */
@@ -157,6 +166,7 @@ const INITIAL_STATE = {
     },
   },
   error: null,
+  response: null,
 };
 
 export const auth = (state = INITIAL_STATE, action) => {
@@ -205,6 +215,8 @@ export const auth = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
         userToCreate: INITIAL_STATE.userToCreate,
         activeStep: INITIAL_STATE.activeStep,
       };
@@ -214,9 +226,8 @@ export const auth = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        userToCreate: INITIAL_STATE.userToCreate,
-        activeStep: INITIAL_STATE.activeStep,
         error: action.error,
+        response: INITIAL_STATE.response,
       };
     }
 
@@ -230,6 +241,8 @@ export const auth = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
         user: {
           id: action.data.id,
           profile: action.data.authorities[0].authority,
@@ -244,15 +257,16 @@ export const auth = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        isAuthenticated: false,
         error: action.error,
+        response: INITIAL_STATE.response,
+        isAuthenticated: false,
       };
 
     case SIGN_OUT:
       return INITIAL_STATE;
 
     case UPDATE_ADDRESS_DATA: {
-      // // Find the state object to return
+      // Find the state object to return
       const myState = action.states.find(
         state => state.name === action.data.state
       );
@@ -294,6 +308,13 @@ export const auth = (state = INITIAL_STATE, action) => {
         activeStep: newActiveStep,
       };
     }
+
+    case CLEAR_SNACKBAR:
+      return {
+        ...state,
+        error: INITIAL_STATE.error,
+        response: INITIAL_STATE.response,
+      };
 
     default:
       return state;

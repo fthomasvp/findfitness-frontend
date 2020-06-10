@@ -22,7 +22,7 @@ export function* signUp(action) {
     const response = yield call(API.post, `/${resource}`, requestBody);
 
     if (response && response.status === 201) {
-      yield put(signUpSuccess());
+      yield put(signUpSuccess(response));
     }
   } catch (error) {
     yield put(signUpFail(error.response || error));
