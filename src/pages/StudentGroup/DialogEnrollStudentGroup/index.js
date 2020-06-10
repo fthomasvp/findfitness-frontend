@@ -119,8 +119,10 @@ const DialogEnrollStudentGroup = ({
    * Effects
    */
   useEffect(() => {
-    dispatch(fetchPaymentMethodsRequest(idStudent));
-  }, [dispatch, idStudent]);
+    if (openDialogEnroll) {
+      dispatch(fetchPaymentMethodsRequest(idStudent));
+    }
+  }, [dispatch, idStudent, openDialogEnroll]);
 
   return (
     <Dialog
