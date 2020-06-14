@@ -18,9 +18,7 @@ import Utils from '../../../../utils';
 const FirstStepForm = ({ handleBack, handleNext }) => {
   const dispatch = useDispatch();
 
-  const { activeStep, createStudentGroup } = useSelector(
-    state => state.studentGroup
-  );
+  const { createStudentGroup } = useSelector(state => state.studentGroup);
   const { firstStepData } = createStudentGroup;
 
   return (
@@ -227,11 +225,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
               }}
             >
               <div>
-                <Button
-                  disabled={activeStep === 0}
-                  color="secondary"
-                  onClick={handleBack}
-                >
+                <Button color="secondary" onClick={handleBack}>
                   Voltar
                 </Button>
               </div>
