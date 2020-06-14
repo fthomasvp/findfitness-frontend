@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -20,6 +20,7 @@ import Button from '@material-ui/core/Button';
 import Radio from '@material-ui/core/Radio';
 
 import { storeSecondStepForm } from '../../../../store/ducks/StudentGroup';
+import { searchExercisesRequest } from '../../../../store/ducks/Exercise';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -42,17 +43,14 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
 
-const SecondStepForm = ({
-  activeStep,
-  handleBack,
-  handleNext,
-  exercisesData,
-}) => {
+const SecondStepForm = ({ activeStep, handleBack, handleNext }) => {
   const dispatch = useDispatch();
 
   const secondStepData = useSelector(
     state => state.studentGroup.createStudentGroup.secondStepData
   );
+
+  const { pagination, exercises } = useSelector(state => state.exercise);
 
   const [exerciseIds, setExerciseIds] = useState(secondStepData);
 
@@ -75,8 +73,20 @@ const SecondStepForm = ({
     {
       title: 'NOME',
       field: 'name',
+      headerStyle: {
+        fontSize: '1.2rem',
+      },
+      cellStyle: {
+        fontSize: '1.2rem',
+        color: '#d3d3d3',
+      },
     },
-    { title: 'DESCRIÇÃO', field: 'description', sorting: false },
+    {
+      title: 'DESCRIÇÃO',
+      field: 'description',
+      sorting: false,
+      hidden: true,
+    },
   ];
 
   const handleClickNext = () => {
@@ -84,13 +94,47 @@ const SecondStepForm = ({
     handleNext();
   };
 
+  /**
+   * Effects
+   */
+  useEffect(() => {
+    if (exercises.length === 0) {
+      dispatch(searchExercisesRequest(pagination));
+    }
+  }, [dispatch, exercises, pagination]);
+
   return (
     <div>
       <MaterialTable
         icons={tableIcons}
         title="Selecione uma atividade"
         columns={columns}
-        data={exercisesData}
+        data={exercises}
+        detailPanel={rowData => {
+          return (
+            <div style={{ display: 'flex', flex: 1, padding: '15px' }}>
+              <div style={{ display: 'flex', width: '20%' }}>
+                <img
+                  src="https://media.istockphoto.com/vectors/cartoon-people-doing-wrist-extension-stretch-exercise-vector-id540566306"
+                  width="100%"
+                  height="100%"
+                  alt="Activity Example"
+                />
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  width: '80%',
+                  marginLeft: '45px',
+                  fontSize: '1.2rem',
+                  color: '#d3d3d3',
+                }}
+              >
+                {rowData.description}
+              </div>
+            </div>
+          );
+        }}
         options={{
           pageSizeOptions: [], // Don't show Row size option
           padding: 'dense',
@@ -99,7 +143,22 @@ const SecondStepForm = ({
           setSelectedValue(rowData.id);
           setExerciseIds(rowData);
         }}
-        style={{ marginBottom: '20px' }}
+        localization={{
+          toolbar: {
+            searchPlaceholder: 'Buscar',
+            searchTooltip: 'Buscar',
+          },
+          body: {
+            emptyDataSourceMessage: 'Poxa! Ainda não há atividades cadastradas',
+          },
+          pagination: {
+            firstTooltip: 'Primeira página',
+            previousTooltip: 'Página anterior',
+            nextTooltip: 'Próxima página',
+            lastTooltip: 'Última página',
+          },
+        }}
+        style={{ marginBottom: '20px', fontSize: '1.2rem' }}
       />
 
       {/* Step Control Buttons */}
@@ -138,7 +197,6 @@ SecondStepForm.propTypes = {
   activeStep: PropTypes.number.isRequired,
   handleBack: PropTypes.func.isRequired,
   handleNext: PropTypes.func.isRequired,
-  exercisesData: PropTypes.array.isRequired,
 };
 
 export default SecondStepForm;
