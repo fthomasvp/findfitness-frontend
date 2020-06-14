@@ -64,16 +64,17 @@ const DialogContent = withStyles(theme => ({
 }))(MuiDialogContent);
 
 const DialogAddStudentGroup = ({ open, handleClose }) => {
+  const dispatch = useDispatch();
+
   const { activeStep, createStudentGroup, pagination } = useSelector(
     state => state.studentGroup
   );
-  const { exercises } = useSelector(state => state.exercise);
-
-  const dispatch = useDispatch();
 
   /**
    * Stepper Info
    */
+  const steps = ['Importante !', 'Atividade', 'Localização'];
+
   const handleNext = () => dispatch(handleNextStep(activeStep));
   const handleBack = () => {
     if (activeStep === 0) {
@@ -83,19 +84,20 @@ const DialogAddStudentGroup = ({ open, handleClose }) => {
     return dispatch(handleBackStep(activeStep));
   };
 
-  const handleClickDone = async () => {
-    await dispatch(searchStudentGroupRequest(pagination));
+  const handleClickDone = () => {
+    dispatch(searchStudentGroupRequest(pagination));
 
-    await handleClose();
+    handleClose();
   };
 
+  /**
+   * Effects
+   */
   useEffect(() => {
     if (activeStep === 3) {
       dispatch(createStudentGroupRequest(createStudentGroup));
     }
   }, [dispatch, activeStep, createStudentGroup]);
-
-  const steps = ['Importante !', 'Atividade', 'Localização'];
 
   return (
     <Dialog
@@ -140,7 +142,6 @@ const DialogAddStudentGroup = ({ open, handleClose }) => {
             activeStep={activeStep}
             handleBack={handleBack}
             handleNext={handleNext}
-            exercisesData={exercises}
           />
         )}
 

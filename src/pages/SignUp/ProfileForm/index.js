@@ -8,6 +8,10 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import Divider from '@material-ui/core/Divider';
 
 import {
   SContainer,
@@ -16,7 +20,7 @@ import {
   SPanelContent,
   SPanelActions,
 } from '../styles';
-import { storeProfileType } from '../../../store/ducks/Auth';
+import { storeProfileType, handleNextStep } from '../../../store/ducks/Auth';
 
 const ProfileForm = () => {
   const history = useHistory();
@@ -28,8 +32,17 @@ const ProfileForm = () => {
 
   const [tab, setTab] = React.useState(profileType === 'STUDENT' ? 0 : 1);
 
+  /**
+   * Stepper Info
+   */
+  const { activeStep, steps } = useSelector(state => state.auth);
+
+  const handleNext = () => dispatch(handleNextStep(activeStep));
+
   const handleClickNextButton = () => {
     dispatch(storeProfileType(profileTypeForm));
+
+    handleNext();
 
     history.push('/signup/userform');
   };
@@ -48,6 +61,19 @@ const ProfileForm = () => {
     <SContainer>
       <Paper variant="outlined">
         <SPanel id="SPanel">
+          <div>
+            <Stepper activeStep={activeStep} alternativeLabel>
+              {steps.length > 0 &&
+                steps.map(label => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+            </Stepper>
+
+            <Divider />
+          </div>
+
           <SPanelTitle id="SPanelTitle1">
             <Typography variant="h4">Olá, vamos criar a sua conta?</Typography>
           </SPanelTitle>

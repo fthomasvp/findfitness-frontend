@@ -140,11 +140,10 @@ export const createStudentGroupFail = error => {
   };
 };
 
-export const enrollStudentGroupRequest = (idStudentGroup, idStudent) => {
+export const enrollStudentGroupRequest = enrollData => {
   return {
     type: ENROLL_STUDENT_GROUP_REQUEST,
-    idStudentGroup,
-    idStudent,
+    enrollData,
   };
 };
 
@@ -176,7 +175,7 @@ const INITIAL_STATE = {
       selectedBeginDateTime: Date.now(),
       selectedEndDateTime: Date.now(),
     },
-    secondStepData: [],
+    secondStepData: [0],
     thirdStepData: {
       street: '',
       number: '',

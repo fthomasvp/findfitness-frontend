@@ -11,7 +11,6 @@ import {
   searchStudentGroupRequest,
   clearCreateStudentGroupData,
 } from '../../store/ducks/StudentGroup';
-import { searchExercisesRequest } from '../../store/ducks/Exercise';
 
 const StudentGroup = () => {
   const MAP_CENTER_POSITION = { lat: -8.05428, lng: -34.8813 };
@@ -22,25 +21,17 @@ const StudentGroup = () => {
     state => state.studentGroup
   );
 
-  const { pagination: exercisePagination } = useSelector(
-    state => state.exercise
-  );
-
-  const { user } = useSelector(state => state.auth);
+  const user = useSelector(state => state.auth.user);
 
   // Persistir estado no Redux
   const [open, setOpen] = useState(false);
 
-  const handleOpen = async () => {
-    await dispatch(searchExercisesRequest(exercisePagination));
+  const handleOpen = () => setOpen(true);
 
-    await setOpen(true);
-  };
+  const handleClose = () => {
+    setOpen(false);
 
-  const handleClose = async () => {
-    await setOpen(false);
-
-    await dispatch(clearCreateStudentGroupData());
+    dispatch(clearCreateStudentGroupData());
   };
 
   useEffect(() => {

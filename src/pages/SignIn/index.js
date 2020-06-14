@@ -11,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
-import { signInRequest } from '../../store/ducks/Auth';
+import * as AuthReducer from '../../store/ducks/Auth';
 import YupSchema, { email, password } from '../validators';
 import {
   SContainer,
@@ -22,6 +22,7 @@ import {
 } from './styles';
 import STextLink from '../../components/TextLink';
 import SForm from '../../components/Form';
+import Alert from '../../components/Alert';
 import OxentechLogo from '../../assets/images/oxentech_logo.png';
 
 // Yup Fields Schema
@@ -38,6 +39,28 @@ const SignIn = () => {
 
   const [toggleVisibilityIcon, setToggleVisibilityIcon] = useState(false);
 
+  /**
+   * Alert
+   */
+  const error = useSelector(state => state.auth.error);
+  const response = useSelector(state => state.auth.response);
+
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [growTransition, setGrowTransition] = useState(false);
+  const [severity, setSeverity] = useState('error');
+
+  const handleCloseAlert = () => {
+    setOpenAlert(false);
+    setAlertMessage('');
+    setGrowTransition(false);
+
+    dispatch(AuthReducer.clearSnackbar());
+  };
+
+  /**
+   * Effects
+   */
   useEffect(() => {
     // Unmount component
     if (isAuthenticated) {
@@ -45,13 +68,33 @@ const SignIn = () => {
     }
   }, [history, isAuthenticated]);
 
+  useEffect(() => {
+    // Display snackbar Error message
+    if (error && error.status !== 200) {
+      setAlertMessage(error.data.message);
+      setOpenAlert(true);
+      setGrowTransition(true);
+      setSeverity('error');
+    }
+
+    // Display when User was created with success
+    // Because SignUp page, when ended with success,
+    // returns to this page (SignIn)
+    if (response && response.status === 201) {
+      setAlertMessage('Usuário criado com sucesso!');
+      setOpenAlert(true);
+      setGrowTransition(true);
+      setSeverity('success');
+    }
+  }, [error, response]);
+
   return (
     <SContainer>
       <Paper>
         <Formik
           initialValues={{ email: '', password: '' }}
           onSubmit={({ email, password }) => {
-            dispatch(signInRequest(email, password));
+            dispatch(AuthReducer.signInRequest(email, password));
           }}
           validationSchema={SignInSchema}
           validateOnChange={false}
@@ -108,7 +151,7 @@ const SignIn = () => {
                     <TextField
                       id="password"
                       label="Senha"
-                      type={toggleVisibilityIcon ? "text" : "password"}
+                      type={toggleVisibilityIcon ? 'text' : 'password'}
                       variant="outlined"
                       value={password}
                       onChange={handleChange}
@@ -121,17 +164,17 @@ const SignIn = () => {
                           <InputAdornment position="end">
                             {!toggleVisibilityIcon ? (
                               <IconButton
-                                aria-label="show password text"
+                                aria-label="hide password text"
                                 onClick={() => setToggleVisibilityIcon(true)}
                               >
-                                <VisibilityIcon />
+                                <VisibilityOffIcon />
                               </IconButton>
                             ) : (
                               <IconButton
-                                aria-label="hide password text"
+                                aria-label="show password text"
                                 onClick={() => setToggleVisibilityIcon(false)}
                               >
-                                <VisibilityOffIcon />
+                                <VisibilityIcon />
                               </IconButton>
                             )}
                           </InputAdornment>
@@ -148,7 +191,12 @@ const SignIn = () => {
                         style: { width: 'max-content', fontSize: '1.1rem' },
                       }}
                     />
-                    <Button variant="contained" color="primary" size="large" type="submit">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      type="submit"
+                    >
                       Acessar conta
                     </Button>
                   </SPanelContent>
@@ -161,6 +209,14 @@ const SignIn = () => {
             );
           }}
         </Formik>
+
+        <Alert
+          open={openAlert}
+          handleClose={handleCloseAlert}
+          growTransition={growTransition}
+          message={alertMessage}
+          severity={severity}
+        />
       </Paper>
     </SContainer>
   );

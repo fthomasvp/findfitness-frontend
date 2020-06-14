@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -12,13 +12,12 @@ import Search from '@material-ui/icons/Search';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
 
-import { storeAddressForm, signUpRequest } from '../../../store/ducks/Auth';
-import {
-  fetchStatesRequest,
-  searchAddressByZipcodeRequest,
-  fetchCitiesByStateIdRequest,
-} from '../../../store/ducks/Localization';
+import * as AuthReducer from '../../../store/ducks/Auth';
+import * as LocalizationReducer from '../../../store/ducks/Localization';
 import YupSchema, {
   street,
   number,
@@ -34,6 +33,7 @@ import {
   SPanelActions,
 } from '../styles';
 import SForm from '../../../components/Form';
+import Alert from '../../../components/Alert';
 
 // Yup Fields Schema
 const AddressSchema = YupSchema({
@@ -62,18 +62,78 @@ const AddressForm = () => {
       const fromPage = 'signup';
 
       dispatch(
-        searchAddressByZipcodeRequest(formatedZipCode, states, fromPage)
+        LocalizationReducer.searchAddressByZipcodeRequest(
+          formatedZipCode,
+          states,
+          fromPage
+        )
       );
     } else {
       console.warn('Padrão do CEP Incorreto (e.g. 99999-999)');
     }
   };
 
+  /**
+   * Stepper functions
+   */
+  const { activeStep, steps } = useSelector(state => state.auth);
+
+  const handleNext = () => dispatch(AuthReducer.handleNextStep(activeStep));
+
+  const handleBack = () => dispatch(AuthReducer.handleBackStep(activeStep));
+
+  /**
+   * Alert
+   */
+  const error = useSelector(state => state.auth.error);
+  const response = useSelector(state => state.auth.response);
+
+  const errorLocalization = useSelector(state => state.localization.error);
+
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [growTransition, setGrowTransition] = useState(false);
+  const [severity, setSeverity] = useState('error');
+
+  const handleCloseAlert = () => {
+    setAlertMessage('');
+    setOpenAlert(false);
+    setGrowTransition(false);
+
+    dispatch(AuthReducer.clearSnackbar());
+    dispatch(LocalizationReducer.clearSnackbar());
+  };
+
+  /**
+   * Effects
+   */
   useEffect(() => {
     (async () => {
-      await dispatch(fetchStatesRequest());
+      await dispatch(LocalizationReducer.fetchStatesRequest());
     })();
   }, [dispatch]);
+
+  useEffect(() => {
+    // Display snackbar Error message
+    if (error && error.status !== 201) {
+      setAlertMessage(error.data.message);
+      setOpenAlert(true);
+      setGrowTransition(true);
+      setSeverity('error');
+    }
+
+    if (response && response.status === 201) {
+      history.replace('/login');
+    }
+
+    // Error 500 - CEP Not found in API LocationIQ e.g. 54762222
+    if (errorLocalization && errorLocalization.status === 500) {
+      setAlertMessage('Ops! Parece que esse CEP não foi encontrado');
+      setOpenAlert(true);
+      setGrowTransition(true);
+      setSeverity('error');
+    }
+  }, [error, errorLocalization, response, history]);
 
   return (
     <SContainer>
@@ -85,10 +145,10 @@ const AddressForm = () => {
 
             userToCreate.address = address;
 
-            dispatch(storeAddressForm(address));
-            dispatch(signUpRequest(userToCreate));
+            handleNext();
 
-            history.replace('/login');
+            dispatch(AuthReducer.storeAddressForm(address));
+            dispatch(AuthReducer.signUpRequest(userToCreate));
           }}
           validationSchema={AddressSchema}
           enableReinitialize
@@ -117,13 +177,25 @@ const AddressForm = () => {
             return (
               <SForm onSubmit={handleSubmit}>
                 <SPanel>
+                  <div>
+                    <Stepper activeStep={activeStep} alternativeLabel>
+                      {steps &&
+                        steps.length > 0 &&
+                        steps.map(label => (
+                          <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                          </Step>
+                        ))}
+                    </Stepper>
+                  </div>
+
+                  <Divider style={{ marginBottom: '20px' }} />
+
                   <SPanelTitle>
                     <Typography variant="h5">
                       Precisamos anotar os dados do seu endereço :)
                     </Typography>
                   </SPanelTitle>
-
-                  <Divider style={{ marginBottom: '20px' }} />
 
                   <SPanelContent>
                     <TextField
@@ -152,7 +224,12 @@ const AddressForm = () => {
                         ),
                       }}
                       style={{ marginBottom: '20px', width: '30%' }}
-                      error={errors.zipcode && touched.zipcode ? true : false}
+                      error={
+                        (errors.zipcode && touched.zipcode) ||
+                        (errorLocalization && errorLocalization.status === 500)
+                          ? true
+                          : false
+                      }
                       helperText={
                         errors.zipcode && touched.zipcode ? errors.zipcode : ''
                       }
@@ -263,7 +340,9 @@ const AddressForm = () => {
                         await setFieldValue('state', selectedState);
 
                         return await dispatch(
-                          fetchCitiesByStateIdRequest(selectedState)
+                          LocalizationReducer.fetchCitiesByStateIdRequest(
+                            selectedState
+                          )
                         );
                       }}
                       InputLabelProps={{
@@ -324,7 +403,14 @@ const AddressForm = () => {
                   </SPanelContent>
 
                   <SPanelActions>
-                    <Button color="secondary" onClick={() => history.goBack()}>
+                    <Button
+                      color="secondary"
+                      onClick={() => {
+                        handleBack();
+
+                        history.goBack();
+                      }}
+                    >
                       VOLTAR
                     </Button>
                     <Button color="primary" variant="contained" type="submit">
@@ -336,6 +422,14 @@ const AddressForm = () => {
             );
           }}
         </Formik>
+
+        <Alert
+          open={openAlert}
+          handleClose={handleCloseAlert}
+          growTransition={growTransition}
+          message={alertMessage}
+          severity={severity}
+        />
       </Paper>
     </SContainer>
   );

@@ -13,8 +13,19 @@ import Tab from '@material-ui/core/Tab';
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import Divider from '@material-ui/core/Divider';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
-import { storePersonForm } from '../../../store/ducks/Auth';
+import {
+  storePersonForm,
+  handleBackStep,
+  handleNextStep,
+} from '../../../store/ducks/Auth';
 import YupSchema, {
   errorMessages,
   email,
@@ -81,6 +92,17 @@ const StudentOrPersonalForm = () => {
     }
   };
 
+  const [toggleVisibilityIcon, setToggleVisibilityIcon] = useState(false);
+
+  /**
+   * Stepper Info
+   */
+  const { activeStep, steps } = useSelector(state => state.auth);
+
+  const handleNext = () => dispatch(handleNextStep(activeStep));
+
+  const handleBack = () => dispatch(handleBackStep(activeStep));
+
   return (
     <SContainer>
       <Paper>
@@ -94,6 +116,8 @@ const StudentOrPersonalForm = () => {
             const person = { ...values, gender: userGender };
 
             dispatch(storePersonForm(person));
+
+            handleNext();
 
             history.push('/signup/addressform');
           }}
@@ -161,6 +185,20 @@ const StudentOrPersonalForm = () => {
             return (
               <SForm onSubmit={handleSubmit}>
                 <SPanel>
+                  <div>
+                    <Stepper activeStep={activeStep} alternativeLabel>
+                      {steps &&
+                        steps.length > 0 &&
+                        steps.map(label => (
+                          <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                          </Step>
+                        ))}
+                    </Stepper>
+                  </div>
+
+                  <Divider style={{ marginBottom: '20px' }} />
+
                   <SPanelTitle>
                     <Typography variant="h5">
                       Hey! Queremos te conhecer melhor{' '}
@@ -169,8 +207,6 @@ const StudentOrPersonalForm = () => {
                       </span>
                     </Typography>
                   </SPanelTitle>
-
-                  <Divider style={{ marginBottom: '20px' }} />
 
                   <SPanelContent>
                     {userToCreate.profileType === 'PERSONAL' && (
@@ -376,13 +412,34 @@ const StudentOrPersonalForm = () => {
                     <TextField
                       id="password"
                       label="Senha"
-                      type="password"
+                      type={toggleVisibilityIcon ? 'text' : 'password'}
                       variant="outlined"
                       value={password}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
                         style: { color: 'white', fontSize: '1.2rem' },
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            {!toggleVisibilityIcon ? (
+                              <IconButton
+                                aria-label="hide password text"
+                                onClick={() => setToggleVisibilityIcon(true)}
+                              >
+                                <VisibilityOffIcon />
+                              </IconButton>
+                            ) : (
+                              <IconButton
+                                aria-label="show password text"
+                                onClick={() => setToggleVisibilityIcon(false)}
+                              >
+                                <VisibilityIcon />
+                              </IconButton>
+                            )}
+                          </InputAdornment>
+                        ),
                       }}
                       style={{ marginBottom: '20px' }}
                       error={errors.password && touched.password ? true : false}
@@ -398,7 +455,14 @@ const StudentOrPersonalForm = () => {
                   </SPanelContent>
 
                   <SPanelActions>
-                    <Button color="secondary" onClick={() => history.goBack()}>
+                    <Button
+                      color="secondary"
+                      onClick={() => {
+                        handleBack();
+
+                        history.goBack();
+                      }}
+                    >
                       Voltar
                     </Button>
                     <Button color="primary" variant="contained" type="submit">
