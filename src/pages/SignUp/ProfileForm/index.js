@@ -12,14 +12,9 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Divider from '@material-ui/core/Divider';
+import Container from '@material-ui/core/Container';
 
-import {
-  SContainer,
-  SPanel,
-  SPanelTitle,
-  SPanelContent,
-  SPanelActions,
-} from '../styles';
+import * as S from '../styles';
 import { storeProfileType, handleNextStep } from '../../../store/ducks/Auth';
 
 const ProfileForm = () => {
@@ -58,9 +53,9 @@ const ProfileForm = () => {
   };
 
   return (
-    <SContainer>
+    <Container maxWidth="sm" style={{ alignSelf: 'center' }}>
       <Paper variant="outlined">
-        <SPanel id="SPanel">
+        <S.Panel id="SPanel">
           <div>
             <Stepper activeStep={activeStep} alternativeLabel>
               {steps.length > 0 &&
@@ -74,23 +69,23 @@ const ProfileForm = () => {
             <Divider />
           </div>
 
-          <SPanelTitle id="SPanelTitle1">
-            <Typography variant="h4">Olá, vamos criar a sua conta?</Typography>
-          </SPanelTitle>
+          <S.PanelTitle id="SPanelTitle1">
+            <Typography variant="h5">Olá, vamos criar a sua conta?</Typography>
+          </S.PanelTitle>
 
-          <SPanelTitle id="SPanelTitle2">
-            <Typography variant="h5">
+          <S.PanelTitle id="SPanelTitle2">
+            <Typography variant="h5" align="center">
               Primeiro precisamos saber o seu tipo de perfil!
             </Typography>
-          </SPanelTitle>
+          </S.PanelTitle>
 
-          <SPanelTitle id="SPanelTitle3">
-            <Typography variant="h5">
+          <S.PanelTitle id="SPanelTitle3">
+            <Typography variant="h5" align="center">
               Por favor, selecione uma das opções abaixo:
             </Typography>
-          </SPanelTitle>
+          </S.PanelTitle>
 
-          <SPanelContent id="SPanelContent">
+          <S.PanelContent id="SPanelContent">
             <AppBar position="relative" color="transparent">
               <Tabs
                 value={tab}
@@ -102,9 +97,9 @@ const ProfileForm = () => {
                 <Tab label="PERSONAL" />
               </Tabs>
             </AppBar>
-          </SPanelContent>
+          </S.PanelContent>
 
-          <SPanelActions id="sPanelActions">
+          <S.PanelActions id="sPanelActions">
             <Button color="secondary" onClick={() => history.goBack()}>
               Voltar
             </Button>
@@ -115,10 +110,10 @@ const ProfileForm = () => {
             >
               Próximo
             </Button>
-          </SPanelActions>
-        </SPanel>
+          </S.PanelActions>
+        </S.Panel>
       </Paper>
-    </SContainer>
+    </Container>
   );
 };
 

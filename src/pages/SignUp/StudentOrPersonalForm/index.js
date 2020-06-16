@@ -18,6 +18,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
+import Container from '@material-ui/core/Container';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
@@ -33,13 +34,7 @@ import YupSchema, {
   name,
   birthdate,
 } from '../../validators';
-import {
-  SContainer,
-  SPanel,
-  SPanelTitle,
-  SPanelContent,
-  SPanelActions,
-} from '../styles';
+import * as S from '../styles';
 import SForm from '../../../components/Form';
 
 /**
@@ -104,7 +99,7 @@ const StudentOrPersonalForm = () => {
   const handleBack = () => dispatch(handleBackStep(activeStep));
 
   return (
-    <SContainer>
+    <Container maxWidth="sm" style={{ alignSelf: 'center' }}>
       <Paper>
         <Formik
           initialValues={
@@ -184,7 +179,7 @@ const StudentOrPersonalForm = () => {
 
             return (
               <SForm onSubmit={handleSubmit}>
-                <SPanel>
+                <S.Panel>
                   <div>
                     <Stepper activeStep={activeStep} alternativeLabel>
                       {steps &&
@@ -199,16 +194,16 @@ const StudentOrPersonalForm = () => {
 
                   <Divider style={{ marginBottom: '20px' }} />
 
-                  <SPanelTitle>
-                    <Typography variant="h5">
+                  <S.PanelTitle>
+                    <Typography variant="h5" align="center">
                       Hey! Queremos te conhecer melhor{' '}
                       <span role="img" aria-label="Blink emoction">
                         &#128521;
                       </span>
                     </Typography>
-                  </SPanelTitle>
+                  </S.PanelTitle>
 
-                  <SPanelContent>
+                  <S.PanelContent>
                     {userToCreate.profileType === 'PERSONAL' && (
                       <TextField
                         autoFocus
@@ -254,7 +249,7 @@ const StudentOrPersonalForm = () => {
                           errors.cref && touched.cref ? errors.cref : ''
                         }
                         FormHelperTextProps={{
-                          style: { width: 'max-content', fontSize: '1.1rem' },
+                          style: { fontSize: '1.1rem' },
                         }}
                       />
                     )}
@@ -276,7 +271,7 @@ const StudentOrPersonalForm = () => {
                         errors.name && touched.name ? errors.name : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     />
 
@@ -296,7 +291,7 @@ const StudentOrPersonalForm = () => {
                         errors.phone && touched.phone ? errors.phone : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     />
 
@@ -314,7 +309,7 @@ const StudentOrPersonalForm = () => {
                       error={errors.cpf && touched.cpf ? true : false}
                       helperText={errors.cpf && touched.cpf ? errors.cpf : ''}
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     />
 
@@ -405,7 +400,7 @@ const StudentOrPersonalForm = () => {
                         errors.email && touched.email ? errors.email : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     />
 
@@ -425,17 +420,17 @@ const StudentOrPersonalForm = () => {
                           <InputAdornment position="end">
                             {!toggleVisibilityIcon ? (
                               <IconButton
-                                aria-label="hide password text"
+                                aria-label="show password text"
                                 onClick={() => setToggleVisibilityIcon(true)}
                               >
-                                <VisibilityOffIcon />
+                                <VisibilityIcon />
                               </IconButton>
                             ) : (
                               <IconButton
-                                aria-label="show password text"
+                                aria-label="hide password text"
                                 onClick={() => setToggleVisibilityIcon(false)}
                               >
-                                <VisibilityIcon />
+                                <VisibilityOffIcon />
                               </IconButton>
                             )}
                           </InputAdornment>
@@ -449,12 +444,12 @@ const StudentOrPersonalForm = () => {
                           : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     />
-                  </SPanelContent>
+                  </S.PanelContent>
 
-                  <SPanelActions>
+                  <S.PanelActions>
                     <Button
                       color="secondary"
                       onClick={() => {
@@ -468,14 +463,14 @@ const StudentOrPersonalForm = () => {
                     <Button color="primary" variant="contained" type="submit">
                       Próximo
                     </Button>
-                  </SPanelActions>
-                </SPanel>
+                  </S.PanelActions>
+                </S.Panel>
               </SForm>
             );
           }}
         </Formik>
       </Paper>
-    </SContainer>
+    </Container>
   );
 };
 

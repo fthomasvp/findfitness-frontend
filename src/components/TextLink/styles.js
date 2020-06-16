@@ -13,5 +13,6 @@ export const SLink = Styled(Link)`
 
   &:hover {
     color: lightblue;
+    text-decoration: underline;
   }
 `;
