@@ -47,22 +47,22 @@ const Routes = () => {
         {/* Home */}
         <Route exact path="/studentgroup">
           {!isAuthenticated && <Redirect to="/" />}
-          <MainLayout menuArea={Menu} asideArea={StudentGroup} />
+          <MainLayout menuArea={Menu} mainArea={StudentGroup} />
         </Route>
 
         <Route exact path="/specialization">
           {!isAuthenticated && <Redirect to="/" />}
-          <MainLayout menuArea={Menu} asideArea={Specialization} />
+          <MainLayout menuArea={Menu} mainArea={Specialization} />
         </Route>
 
         <Route exact path="/exercise">
           {!isAuthenticated && <Redirect to="/" />}
-          <MainLayout menuArea={Menu} asideArea={Exercise} />
+          <MainLayout menuArea={Menu} mainArea={Exercise} />
         </Route>
 
         <Route exact path="/chat">
           {!isAuthenticated && <Redirect to="/" />}
-          <MainLayout menuArea={Menu} asideArea={Chat} />
+          <MainLayout menuArea={Menu} mainArea={Chat} />
         </Route>
       </Switch>
     </BrowserRouter>

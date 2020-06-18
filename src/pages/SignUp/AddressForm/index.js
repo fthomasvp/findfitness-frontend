@@ -111,7 +111,7 @@ const AddressForm = () => {
   useEffect(() => {
     // Display snackbar Error message
     if (error && error.status !== 201) {
-      setAlertMessage(error.data.message);
+      setAlertMessage(error.data?.message || error.message);
       setOpenAlert(true);
       setGrowTransition(true);
       setSeverity('error');
@@ -184,15 +184,15 @@ const AddressForm = () => {
                     </Stepper>
                   </div>
 
-                  <Divider style={{ marginBottom: '20px' }} />
-
-                  <S.PanelTitle>
-                    <Typography variant="h5" align="center">
-                      Precisamos anotar os dados do seu endereço :)
-                    </Typography>
-                  </S.PanelTitle>
+                  <Divider style={{ marginBottom: '10px' }} />
 
                   <S.PanelContent>
+                    <S.PanelTitle>
+                      <Typography variant="h5" align="center">
+                        Precisamos anotar os dados do seu endereço :)
+                      </Typography>
+                    </S.PanelTitle>
+
                     <TextField
                       autoFocus
                       id="zipcode"
@@ -346,7 +346,7 @@ const AddressForm = () => {
                       SelectProps={{
                         autoWidth: true,
                       }}
-                      style={{ marginBottom: '20px', width: '25%' }}
+                      style={{ marginBottom: '20px', width: '30%' }}
                       error={errors.state && touched.state ? true : false}
                       helperText={
                         errors.state && touched.state ? errors.state : ''

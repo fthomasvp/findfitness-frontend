@@ -12,7 +12,7 @@ export const PanelTitle = Styled.div`
   display: flex;
   flex-flow: row;
   justify-content: space-evenly;
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 `;
 
 export const PanelContent = Styled.div`

@@ -1,43 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  SContainer,
-  SContainerUpside,
-  SContainerUpsideLeft,
-  SContainerProfile,
-  SContainerMenu,
-  SContainerAside,
-  SContainerFooter,
-} from './styles';
+
+import Container from '@material-ui/core/Container';
+
+import * as S from './styles';
 import Profile from '../Profile';
 import Footer from '../Footer';
 
-const MainLayout = ({ menuArea: Menu, asideArea: Page }) => {
+const MainLayout = ({ menuArea: Menu, mainArea: Page }) => {
   return (
-    <SContainer>
-      <SContainerUpside>
-        <SContainerUpsideLeft>
-          <SContainerProfile>
+    <Container>
+      <S.ContainerUpside>
+        <S.ContainerUpsideLeft>
+          <S.ContainerProfile>
             <Profile />
-          </SContainerProfile>
-          <SContainerMenu>
+          </S.ContainerProfile>
+          <S.ContainerMenu>
             <Menu />
-          </SContainerMenu>
-        </SContainerUpsideLeft>
-        <SContainerAside>
+          </S.ContainerMenu>
+        </S.ContainerUpsideLeft>
+        <S.ContainerAside>
           <Page />
-        </SContainerAside>
-      </SContainerUpside>
-      <SContainerFooter>
+        </S.ContainerAside>
+      </S.ContainerUpside>
+      <S.ContainerFooter>
         <Footer />
-      </SContainerFooter>
-    </SContainer>
+      </S.ContainerFooter>
+    </Container>
   );
 };
 
 MainLayout.propTypes = {
   menuArea: PropTypes.func.isRequired,
-  asideArea: PropTypes.func.isRequired,
+  mainArea: PropTypes.func.isRequired,
 };
 
 export default MainLayout;

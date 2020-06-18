@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -10,7 +11,8 @@ import ChatIcon from '@material-ui/icons/Chat';
 import ClassIcon from '@material-ui/icons/Class';
 import SchoolIcon from '@material-ui/icons/School';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { signOut } from '../../store/ducks/Auth';
+
+import * as AuthReducer from '../../store/ducks/Auth';
 
 const Menu = () => {
   let history = useHistory();
@@ -23,21 +25,28 @@ const Menu = () => {
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
 
-    if (index === 0) {
-      history.push('/studentgroup');
-    } else if (index === 1) {
-      history.push('/chat');
-    } else if (index === 2) {
-      history.push('/exercise');
-    } else {
-      history.push('/specialization');
+    switch (index) {
+      case 0:
+        return history.push('/studentgroup');
+
+      case 1:
+        return history.push('/chat');
+
+      case 2:
+        return history.push('/exercise');
+
+      case 3:
+        return history.push('/specialization');
+
+      default:
+        return history.push('/studentgroup');
     }
   };
 
-  const handleLogoutClick = async () => {
-    await dispatch(signOut());
+  const handleLogoutClick = () => {
+    dispatch(AuthReducer.signOut());
 
-    await history.replace('/');
+    history.replace('/');
   };
 
   return (

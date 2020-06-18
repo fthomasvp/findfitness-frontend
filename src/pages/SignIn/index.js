@@ -67,7 +67,7 @@ const SignIn = () => {
   useEffect(() => {
     // Display snackbar Error message
     if (error && error.status !== 200) {
-      setAlertMessage(error.data.message);
+      setAlertMessage(error.data?.message || error.message);
       setOpenAlert(true);
       setGrowTransition(true);
       setSeverity('error');

@@ -192,18 +192,18 @@ const StudentOrPersonalForm = () => {
                     </Stepper>
                   </div>
 
-                  <Divider style={{ marginBottom: '20px' }} />
-
-                  <S.PanelTitle>
-                    <Typography variant="h5" align="center">
-                      Hey! Queremos te conhecer melhor{' '}
-                      <span role="img" aria-label="Blink emoction">
-                        &#128521;
-                      </span>
-                    </Typography>
-                  </S.PanelTitle>
+                  <Divider style={{ marginBottom: '10px' }} />
 
                   <S.PanelContent>
+                    <S.PanelTitle>
+                      <Typography variant="h5" align="center">
+                        Hey! Queremos te conhecer{' '}
+                        <span role="img" aria-label="Blink emoction">
+                          &#128521;
+                        </span>
+                      </Typography>
+                    </S.PanelTitle>
+
                     {userToCreate.profileType === 'PERSONAL' && (
                       <TextField
                         autoFocus
@@ -242,7 +242,7 @@ const StudentOrPersonalForm = () => {
                         }}
                         style={{
                           marginBottom: '20px',
-                          width: '25%',
+                          width: '40%',
                         }}
                         error={errors.cref && touched.cref ? true : false}
                         helperText={
