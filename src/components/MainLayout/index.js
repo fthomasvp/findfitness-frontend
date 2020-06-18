@@ -9,20 +9,8 @@ import Footer from '../Footer';
 
 const MainLayout = ({ menuArea: Menu, mainArea: Page }) => {
   return (
-    <Container>
-      <S.ContainerUpside>
-        <S.ContainerUpsideLeft>
-          <S.ContainerProfile>
-            <Profile />
-          </S.ContainerProfile>
-          <S.ContainerMenu>
-            <Menu />
-          </S.ContainerMenu>
-        </S.ContainerUpsideLeft>
-        <S.ContainerAside>
-          <Page />
-        </S.ContainerAside>
-      </S.ContainerUpside>
+    <Container maxWidth="xl">
+      <Menu />
       <S.ContainerFooter>
         <Footer />
       </S.ContainerFooter>
@@ -36,3 +24,19 @@ MainLayout.propTypes = {
 };
 
 export default MainLayout;
+
+{
+  /* <S.ContainerUpside>
+  <S.ContainerUpsideLeft>
+    <S.ContainerProfile>
+      <Profile />
+    </S.ContainerProfile>
+    <S.ContainerMenu>
+      <Menu />
+    </S.ContainerMenu>
+  </S.ContainerUpsideLeft>
+  <S.ContainerAside>
+    <Page />
+  </S.ContainerAside>
+</S.ContainerUpside> */
+}
