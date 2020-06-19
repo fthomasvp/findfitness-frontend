@@ -10,20 +10,16 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import Container from '@material-ui/core/Container';
 
 import * as AuthReducer from '../../store/ducks/Auth';
 import YupSchema, { email, password } from '../validators';
-import {
-  SContainer,
-  SPanel,
-  SPanelTitle,
-  SPanelContent,
-  SPanelActions,
-} from './styles';
+import * as S from './styles';
 import STextLink from '../../components/TextLink';
 import SForm from '../../components/Form';
 import Alert from '../../components/Alert';
-import OxentechLogo from '../../assets/images/oxentech_logo.png';
+import Footer from '../../components/Footer';
+import FindFitnessLogo from '../../assets/images/findfitness_logo.png';
 
 // Yup Fields Schema
 const SignInSchema = YupSchema({
@@ -64,14 +60,14 @@ const SignIn = () => {
   useEffect(() => {
     // Unmount component
     if (isAuthenticated) {
-      return history.replace('/studentgroup');
+      return history.replace('/home');
     }
   }, [history, isAuthenticated]);
 
   useEffect(() => {
     // Display snackbar Error message
     if (error && error.status !== 200) {
-      setAlertMessage(error.data.message);
+      setAlertMessage(error.data?.message || error.message);
       setOpenAlert(true);
       setGrowTransition(true);
       setSeverity('error');
@@ -89,7 +85,12 @@ const SignIn = () => {
   }, [error, response]);
 
   return (
-    <SContainer>
+    <Container
+      maxWidth="sm"
+      style={{
+        alignSelf: 'center',
+      }}
+    >
       <Paper>
         <Formik
           initialValues={{ email: '', password: '' }}
@@ -111,10 +112,10 @@ const SignIn = () => {
 
             return (
               <SForm onSubmit={handleSubmit}>
-                <SPanel>
-                  <SPanelTitle>
+                <S.Panel>
+                  <S.PanelTitle>
                     <img
-                      src={OxentechLogo}
+                      src={FindFitnessLogo}
                       alt="FindFitness_Logo"
                       style={{
                         width: '300px',
@@ -123,9 +124,9 @@ const SignIn = () => {
                         alignSelf: 'center',
                       }}
                     />
-                  </SPanelTitle>
+                  </S.PanelTitle>
 
-                  <SPanelContent>
+                  <S.PanelContent>
                     <TextField
                       id="email"
                       autoFocus
@@ -144,7 +145,7 @@ const SignIn = () => {
                         errors.email && touched.email ? errors.email : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     />
 
@@ -164,17 +165,17 @@ const SignIn = () => {
                           <InputAdornment position="end">
                             {!toggleVisibilityIcon ? (
                               <IconButton
-                                aria-label="hide password text"
+                                aria-label="show password text"
                                 onClick={() => setToggleVisibilityIcon(true)}
                               >
-                                <VisibilityOffIcon />
+                                <VisibilityIcon />
                               </IconButton>
                             ) : (
                               <IconButton
-                                aria-label="show password text"
+                                aria-label="hide password text"
                                 onClick={() => setToggleVisibilityIcon(false)}
                               >
-                                <VisibilityIcon />
+                                <VisibilityOffIcon />
                               </IconButton>
                             )}
                           </InputAdornment>
@@ -188,7 +189,7 @@ const SignIn = () => {
                           : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     />
                     <Button
@@ -199,12 +200,12 @@ const SignIn = () => {
                     >
                       Acessar conta
                     </Button>
-                  </SPanelContent>
+                  </S.PanelContent>
 
-                  <SPanelActions>
+                  <S.PanelActions>
                     <STextLink to="/signup">Crie uma conta gratuita</STextLink>
-                  </SPanelActions>
-                </SPanel>
+                  </S.PanelActions>
+                </S.Panel>
               </SForm>
             );
           }}
@@ -218,7 +219,9 @@ const SignIn = () => {
           severity={severity}
         />
       </Paper>
-    </SContainer>
+
+      <Footer />
+    </Container>
   );
 };
 

@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
+import Container from '@material-ui/core/Container';
 import StepLabel from '@material-ui/core/StepLabel';
 
 import * as AuthReducer from '../../../store/ducks/Auth';
@@ -25,13 +26,7 @@ import YupSchema, {
   city,
   zipcode,
 } from '../../validators';
-import {
-  SContainer,
-  SPanel,
-  SPanelTitle,
-  SPanelContent,
-  SPanelActions,
-} from '../styles';
+import * as S from '../styles';
 import SForm from '../../../components/Form';
 import Alert from '../../../components/Alert';
 
@@ -116,7 +111,7 @@ const AddressForm = () => {
   useEffect(() => {
     // Display snackbar Error message
     if (error && error.status !== 201) {
-      setAlertMessage(error.data.message);
+      setAlertMessage(error.data?.message || error.message);
       setOpenAlert(true);
       setGrowTransition(true);
       setSeverity('error');
@@ -136,7 +131,7 @@ const AddressForm = () => {
   }, [error, errorLocalization, response, history]);
 
   return (
-    <SContainer>
+    <Container maxWidth="sm" style={{ alignSelf: 'center' }}>
       <Paper>
         <Formik
           initialValues={userToCreate.address}
@@ -176,7 +171,7 @@ const AddressForm = () => {
 
             return (
               <SForm onSubmit={handleSubmit}>
-                <SPanel>
+                <S.Panel>
                   <div>
                     <Stepper activeStep={activeStep} alternativeLabel>
                       {steps &&
@@ -189,15 +184,15 @@ const AddressForm = () => {
                     </Stepper>
                   </div>
 
-                  <Divider style={{ marginBottom: '20px' }} />
+                  <Divider style={{ marginBottom: '10px' }} />
 
-                  <SPanelTitle>
-                    <Typography variant="h5">
-                      Precisamos anotar os dados do seu endereço :)
-                    </Typography>
-                  </SPanelTitle>
+                  <S.PanelContent>
+                    <S.PanelTitle>
+                      <Typography variant="h5" align="center">
+                        Precisamos anotar os dados do seu endereço :)
+                      </Typography>
+                    </S.PanelTitle>
 
-                  <SPanelContent>
                     <TextField
                       autoFocus
                       id="zipcode"
@@ -223,7 +218,7 @@ const AddressForm = () => {
                           </InputAdornment>
                         ),
                       }}
-                      style={{ marginBottom: '20px', width: '30%' }}
+                      style={{ marginBottom: '20px', width: '50%' }}
                       error={
                         (errors.zipcode && touched.zipcode) ||
                         (errorLocalization && errorLocalization.status === 500)
@@ -234,7 +229,7 @@ const AddressForm = () => {
                         errors.zipcode && touched.zipcode ? errors.zipcode : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     />
                     <TextField
@@ -253,7 +248,7 @@ const AddressForm = () => {
                         errors.street && touched.street ? errors.street : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     />
                     <TextField
@@ -278,7 +273,7 @@ const AddressForm = () => {
                           : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     />
                     <TextField
@@ -293,13 +288,13 @@ const AddressForm = () => {
                         style: { color: 'white', fontSize: '1.2rem' },
                       }}
                       inputProps={{ min: 1 }}
-                      style={{ marginBottom: '20px', width: '18%' }}
+                      style={{ marginBottom: '20px', width: '30%' }}
                       error={errors.number && touched.number ? true : false}
                       helperText={
                         errors.number && touched.number ? errors.number : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     />
 
@@ -351,13 +346,13 @@ const AddressForm = () => {
                       SelectProps={{
                         autoWidth: true,
                       }}
-                      style={{ marginBottom: '20px', width: '18%' }}
+                      style={{ marginBottom: '20px', width: '30%' }}
                       error={errors.state && touched.state ? true : false}
                       helperText={
                         errors.state && touched.state ? errors.state : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     >
                       {states &&
@@ -381,13 +376,13 @@ const AddressForm = () => {
                       SelectProps={{
                         autoWidth: true,
                       }}
-                      style={{ marginBottom: '20px', width: '50%' }}
+                      style={{ marginBottom: '20px', width: '80%' }}
                       error={errors.city && touched.city ? true : false}
                       helperText={
                         errors.city && touched.city ? errors.city : ''
                       }
                       FormHelperTextProps={{
-                        style: { width: 'max-content', fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem' },
                       }}
                     >
                       {citiesByState && citiesByState.length > 0 ? (
@@ -400,9 +395,9 @@ const AddressForm = () => {
                         <MenuItem value={city}>{city}</MenuItem>
                       )}
                     </TextField>
-                  </SPanelContent>
+                  </S.PanelContent>
 
-                  <SPanelActions>
+                  <S.PanelActions>
                     <Button
                       color="secondary"
                       onClick={() => {
@@ -416,8 +411,8 @@ const AddressForm = () => {
                     <Button color="primary" variant="contained" type="submit">
                       FINALIZAR
                     </Button>
-                  </SPanelActions>
-                </SPanel>
+                  </S.PanelActions>
+                </S.Panel>
               </SForm>
             );
           }}
@@ -431,7 +426,7 @@ const AddressForm = () => {
           severity={severity}
         />
       </Paper>
-    </SContainer>
+    </Container>
   );
 };
 

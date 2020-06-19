@@ -9,9 +9,10 @@ import StudentOrPersonalForm from '../pages/SignUp/StudentOrPersonalForm';
 import AddressForm from '../pages/SignUp/AddressForm';
 import MainLayout from '../components/MainLayout';
 import Menu from '../components/Menu';
-import Chat from '../pages/Chat';
+// import Chat from '../pages/Chat';
 import Exercise from '../pages/Exercise';
 import Specialization from '../pages/Specialization';
+import Home from '../pages/Home';
 import StudentGroup from '../pages/StudentGroup';
 import API from '../services/API';
 
@@ -45,25 +46,30 @@ const Routes = () => {
         </Route>
 
         {/* Home */}
-        <Route exact path="/studentgroup">
+        <Route exact path="/home">
           {!isAuthenticated && <Redirect to="/" />}
-          <MainLayout menuArea={Menu} asideArea={StudentGroup} />
+          <MainLayout menuArea={Menu} mainArea={Home} />
         </Route>
 
-        <Route exact path="/specialization">
+        <Route exact path="/studentgroups">
           {!isAuthenticated && <Redirect to="/" />}
-          <MainLayout menuArea={Menu} asideArea={Specialization} />
+          <MainLayout menuArea={Menu} mainArea={StudentGroup} />
         </Route>
 
-        <Route exact path="/exercise">
+        <Route exact path="/specializations">
           {!isAuthenticated && <Redirect to="/" />}
-          <MainLayout menuArea={Menu} asideArea={Exercise} />
+          <MainLayout menuArea={Menu} mainArea={Specialization} />
         </Route>
 
-        <Route exact path="/chat">
+        <Route exact path="/activities">
           {!isAuthenticated && <Redirect to="/" />}
-          <MainLayout menuArea={Menu} asideArea={Chat} />
+          <MainLayout menuArea={Menu} mainArea={Exercise} />
         </Route>
+
+        {/* <Route exact path="/chat">
+          {!isAuthenticated && <Redirect to="/" />}
+          <MainLayout menuArea={Menu} mainArea={Chat} />
+        </Route> */}
       </Switch>
     </BrowserRouter>
   );

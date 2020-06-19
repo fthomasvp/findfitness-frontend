@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 
-import DialogStudentGroupDetails from '../../pages/StudentGroup/DialogStudentGroupDetails';
+import DialogStudentGroupDetails from '../../pages/Home/DialogStudentGroupDetails';
 
 const Marker = React.memo(function MemodMarker({ studentGroup }) {
   /**
