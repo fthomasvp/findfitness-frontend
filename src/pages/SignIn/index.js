@@ -60,7 +60,7 @@ const SignIn = () => {
   useEffect(() => {
     // Unmount component
     if (isAuthenticated) {
-      return history.replace('/studentgroup');
+      return history.replace('/home');
     }
   }, [history, isAuthenticated]);
 

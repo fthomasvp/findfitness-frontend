@@ -1,19 +1,14 @@
-import Styled from 'styled-components';
+import { makeStyles } from '@material-ui/core/styles';
 
-export const SMenuOption = Styled.div`
-  width: calc(100% - 10px);
-  height: 50px;
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-  text-align: center;
-  border-radius: 30px;
-  margin: 10px;
-  background-color: ${({ secondary }) => (secondary ? 'none' : 'gray')};
-  border: ${({ secondary }) => (secondary ? '1px solid #ABABAB' : '')};
-
-  &:hover {
-    cursor: pointer;
-    color: white;
-  }
-`;
+export const useStyles = makeStyles(theme => ({
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  large: {
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+  },
+}));

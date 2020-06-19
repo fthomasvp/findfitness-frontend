@@ -29,7 +29,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import Utils from '../../../utils';
 import PersonalPicture from '../../../assets/images/guilian-fremaux-personal.jpg';
 import { DialogContent, DialogActions } from './styles';
-import DialogEnrollStudentGroup from '../../StudentGroup/DialogEnrollStudentGroup';
+import DialogEnrollStudentGroup from '../../Home/DialogEnrollStudentGroup';
 
 const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
   const {

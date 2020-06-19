@@ -3,17 +3,14 @@ import PropTypes from 'prop-types';
 
 import Container from '@material-ui/core/Container';
 
-import * as S from './styles';
-import Profile from '../Profile';
 import Footer from '../Footer';
 
-const MainLayout = ({ menuArea: Menu, mainArea: Page }) => {
+const MainLayout = ({ menuArea: Menu, mainArea: MainContent }) => {
   return (
     <Container maxWidth="xl">
       <Menu />
-      <S.ContainerFooter>
-        <Footer />
-      </S.ContainerFooter>
+      <MainContent />
+      <Footer />
     </Container>
   );
 };
@@ -24,19 +21,3 @@ MainLayout.propTypes = {
 };
 
 export default MainLayout;
-
-{
-  /* <S.ContainerUpside>
-  <S.ContainerUpsideLeft>
-    <S.ContainerProfile>
-      <Profile />
-    </S.ContainerProfile>
-    <S.ContainerMenu>
-      <Menu />
-    </S.ContainerMenu>
-  </S.ContainerUpsideLeft>
-  <S.ContainerAside>
-    <Page />
-  </S.ContainerAside>
-</S.ContainerUpside> */
-}
