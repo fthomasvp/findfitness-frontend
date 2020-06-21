@@ -6,7 +6,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 
 import DialogAddStudentGroup from './DialogAddStudentGroup';
-import Marker from '../../components/Marker';
+import DialogStudentGroupDetails from '../../components/DialogStudentGroupDetails';
 import {
   searchStudentGroupRequest,
   clearCreateStudentGroupData,
@@ -26,7 +26,6 @@ const StudentGroup = () => {
     lng: -34.8813,
   });
 
-  // Persistir estado no Redux
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -35,6 +34,37 @@ const StudentGroup = () => {
     setOpen(false);
 
     dispatch(clearCreateStudentGroupData());
+  };
+
+  /**
+   * Variables and functions to DialogStudentGroupDetails
+   */
+  const [openDialogDetails, setOpenDialogDetails] = useState(false);
+  const [selectedStudentGroup, setSelectedStudentGroup] = useState(null);
+
+  const handleCloseDialogDetails = () => setOpenDialogDetails(false);
+
+  /**
+   * About Google Maps (Markers...)
+   */
+  const handleApiLoaded = (map, maps) => {
+    studentGroups.forEach(studentGroup => {
+      const { latitude: lat, longitude: lng } = studentGroup;
+
+      const marker = new maps.Marker({
+        title: 'Hello World!',
+        animation: maps.Animation.DROP,
+        position: { lat, lng },
+        map,
+      });
+
+      // Trigger DialogDetails by click on Marker
+      marker.addListener('click', () => {
+        setOpenDialogDetails(true);
+
+        setSelectedStudentGroup(studentGroup);
+      });
+    });
   };
 
   /**
@@ -64,19 +94,10 @@ const StudentGroup = () => {
         bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY }}
         center={MAP_CENTER_POSITION} // defaultCenter needs a constant object
         defaultZoom={13}
+        yesIWantToUseGoogleMapApiInternals={true}
+        onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
         options={{ fullscreenControl: false, zoomControl: false }}
-      >
-        {studentGroups.map((studentGroup, index) => {
-          return (
-            <Marker
-              key={index}
-              lat={studentGroup.latitude}
-              lng={studentGroup.longitude}
-              studentGroup={studentGroup}
-            />
-          );
-        })}
-      </GoogleMapReact>
+      />
 
       {user.profile !== 'ROLE_STUDENT' && (
         <Fab
@@ -91,6 +112,15 @@ const StudentGroup = () => {
           <AddIcon />
         </Fab>
       )}
+
+      {selectedStudentGroup && (
+        <DialogStudentGroupDetails
+          open={openDialogDetails}
+          handleClose={handleCloseDialogDetails}
+          studentGroup={selectedStudentGroup}
+        />
+      )}
+
       <DialogAddStudentGroup open={open} handleClose={handleClose} />
     </div>
   );
