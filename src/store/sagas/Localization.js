@@ -40,7 +40,7 @@ export function* searchAddressByZipCode(action) {
         yield put(updateAddressData(response, states));
       }
 
-      if (fromPage === 'studentgroup') {
+      if (fromPage === 'studentgroups') {
         yield put(updateThirdStepData(response, states));
       }
     }
