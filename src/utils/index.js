@@ -7,24 +7,20 @@ const Utils = {
 
     const formatedAddress = {
       street: splitedAddress[0],
-      number: nullRegex.test(splitedAddress[1])
-        ? 'Sem Número'
-        : splitedAddress[1],
+      number: nullRegex.test(splitedAddress[1]) ? '' : `, ${splitedAddress[1]}`,
 
       complemento: nullRegex.test(splitedAddress[2])
-        ? 'Sem Complemento'
-        : splitedAddress[2],
+        ? ''
+        : ` - ${splitedAddress[2]}`,
 
-      neighboor: nullRegex.test(splitedAddress[3])
-        ? 'Sem Bairro'
-        : splitedAddress[3],
+      neighboor: splitedAddress[3],
 
       referenceLocation: nullRegex.test(splitedAddress[4])
         ? 'Sem Ponto de Referência'
         : splitedAddress[4],
 
-      city: splitedAddress[5],
-      state: splitedAddress[6],
+      city: `, ${splitedAddress[5]}`,
+      state: ` - ${splitedAddress[6]}`,
     };
 
     return formatedAddress;
