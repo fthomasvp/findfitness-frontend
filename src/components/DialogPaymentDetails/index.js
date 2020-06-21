@@ -27,7 +27,6 @@ import IconButton from '@material-ui/core/IconButton';
 import PaymentIcon from '@material-ui/icons/Payment';
 
 import Utils from '../../utils';
-import PersonalPicture from '../../assets/images/guilian-fremaux-personal.jpg';
 import { DialogContent, DialogActions } from './styles';
 
 const DialogPaymentDetails = ({ open, handleClose, payment }) => {
@@ -85,11 +84,13 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
             <Typography gutterBottom variant="h5" align="center">
               <PersonIcon /> PERSONAL
             </Typography>
-            <Avatar
-              src={PersonalPicture} // Mock picture
-              alt={'Personal profile'}
-              style={{ marginLeft: '48%', width: '48px', height: '48px' }}
-            />
+            <div style={{ display: 'flex', flex: 1, justifyContent: 'center' }}>
+              <Avatar
+                src={personal.profilePicture}
+                alt={'Personal profile'}
+                style={{ width: '64px', height: '64px' }}
+              />
+            </div>
             <Typography
               variant="h6"
               align="center"
@@ -338,6 +339,7 @@ DialogPaymentDetails.propTypes = {
         cref: PropTypes.string.isRequired,
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
+        profilePicture: PropTypes.string,
       }).isRequired,
       personalEvaluations: PropTypes.array,
       studentEvaluations: PropTypes.array,

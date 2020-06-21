@@ -24,10 +24,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ImageIcon from '@material-ui/icons/Image';
 
 import Utils from '../../utils';
-import PersonalPicture from '../../assets/images/guilian-fremaux-personal.jpg';
 import DialogEnrollStudentGroup from '../../pages/Home/DialogEnrollStudentGroup';
 import { DialogContent, DialogActions } from './styles';
 
@@ -87,7 +85,7 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
           centered
           aria-label="simple tabs example"
         >
-          <Tab label="Detalhes da aula" />
+          <Tab label="Informações" />
           <Tab label="Alunos" />
           <Tab label="Avaliações" />
         </Tabs>
@@ -104,11 +102,13 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
             <Typography gutterBottom variant="h5" align="center">
               <PersonIcon /> PERSONAL
             </Typography>
-            <Avatar
-              src={PersonalPicture} // Mock picture
-              alt={'Personal profile'}
-              style={{ marginLeft: '48%', width: '48px', height: '48px' }}
-            />
+            <div style={{ display: 'flex', flex: 1, justifyContent: 'center' }}>
+              <Avatar
+                src={personal.profilePicture}
+                alt={'Personal profile'}
+                style={{ width: '64px', height: '64px' }}
+              />
+            </div>
             <Typography
               variant="h6"
               align="center"
@@ -322,9 +322,14 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
               {payments.map(({ id, student }) => (
                 <ListItem key={id}>
                   <ListItemAvatar>
-                    <Avatar>
-                      <ImageIcon />
-                    </Avatar>
+                    <Avatar
+                      src={student.profilePicture}
+                      style={{
+                        width: '64px',
+                        height: '64px',
+                        marginRight: '10px',
+                      }}
+                    ></Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={student.name} />
                 </ListItem>
@@ -409,6 +414,7 @@ DialogStudentGroupDetails.propTypes = {
       cref: PropTypes.string.isRequired,
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
+      profilePicture: PropTypes.string,
     }).isRequired,
     payments: PropTypes.array,
   }).isRequired,

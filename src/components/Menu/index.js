@@ -7,7 +7,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
-// import ChatIcon from '@material-ui/icons/Chat';
 import ClassIcon from '@material-ui/icons/Class';
 import SchoolIcon from '@material-ui/icons/School';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -15,7 +14,6 @@ import HomeIcon from '@material-ui/icons/Home';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-// import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '@material-ui/core/Drawer';
@@ -36,7 +34,9 @@ const Menu = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const { profile } = useSelector(state => state.auth.user);
+  const { profile, profilePicture, username } = useSelector(
+    state => state.auth.user
+  );
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -121,6 +121,8 @@ const Menu = () => {
           {pageTitle}
         </Typography>
 
+        <Typography variant="button" align="right">Olá, {username}</Typography>
+
         <IconButton
           edge="end"
           color="inherit"
@@ -132,11 +134,9 @@ const Menu = () => {
         >
           <Avatar
             alt="Profile picture"
-            // src="/static/images/avatar/1.jpg"
+            src={profilePicture}
             className={classes.large}
-          >
-            F
-          </Avatar>
+          ></Avatar>
           <Popper
             open={openProfileMenu}
             anchorEl={anchorEl}
