@@ -247,6 +247,8 @@ export const auth = (state = INITIAL_STATE, action) => {
           id: action.data.id,
           profile: action.data.authorities[0].authority,
           email: action.data.email,
+          username: action.data.name,
+          profilePicture: action.data.profilePicture,
           token: action.headers.authorization,
         },
         isAuthenticated: true,
