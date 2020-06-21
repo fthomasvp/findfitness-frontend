@@ -167,7 +167,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                       </InputAdornment>
                     ),
                   }}
-                  style={{ marginBottom: '20px', width: '25%' }}
+                  style={{ marginBottom: '20px', width: '50%' }}
                   error={
                     (errors && errors.zipcode && touched.zipcode) ||
                     (errorLocalization && errorLocalization.status === 500)
@@ -178,7 +178,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                     errors.zipcode && touched.zipcode ? errors.zipcode : ''
                   }
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    style: { fontSize: '1.1rem', minWidth: '280px' },
                   }}
                 />
 
@@ -198,7 +198,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                     errors.street && touched.street ? errors.street : ''
                   }
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    style: { fontSize: '1.1rem', minWidth: '280px' },
                   }}
                 />
 
@@ -222,7 +222,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                       : ''
                   }
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    style: { fontSize: '1.1rem', minWidth: '280px' },
                   }}
                 />
 
@@ -238,7 +238,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                     style: { color: 'white', fontSize: '1.2rem' },
                   }}
                   inputProps={{ min: 1 }}
-                  style={{ marginBottom: '20px', width: '10%' }}
+                  style={{ marginBottom: '20px', width: '30%' }}
                 />
                 <TextField
                   id="complement"
@@ -289,11 +289,11 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   SelectProps={{
                     autoWidth: true,
                   }}
-                  style={{ marginBottom: '20px', width: '10%' }}
+                  style={{ marginBottom: '20px', width: '30%' }}
                   error={errors.state && touched.state ? true : false}
                   helperText={errors.state && touched.state ? errors.state : ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    style: { fontSize: '1.1rem', minWidth: '280px' },
                   }}
                 >
                   {states &&
@@ -317,11 +317,11 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   SelectProps={{
                     autoWidth: true,
                   }}
-                  style={{ marginBottom: '20px', width: '35%' }}
+                  style={{ marginBottom: '20px', width: '80%' }}
                   error={errors.city && touched.city ? true : false}
                   helperText={errors.city && touched.city ? errors.city : ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    style: { fontSize: '1.1rem', minWidth: '280px' },
                   }}
                 >
                   {citiesByState && citiesByState.length > 0 ? (

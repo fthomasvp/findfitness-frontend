@@ -49,10 +49,10 @@ const StudentGroup = () => {
    */
   const handleApiLoaded = (map, maps) => {
     studentGroups.forEach(studentGroup => {
-      const { latitude: lat, longitude: lng } = studentGroup;
+      const { id, latitude: lat, longitude: lng } = studentGroup;
 
       const marker = new maps.Marker({
-        title: 'Hello World!',
+        title: `Aula ${id}`,
         animation: maps.Animation.DROP,
         position: { lat, lng },
         map,

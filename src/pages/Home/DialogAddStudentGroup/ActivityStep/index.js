@@ -101,8 +101,8 @@ const ActivityStep = ({ activeStep, handleBack, handleNext }) => {
     <div>
       <div
         style={{
-          maxHeight: '430px',
-          overflowY: 'scroll',
+          maxHeight: '390px',
+          overflowY: 'auto',
         }}
       >
         <MaterialTable

@@ -108,7 +108,6 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 maxHeight: '400px',
                 display: 'flex',
                 flexFlow: 'column',
-                alignItems: 'center',
                 padding: '10px',
               }}
             >
@@ -135,7 +134,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 FormHelperTextProps={{
                   style: { fontSize: '1.1rem', minWidth: '280px' },
                 }}
-                style={{ marginBottom: '20px', width: '30%' }}
+                style={{ marginBottom: '20px' }}
               />
 
               <TextField
@@ -161,7 +160,6 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 FormHelperTextProps={{
                   style: { fontSize: '1.1rem', minWidth: '280px' },
                 }}
-                style={{ width: '30%' }}
               />
 
               <MuiPickersUtilsProvider utils={MomentUtils}>
@@ -184,7 +182,6 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                   FormHelperTextProps={{
                     style: { fontSize: '1.1rem' },
                   }}
-                  style={{ width: '30%' }}
                 />
 
                 <DateTimePicker
@@ -206,7 +203,6 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                   FormHelperTextProps={{
                     style: { fontSize: '1.1rem' },
                   }}
-                  style={{ width: '30%' }}
                 />
               </MuiPickersUtilsProvider>
 
@@ -243,7 +239,6 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 style={{
                   marginTop: '20px',
                   marginBottom: '20px',
-                  width: '30%',
                 }}
               />
 
@@ -264,7 +259,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                   ),
                 }}
                 inputProps={{ min: 0, step: '.01' }}
-                style={{ marginBottom: '20px', width: '30%' }}
+                style={{ marginBottom: '20px' }}
               />
             </div>
 

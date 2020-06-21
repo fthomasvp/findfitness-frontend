@@ -251,6 +251,7 @@ const AddressForm = () => {
                         style: { fontSize: '1.1rem', minWidth: '280px' },
                       }}
                     />
+
                     <TextField
                       id="neighborhood"
                       label="Bairro"
@@ -276,6 +277,7 @@ const AddressForm = () => {
                         style: { fontSize: '1.1rem', minWidth: '280px' },
                       }}
                     />
+
                     <TextField
                       id="number"
                       label="N°"
