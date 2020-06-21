@@ -37,7 +37,7 @@ const INITIAL_STATE = {
   exercises: [],
   pagination: {
     page: 0,
-    size: 10,
+    size: 20,
   },
   error: null,
 };

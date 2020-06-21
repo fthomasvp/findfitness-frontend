@@ -2,12 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Stepper from '@material-ui/core/Stepper';
@@ -16,52 +11,15 @@ import StepLabel from '@material-ui/core/StepLabel';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
 import FirstStepForm from './FirstStepForm';
-import SecondStepForm from './SecondStepForm';
+import ActivityStep from './ActivityStep';
 import {
   handleNextStep,
   handleBackStep,
   createStudentGroupRequest,
   searchStudentGroupRequest,
 } from '../../../store/ducks/StudentGroup';
-import ThirdStepForm from './ThirdStepForm';
-
-const styles = theme => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  closeButton: {
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
-});
-
-const DialogTitle = withStyles(styles)(props => {
-  const { children, classes, onClose, ...other } = props;
-
-  return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          className={classes.closeButton}
-          onClick={onClose}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
-
-const DialogContent = withStyles(theme => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiDialogContent);
+import AddressStepForm from './AddressStepForm';
+import { DialogTitle, DialogContent } from './styles';
 
 const DialogAddStudentGroup = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -116,7 +74,10 @@ const DialogAddStudentGroup = ({ open, handleClose }) => {
         Marcar aula
       </DialogTitle>
 
-      <DialogContent dividers>
+      <DialogContent
+        dividers
+        style={{ minHeight: '645px', maxHeight: '645px' }}
+      >
         <div>
           <Stepper activeStep={activeStep} alternativeLabel>
             {steps.length > 0 &&
@@ -138,7 +99,7 @@ const DialogAddStudentGroup = ({ open, handleClose }) => {
         )}
 
         {activeStep === 1 && (
-          <SecondStepForm
+          <ActivityStep
             activeStep={activeStep}
             handleBack={handleBack}
             handleNext={handleNext}
@@ -146,7 +107,7 @@ const DialogAddStudentGroup = ({ open, handleClose }) => {
         )}
 
         {activeStep === 2 && (
-          <ThirdStepForm
+          <AddressStepForm
             activeStep={activeStep}
             handleBack={handleBack}
             handleNext={handleNext}

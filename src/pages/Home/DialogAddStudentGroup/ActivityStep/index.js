@@ -21,6 +21,7 @@ import Radio from '@material-ui/core/Radio';
 
 import { storeSecondStepForm } from '../../../../store/ducks/StudentGroup';
 import { searchExercisesRequest } from '../../../../store/ducks/Exercise';
+import { ContainerActionButtons, ActionButtons } from '../styles';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -43,7 +44,7 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
 
-const SecondStepForm = ({ activeStep, handleBack, handleNext }) => {
+const ActivityStep = ({ activeStep, handleBack, handleNext }) => {
   const dispatch = useDispatch();
 
   const secondStepData = useSelector(
@@ -71,15 +72,8 @@ const SecondStepForm = ({ activeStep, handleBack, handleNext }) => {
       ),
     },
     {
-      title: 'NOME',
+      title: 'ATIVIDADE',
       field: 'name',
-      headerStyle: {
-        fontSize: '1.2rem',
-      },
-      cellStyle: {
-        fontSize: '1.2rem',
-        color: '#d3d3d3',
-      },
     },
     {
       title: 'DESCRIÇÃO',
@@ -105,98 +99,117 @@ const SecondStepForm = ({ activeStep, handleBack, handleNext }) => {
 
   return (
     <div>
-      <MaterialTable
-        icons={tableIcons}
-        title="Selecione uma atividade"
-        columns={columns}
-        data={exercises}
-        detailPanel={rowData => {
-          return (
-            <div style={{ display: 'flex', flex: 1, padding: '15px' }}>
-              <div style={{ display: 'flex', width: '20%' }}>
-                <img
-                  src="https://media.istockphoto.com/vectors/cartoon-people-doing-wrist-extension-stretch-exercise-vector-id540566306"
-                  width="100%"
-                  height="100%"
-                  alt="Activity Example"
-                />
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  width: '80%',
-                  marginLeft: '45px',
-                  fontSize: '1.2rem',
-                  color: '#d3d3d3',
-                }}
-              >
-                {rowData.description}
-              </div>
-            </div>
-          );
-        }}
-        options={{
-          pageSizeOptions: [], // Don't show Row size option
-          padding: 'dense',
-        }}
-        onRowClick={(event, rowData) => {
-          setSelectedValue(rowData.id);
-          setExerciseIds(rowData);
-        }}
-        localization={{
-          toolbar: {
-            searchPlaceholder: 'Buscar',
-            searchTooltip: 'Buscar',
-          },
-          body: {
-            emptyDataSourceMessage: 'Poxa! Ainda não há atividades cadastradas',
-          },
-          pagination: {
-            firstTooltip: 'Primeira página',
-            previousTooltip: 'Página anterior',
-            nextTooltip: 'Próxima página',
-            lastTooltip: 'Última página',
-          },
-        }}
-        style={{ marginBottom: '20px', fontSize: '1.2rem' }}
-      />
-
-      {/* Step Control Buttons */}
       <div
         style={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'space-around',
+          maxHeight: '430px',
+          overflowY: 'scroll',
         }}
       >
-        <div>
-          <Button
-            disabled={activeStep === 0}
-            color="secondary"
-            onClick={handleBack}
-          >
-            Voltar
-          </Button>
-        </div>
-        <div>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleClickNext}
-            disabled={!exerciseIds || exerciseIds.length === 0}
-          >
-            Próximo
-          </Button>
-        </div>
+        <MaterialTable
+          icons={tableIcons}
+          title="Selecione uma atividade"
+          columns={columns}
+          data={exercises}
+          detailPanel={rowData => {
+            return (
+              <div style={{ display: 'flex', flex: 1, padding: '15px' }}>
+                <div style={{ display: 'flex', width: '20%' }}>
+                  <img
+                    src="https://media.istockphoto.com/vectors/cartoon-people-doing-wrist-extension-stretch-exercise-vector-id540566306"
+                    width="100%"
+                    height="100%"
+                    alt="Activity Example"
+                  />
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    width: '80%',
+                    marginLeft: '45px',
+                    fontSize: '1.2rem',
+                    color: '#d3d3d3',
+                  }}
+                >
+                  {rowData.description}
+                </div>
+              </div>
+            );
+          }}
+          onRowClick={(event, rowData) => {
+            setSelectedValue(rowData.id);
+            setExerciseIds(rowData);
+          }}
+          options={{
+            padding: 'dense',
+            pageSizeOptions: [], // Don't show Row size option
+            actionsColumnIndex: -1, // Add actions on the end of row
+            headerStyle: {
+              fontSize: '1.2rem',
+            },
+            cellStyle: {
+              fontSize: '1.2rem',
+              color: '#d3d3d3',
+            },
+            searchFieldStyle: {
+              fontSize: '1.2rem',
+            },
+            paginationType: 'stepped',
+          }}
+          localization={{
+            toolbar: {
+              searchPlaceholder: 'Buscar',
+              searchTooltip: 'Buscar',
+            },
+            body: {
+              emptyDataSourceMessage:
+                'Hmmm... Parece que você ainda não entrou numa aula ;-(',
+            },
+            pagination: {
+              firstTooltip: 'Primeira página',
+              previousTooltip: 'Página anterior',
+              nextTooltip: 'Próxima página',
+              lastTooltip: 'Última página',
+            },
+            header: {
+              actions: 'Detalhes',
+            },
+          }}
+          style={{ fontSize: '1.2rem' }}
+        />
       </div>
+
+      {/* Step Control Buttons */}
+      <ContainerActionButtons>
+        <ActionButtons>
+          <div>
+            <Button
+              disabled={activeStep === 0}
+              color="secondary"
+              onClick={handleBack}
+            >
+              Voltar
+            </Button>
+          </div>
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleClickNext}
+              disabled={!exerciseIds || exerciseIds.length === 0}
+            >
+              Próximo
+            </Button>
+          </div>
+        </ActionButtons>
+      </ContainerActionButtons>
     </div>
   );
 };
 
-SecondStepForm.propTypes = {
+ActivityStep.propTypes = {
   activeStep: PropTypes.number.isRequired,
   handleBack: PropTypes.func.isRequired,
   handleNext: PropTypes.func.isRequired,
 };
 
-export default SecondStepForm;
+export default ActivityStep;
