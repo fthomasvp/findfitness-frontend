@@ -14,6 +14,7 @@ import SForm from '../../../../components/Form';
 import { storeFirstStepForm } from '../../../../store/ducks/StudentGroup';
 import { errorMessages } from '../../../validators';
 import Utils from '../../../../utils';
+import { ContainerActionButtons, ActionButtons } from '../styles';
 
 const FirstStepForm = ({ handleBack, handleNext }) => {
   const dispatch = useDispatch();
@@ -79,13 +80,15 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
 
         return errors;
       }}
+      validateOnChange={false}
     >
       {({ values, ...formikProps }) => {
         const {
-          handleChange,
-          handleBlur,
-          handleSubmit,
           setFieldValue,
+          handleChange,
+          handleSubmit,
+          handleBlur,
+          touched,
           errors,
         } = formikProps;
 
@@ -100,141 +103,186 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
 
         return (
           <SForm onSubmit={handleSubmit}>
-            <TextField
-              id="minQtyStudents"
-              label="Quantidade mínima de alunos"
-              type="number"
-              variant="outlined"
-              value={minQtyStudents}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              InputLabelProps={{ style: { color: 'white' } }}
-              inputProps={{ min: 1 }}
-              style={{ marginBottom: '20px' }}
-              error={errors && errors.minQtyStudents ? true : false}
-              helperText={errors.minQtyStudents || ''}
-            />
-            <TextField
-              id="maxQtyStudents"
-              label="Quantidade máxima de alunos"
-              type="number"
-              variant="outlined"
-              value={maxQtyStudents}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              InputLabelProps={{ style: { color: 'white' } }}
-              inputProps={{ min: 1 }}
-              error={errors && errors.maxQtyStudents ? true : false}
-              helperText={errors.maxQtyStudents || ''}
-            />
-
-            <MuiPickersUtilsProvider utils={MomentUtils}>
-              <div
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: '20px',
-                }}
-              >
-                <div>
-                  <DateTimePicker
-                    id="selectedBeginDateTime"
-                    label="Começa em"
-                    format="DD/MM/YYYY HH:mm"
-                    margin="normal"
-                    size="small"
-                    minDate={Date.now()}
-                    value={selectedBeginDateTime}
-                    onChange={value => {
-                      setFieldValue('selectedBeginDateTime', value);
-                    }}
-                    InputLabelProps={{ style: { color: 'white' } }}
-                    error={
-                      errors && errors.selectedBeginDateTime ? true : false
-                    }
-                    helperText={errors.selectedBeginDateTime || ''}
-                  />
-                </div>
-                <div>
-                  <DateTimePicker
-                    id="selectedEndDateTime"
-                    label="Termina em"
-                    format="DD/MM/YYYY HH:mm"
-                    margin="normal"
-                    size="small"
-                    minDate={Date.now()}
-                    value={selectedEndDateTime}
-                    onChange={value => {
-                      setFieldValue('selectedEndDateTime', value);
-                    }}
-                    InputLabelProps={{ style: { color: 'white' } }}
-                    error={errors && errors.selectedEndDateTime ? true : false}
-                    helperText={errors.selectedEndDateTime || ''}
-                  />
-                </div>
-              </div>
-            </MuiPickersUtilsProvider>
-
-            <TextField
-              id="contactPhone"
-              label="Número para contato"
-              type="number"
-              variant="outlined"
-              value={contactPhone}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              InputLabelProps={{ style: { color: 'white' } }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <PhoneIcon />
-                  </InputAdornment>
-                ),
-              }}
-              inputProps={{ min: 0 }}
-              error={errors && errors.contactPhone ? true : false}
-              helperText={errors.contactPhone || ''}
-              style={{ marginBottom: '20px' }}
-            />
-
-            <TextField
-              id="eventPrice"
-              label="Valor"
-              type="number"
-              variant="outlined"
-              value={eventPrice}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              InputLabelProps={{ style: { color: 'white' } }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">R$</InputAdornment>
-                ),
-              }}
-              inputProps={{ min: 0, step: '.01' }}
-              style={{ marginBottom: '20px' }}
-            />
-
-            {/* Step Control Buttons */}
             <div
               style={{
-                width: '100%',
+                maxHeight: '400px',
                 display: 'flex',
-                justifyContent: 'space-around',
+                flexFlow: 'column',
+                alignItems: 'center',
+                padding: '10px',
               }}
             >
-              <div>
-                <Button color="secondary" onClick={handleBack}>
-                  Voltar
-                </Button>
-              </div>
-              <div>
-                <Button variant="contained" color="primary" type="submit">
-                  Próximo
-                </Button>
-              </div>
+              <TextField
+                id="minQtyStudents"
+                label="Quantidade mínima de alunos"
+                type="number"
+                variant="outlined"
+                value={minQtyStudents}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                InputLabelProps={{
+                  style: { color: 'white', fontSize: '1.2rem' },
+                }}
+                inputProps={{ min: 1 }}
+                error={
+                  errors.minQtyStudents && touched.minQtyStudents ? true : false
+                }
+                helperText={
+                  errors.minQtyStudents && touched.minQtyStudents
+                    ? errors.minQtyStudents
+                    : ''
+                }
+                FormHelperTextProps={{
+                  style: { fontSize: '1.1rem', minWidth: '280px' },
+                }}
+                style={{ marginBottom: '20px', width: '30%' }}
+              />
+
+              <TextField
+                id="maxQtyStudents"
+                label="Quantidade máxima de alunos"
+                type="number"
+                variant="outlined"
+                value={maxQtyStudents}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                InputLabelProps={{
+                  style: { color: 'white', fontSize: '1.2rem' },
+                }}
+                inputProps={{ min: 1 }}
+                error={
+                  errors.maxQtyStudents && touched.maxQtyStudents ? true : false
+                }
+                helperText={
+                  errors.maxQtyStudents && touched.maxQtyStudents
+                    ? errors.maxQtyStudents
+                    : ''
+                }
+                FormHelperTextProps={{
+                  style: { fontSize: '1.1rem', minWidth: '280px' },
+                }}
+                style={{ width: '30%' }}
+              />
+
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <DateTimePicker
+                  id="selectedBeginDateTime"
+                  label="Começa em"
+                  format="DD/MM/YYYY HH:mm"
+                  margin="normal"
+                  size="small"
+                  minDate={Date.now()}
+                  value={selectedBeginDateTime}
+                  onChange={value => {
+                    setFieldValue('selectedBeginDateTime', value);
+                  }}
+                  InputLabelProps={{
+                    style: { color: 'white', fontSize: '1.2rem' },
+                  }}
+                  error={errors && errors.selectedBeginDateTime ? true : false}
+                  helperText={errors.selectedBeginDateTime || ''}
+                  FormHelperTextProps={{
+                    style: { fontSize: '1.1rem' },
+                  }}
+                  style={{ width: '30%' }}
+                />
+
+                <DateTimePicker
+                  id="selectedEndDateTime"
+                  label="Termina em"
+                  format="DD/MM/YYYY HH:mm"
+                  margin="normal"
+                  size="small"
+                  minDate={Date.now()}
+                  value={selectedEndDateTime}
+                  onChange={value => {
+                    setFieldValue('selectedEndDateTime', value);
+                  }}
+                  InputLabelProps={{
+                    style: { color: 'white', fontSize: '1.2rem' },
+                  }}
+                  error={errors && errors.selectedEndDateTime ? true : false}
+                  helperText={errors.selectedEndDateTime || ''}
+                  FormHelperTextProps={{
+                    style: { fontSize: '1.1rem' },
+                  }}
+                  style={{ width: '30%' }}
+                />
+              </MuiPickersUtilsProvider>
+
+              <TextField
+                id="contactPhone"
+                label="Número para contato"
+                type="number"
+                variant="outlined"
+                value={contactPhone}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                InputLabelProps={{
+                  style: { color: 'white', fontSize: '1.2rem' },
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PhoneIcon />
+                    </InputAdornment>
+                  ),
+                }}
+                inputProps={{ min: 0 }}
+                error={
+                  errors.contactPhone && touched.contactPhone ? true : false
+                }
+                helperText={
+                  errors.contactPhone && touched.contactPhone
+                    ? errors.contactPhone
+                    : ''
+                }
+                FormHelperTextProps={{
+                  style: { fontSize: '1.1rem', minWidth: '280px' },
+                }}
+                style={{
+                  marginTop: '20px',
+                  marginBottom: '20px',
+                  width: '30%',
+                }}
+              />
+
+              <TextField
+                id="eventPrice"
+                label="Valor"
+                type="number"
+                variant="outlined"
+                value={eventPrice}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                InputLabelProps={{
+                  style: { color: 'white', fontSize: '1.2rem' },
+                }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">R$</InputAdornment>
+                  ),
+                }}
+                inputProps={{ min: 0, step: '.01' }}
+                style={{ marginBottom: '20px', width: '30%' }}
+              />
             </div>
+
+            {/* Step Control Buttons */}
+            <ContainerActionButtons>
+              <ActionButtons>
+                <div>
+                  <Button color="secondary" onClick={handleBack}>
+                    Voltar
+                  </Button>
+                </div>
+                <div>
+                  <Button variant="contained" color="primary" type="submit">
+                    Próximo
+                  </Button>
+                </div>
+              </ActionButtons>
+            </ContainerActionButtons>
           </SForm>
         );
       }}
