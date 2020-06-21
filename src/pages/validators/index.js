@@ -41,9 +41,10 @@ export const state = Yup.string()
   )
   .required('Preencha o campo apenas com duas letras');
 
-export const zipcode = Yup.number().typeError(
-  'Não pode conter letras, espaços em branco ou caracteres especiais'
-)
+export const zipcode = Yup.number()
+  .typeError(
+    'Não pode conter letras, espaços em branco ou caracteres especiais'
+  )
   .test(
     'zipcode',
     'Deve conter 8 caracteres numéricos',
@@ -51,11 +52,11 @@ export const zipcode = Yup.number().typeError(
   )
   .required('Preencha o campo apenas com números');
 
-export const number = Yup.number().typeError(
-  'Não pode conter letras, espaços em branco ou caracteres especiais'
-)
-  .required('Preencha o campo com o número de sua residência'
-);
+export const number = Yup.number()
+  .typeError(
+    'Não pode conter letras, espaços em branco ou caracteres especiais'
+  )
+  .required('Preencha o campo com o número de sua residência');
 
 export const city = Yup.string()
   .max(120, 'Não pode ultrapassar 120 caracteres')

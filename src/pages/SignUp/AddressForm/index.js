@@ -202,7 +202,7 @@ const AddressForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem'},
+                        style: { color: 'white', fontSize: '1.2rem' },
                       }}
                       InputProps={{
                         endAdornment: (
@@ -248,7 +248,7 @@ const AddressForm = () => {
                         errors.street && touched.street ? errors.street : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem', minWidth: '280px'},
+                        style: { fontSize: '1.1rem', minWidth: '280px' },
                       }}
                     />
                     <TextField
@@ -294,7 +294,7 @@ const AddressForm = () => {
                         errors.number && touched.number ? errors.number : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem', minWidth: '280px'},
+                        style: { fontSize: '1.1rem', minWidth: '280px' },
                       }}
                     />
 
