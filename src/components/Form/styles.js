@@ -6,5 +6,5 @@ export const Form = Styled.form`
   flex-flow: ${({ flexFlow }) => flexFlow || 'column'};
   justify-content: ${({ justifyContent }) => justifyContent || 'space-evenly'};
   margin: ${({ margin }) => margin || '5px'};
-  overflow-y: scroll;
+  overflow-y: auto;
 `;
