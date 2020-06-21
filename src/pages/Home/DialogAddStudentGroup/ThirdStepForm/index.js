@@ -46,7 +46,7 @@ const ThirdStepForm = ({ activeStep, handleBack, handleNext }) => {
 
       const formatedZipCode = `${firstPart}-${secondPart}`;
 
-      const fromPage = 'studentgroup';
+      const fromPage = 'studentgroups';
 
       dispatch(
         LocalizationReducer.searchAddressByZipcodeRequest(

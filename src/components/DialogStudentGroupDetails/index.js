@@ -26,10 +26,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ImageIcon from '@material-ui/icons/Image';
 
-import Utils from '../../../utils';
-import PersonalPicture from '../../../assets/images/guilian-fremaux-personal.jpg';
+import Utils from '../../utils';
+import PersonalPicture from '../../assets/images/guilian-fremaux-personal.jpg';
+import DialogEnrollStudentGroup from '../../pages/Home/DialogEnrollStudentGroup';
 import { DialogContent, DialogActions } from './styles';
-import DialogEnrollStudentGroup from '../../Home/DialogEnrollStudentGroup';
 
 const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
   const {
@@ -172,7 +172,8 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                     color: '#d3d3d3',
                   }}
                 >
-                  {formatedAddress.street}, {formatedAddress.number} -{' '}
+                  {formatedAddress.street}
+                  {formatedAddress.number}
                   {formatedAddress.complemento}
                 </Typography>
                 <Typography
@@ -195,7 +196,8 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                     color: '#d3d3d3',
                   }}
                 >
-                  {formatedAddress.neighboor}, {formatedAddress.city} -{' '}
+                  {formatedAddress.neighboor}
+                  {formatedAddress.city}
                   {formatedAddress.state}
                 </Typography>
               </div>
@@ -255,7 +257,7 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                     color: '#d3d3d3',
                   }}
                 >
-                  Valor: R${eventPrice}
+                  Valor: R$ {eventPrice}
                 </Typography>
               </div>
             </div>
@@ -275,15 +277,38 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                     </Typography>
                   </ExpansionPanelSummary>
                   <ExpansionPanelDetails>
-                    <Typography
-                      variant="h6"
+                    <div
                       style={{
-                        fontSize: '1.2em',
-                        color: '#d3d3d3',
+                        display: 'flex',
+                        flex: 1,
                       }}
                     >
-                      {description}
-                    </Typography>
+                      <div style={{ display: 'flex', width: '20%' }}>
+                        <img
+                          src="https://media.istockphoto.com/vectors/cartoon-people-doing-wrist-extension-stretch-exercise-vector-id540566306"
+                          width="100%"
+                          height="100%"
+                          alt="Activity Example"
+                        />
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          width: '80%',
+                          marginLeft: '45px',
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          style={{
+                            fontSize: '1.1rem',
+                            color: '#d3d3d3',
+                          }}
+                        >
+                          {description}
+                        </Typography>
+                      </div>
+                    </div>
                   </ExpansionPanelDetails>
                 </ExpansionPanel>
               ))}
