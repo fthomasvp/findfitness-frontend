@@ -7,6 +7,9 @@ import {
   SIGN_IN_REQUEST,
   signInSuccess,
   signInFail,
+  UPLOAD_PROFILE_PICTURE_REQUEST,
+  uploadProfilePictureSuccess,
+  uploadProfilePictureFail,
 } from '../ducks/Auth';
 
 // put: faz a chamada de uma "Action Creators"
@@ -41,9 +44,35 @@ export function* signIn(action) {
   }
 }
 
+export function* uploadProfilePicture(action) {
+  const { formData, profile, id } = action;
+
+  const resource = profile === 'ROLE_STUDENT' ? 'students' : 'personals';
+
+  try {
+    const response = yield call(
+      API.put,
+      `/${resource}/${id}/profile_picture`,
+      formData,
+      {
+        headers: {
+          'Content-type': 'multipart/form-data',
+        },
+      }
+    );
+
+    if (response && response.status === 200) {
+      yield put(uploadProfilePictureSuccess(response));
+    }
+  } catch (error) {
+    yield put(uploadProfilePictureFail(error.response || error));
+  }
+}
+
 export default all([
   takeLatest(SIGN_UP_REQUEST, signUp),
   takeLatest(SIGN_IN_REQUEST, signIn),
+  takeLatest(UPLOAD_PROFILE_PICTURE_REQUEST, uploadProfilePicture),
 ]);
 
 function _makeUserBodyRequest(userToCreate) {

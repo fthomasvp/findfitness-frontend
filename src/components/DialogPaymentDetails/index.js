@@ -86,7 +86,7 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
             </Typography>
             <div style={{ display: 'flex', flex: 1, justifyContent: 'center' }}>
               <Avatar
-                src={personal.profilePicture}
+                src={`${personal.profilePicture}?${Date.now()}`}
                 alt={'Personal profile'}
                 style={{ width: '64px', height: '64px' }}
               />

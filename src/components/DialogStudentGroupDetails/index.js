@@ -104,7 +104,7 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
             </Typography>
             <div style={{ display: 'flex', flex: 1, justifyContent: 'center' }}>
               <Avatar
-                src={personal.profilePicture}
+                src={`${personal.profilePicture}?${Date.now()}`}
                 alt={'Personal profile'}
                 style={{ width: '64px', height: '64px' }}
               />
@@ -323,7 +323,7 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                 <ListItem key={id}>
                   <ListItemAvatar>
                     <Avatar
-                      src={student.profilePicture}
+                      src={`${student.profilePicture}?${Date.now()}`}
                       style={{
                         width: '64px',
                         height: '64px',

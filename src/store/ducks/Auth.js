@@ -22,6 +22,14 @@ export const HANDLE_BACK_STEP = '@auth/HANDLE_BACK_STEP';
 
 export const CLEAR_SNACKBAR = '@auth/CLEAR_SNACKBAR';
 
+export const UPLOAD_PROFILE_PICTURE_REQUEST =
+  '@auth/UPLOAD_PROFILE_PICTURE_REQUEST';
+
+export const UPLOAD_PROFILE_PICTURE_SUCCESS =
+  '@auth/UPLOAD_PROFILE_PICTURE_SUCCESS';
+
+export const UPLOAD_PROFILE_PICTURE_FAIL = '@auth/UPLOAD_PROFILE_PICTURE_FAIL';
+
 /**
  * Action Creators
  * */
@@ -123,6 +131,29 @@ export const clearSnackbar = () => {
   };
 };
 
+export const uploadProfilePictureRequest = (formData, profile, id) => {
+  return {
+    type: UPLOAD_PROFILE_PICTURE_REQUEST,
+    formData,
+    profile,
+    id,
+  };
+};
+
+export const uploadProfilePictureSuccess = response => {
+  return {
+    type: UPLOAD_PROFILE_PICTURE_SUCCESS,
+    response,
+  };
+};
+
+export const uploadProfilePictureFail = error => {
+  return {
+    type: UPLOAD_PROFILE_PICTURE_FAIL,
+    error,
+  };
+};
+
 /**
  * Reducer
  * */
@@ -140,7 +171,7 @@ const INITIAL_STATE = {
       phone: '',
       cpf: '',
       password: '',
-      gender: '',
+      gender: 'F',
       birthdate: '',
       email: '',
       validCref: false,
@@ -150,7 +181,7 @@ const INITIAL_STATE = {
       phone: '',
       cpf: '',
       password: '',
-      gender: '',
+      gender: 'F',
       birthdate: '',
       email: '',
     },
@@ -317,6 +348,35 @@ export const auth = (state = INITIAL_STATE, action) => {
         error: INITIAL_STATE.error,
         response: INITIAL_STATE.response,
       };
+
+    case UPLOAD_PROFILE_PICTURE_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case UPLOAD_PROFILE_PICTURE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+        user: {
+          ...state.user,
+          profilePicture: action.response.data,
+        },
+      };
+    }
+
+    case UPLOAD_PROFILE_PICTURE_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
 
     default:
       return state;

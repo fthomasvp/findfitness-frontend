@@ -25,12 +25,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Divider from '@material-ui/core/Divider';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 import * as AuthReducer from '../../store/ducks/Auth';
 import { useStyles } from './styles';
 
 const Menu = () => {
-  let history = useHistory();
+  const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -67,6 +68,9 @@ const Menu = () => {
       case 3:
         return history.push('/specializations');
 
+      case 4:
+        return history.push('/profile');
+
       default:
         return history.push('/home');
     }
@@ -91,6 +95,9 @@ const Menu = () => {
 
       case '/specializations':
         return setPageTitle('Especializações');
+
+      case '/profile':
+        return setPageTitle('Meu perfil');
 
       default:
         return setPageTitle('Tela inicial');
@@ -121,7 +128,9 @@ const Menu = () => {
           {pageTitle}
         </Typography>
 
-        <Typography variant="button" align="right">Olá, {username}</Typography>
+        <Typography variant="button" align="right">
+          Olá, {username}
+        </Typography>
 
         <IconButton
           edge="end"
@@ -134,7 +143,7 @@ const Menu = () => {
         >
           <Avatar
             alt="Profile picture"
-            src={profilePicture}
+            src={`${profilePicture}?${Date.now()}`}
             className={classes.large}
           ></Avatar>
           <Popper
@@ -158,12 +167,6 @@ const Menu = () => {
                       autoFocusItem={openProfileMenu}
                       id="profileMenuList"
                     >
-                      <MenuItem onClick={handleCloseProfileMenu}>
-                        <ListItemText primary="Meu perfil" />
-                      </MenuItem>
-
-                      <Divider />
-
                       <MenuItem onClick={handleLogoutClick}>
                         <ListItemIcon>
                           <ExitToAppIcon fontSize="default" />
@@ -222,17 +225,6 @@ const Menu = () => {
             </ListItem>
           )}
 
-          {/* <ListItem
-            button
-            selected={selectedIndex === 1}
-            onClick={event => handleListItemClick(event, 1)}
-          >
-            <ListItemIcon>
-              <ChatIcon />
-            </ListItemIcon>
-            <ListItemText primary="Chat" />
-          </ListItem> */}
-
           {profile && profile !== 'ROLE_STUDENT' && (
             <ListItem
               button
@@ -245,6 +237,19 @@ const Menu = () => {
               <ListItemText primary="Especializações" />
             </ListItem>
           )}
+
+          <Divider style={{ marginBottom: '5px', marginTop: '5px' }} />
+
+          <ListItem
+            button
+            selected={selectedIndex === 4}
+            onClick={event => handleListItemClick(event, 4)}
+          >
+            <ListItemIcon>
+              <AccountBoxIcon />
+            </ListItemIcon>
+            <ListItemText primary="Perfil" />
+          </ListItem>
         </List>
       </Drawer>
     </AppBar>
