@@ -7,7 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
-import ClassIcon from '@material-ui/icons/Class';
+import MapIcon from '@material-ui/icons/Map';
 import SchoolIcon from '@material-ui/icons/School';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HomeIcon from '@material-ui/icons/Home';
@@ -97,7 +97,7 @@ const Menu = () => {
         return setPageTitle('Especializações');
 
       case '/profile':
-        return setPageTitle('Meu perfil');
+        return setPageTitle('Perfil');
 
       default:
         return setPageTitle('Tela inicial');
@@ -207,7 +207,7 @@ const Menu = () => {
             onClick={event => handleListItemClick(event, 1)}
           >
             <ListItemIcon>
-              <ClassIcon />
+              <MapIcon />
             </ListItemIcon>
             <ListItemText primary="Minhas aulas" />
           </ListItem>
