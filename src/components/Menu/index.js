@@ -44,7 +44,7 @@ const Menu = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openProfileMenu, setOpenProfileMenu] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [pageTitle, setPageTitle] = useState('Tela inicial');
+  const [pageTitle, setPageTitle] = useState('Início');
 
   const handleCloseDrawer = () => setOpenDrawer(false);
 
@@ -85,7 +85,7 @@ const Menu = () => {
   const getPageTitle = pathname => {
     switch (pathname) {
       case '/home':
-        return setPageTitle('Tela inicial');
+        return setPageTitle('Início');
 
       case '/studentgroups':
         return setPageTitle('Minhas aulas');
@@ -100,7 +100,7 @@ const Menu = () => {
         return setPageTitle('Perfil');
 
       default:
-        return setPageTitle('Tela inicial');
+        return setPageTitle('Início');
     }
   };
 
@@ -196,7 +196,7 @@ const Menu = () => {
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
-            <ListItemText primary="Tela inicial" />
+            <ListItemText primary="Início" />
           </ListItem>
 
           <Divider style={{ marginBottom: '5px', marginTop: '5px' }} />
