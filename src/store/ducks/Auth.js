@@ -24,11 +24,17 @@ export const CLEAR_SNACKBAR = '@auth/CLEAR_SNACKBAR';
 
 export const UPLOAD_PROFILE_PICTURE_REQUEST =
   '@auth/UPLOAD_PROFILE_PICTURE_REQUEST';
-
 export const UPLOAD_PROFILE_PICTURE_SUCCESS =
   '@auth/UPLOAD_PROFILE_PICTURE_SUCCESS';
-
 export const UPLOAD_PROFILE_PICTURE_FAIL = '@auth/UPLOAD_PROFILE_PICTURE_FAIL';
+
+export const FETCH_USER_DATA_REQUEST = '@auth/FETCH_USER_DATA_REQUEST';
+export const FETCH_USER_DATA_SUCCESS = '@auth/FETCH_USER_DATA_SUCCESS';
+export const FETCH_USER_DATA_FAIL = '@auth/FETCH_USER_DATA_FAIL';
+
+export const PATCH_USER_DATA_REQUEST = '@auth/PATCH_USER_DATA_REQUEST';
+export const PATCH_USER_DATA_SUCCESS = '@auth/PATCH_USER_DATA_SUCCESS';
+export const PATCH_USER_DATA_FAIL = '@auth/PATCH_USER_DATA_FAIL';
 
 /**
  * Action Creators
@@ -154,6 +160,50 @@ export const uploadProfilePictureFail = error => {
   };
 };
 
+export const fetchUserDataRequest = (profile, id) => {
+  return {
+    type: FETCH_USER_DATA_REQUEST,
+    profile,
+    id,
+  };
+};
+
+export const fetchUserDataSuccess = response => {
+  return {
+    type: FETCH_USER_DATA_SUCCESS,
+    response,
+  };
+};
+
+export const fetchUserDataFail = error => {
+  return {
+    type: FETCH_USER_DATA_FAIL,
+    error,
+  };
+};
+
+export const patchUserDataRequest = (profile, userData) => {
+  return {
+    type: PATCH_USER_DATA_REQUEST,
+    profile,
+    userData,
+  };
+};
+
+export const patchUserDataSuccess = response => {
+  return {
+    type: PATCH_USER_DATA_SUCCESS,
+    response,
+  };
+};
+
+export const patchUserDataFail = error => {
+  return {
+    type: PATCH_USER_DATA_FAIL,
+    error,
+  };
+};
+
 /**
  * Reducer
  * */
@@ -195,6 +245,45 @@ const INITIAL_STATE = {
       state: '',
       zipcode: '',
     },
+  },
+  userToUpdate: {
+    id: 0,
+    address: {
+      id: 0,
+      street: '',
+      number: '',
+      complement: '',
+      neighborhood: '',
+      referenceLocation: '',
+      city: '',
+      state: '',
+      zipcode: '',
+    },
+    birthdate: '',
+    cpf: '',
+    email: '',
+    password: '',
+    gender: 'F',
+    name: '',
+    phone: '',
+    profilePicture: '',
+    healthCard: {
+      id: 0,
+      sedentaryTime: '',
+      regularPhysicalActivity: '',
+      heartProblem: '',
+      respiratoryAllergy: '',
+      orthopedicProblem: '',
+      surgicalIntervention: '',
+      regularMedication: '',
+      comments: '',
+      diabetes: false,
+      epilepsy: false,
+      smoking: false,
+      rheumatism: false,
+      hypertension: false,
+    },
+    cref: '',
   },
   error: null,
   response: null,
@@ -370,6 +459,67 @@ export const auth = (state = INITIAL_STATE, action) => {
     }
 
     case UPLOAD_PROFILE_PICTURE_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
+
+    case FETCH_USER_DATA_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case FETCH_USER_DATA_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+        userToUpdate: {
+          ...state.userToUpdate,
+          ...action.response.data,
+          password: '',
+        },
+        user: {
+          ...state.user,
+          email: action.response.data.email,
+          username: action.response.data.name,
+          profilePicture: action.response.data.profilePicture,
+        },
+      };
+    }
+
+    case FETCH_USER_DATA_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
+
+    case PATCH_USER_DATA_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case PATCH_USER_DATA_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+      };
+    }
+
+    case PATCH_USER_DATA_FAIL: {
       return {
         ...state,
         loading: false,
