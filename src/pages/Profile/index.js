@@ -20,8 +20,18 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { Formik } from 'formik';
+import Search from '@material-ui/icons/Search';
+import MenuItem from '@material-ui/core/MenuItem';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import * as AuthReducer from '../../store/ducks/Auth';
+import * as LocalizationReducer from '../../store/ducks/Localization';
 import Alert from '../../components/Alert';
 import YupSchema, {
   errorMessages,
@@ -29,6 +39,11 @@ import YupSchema, {
   password,
   name,
   birthdate,
+  street,
+  number,
+  neighborhood,
+  city,
+  zipcode,
 } from '../validators';
 import * as S from './styles';
 import SForm from '../../components/Form';
@@ -44,6 +59,14 @@ const StudentOrPersonalSchema = YupSchema({
   birthdate,
 });
 
+const AddressSchema = YupSchema({
+  street,
+  number,
+  neighborhood,
+  city,
+  zipcode,
+});
+
 const Profile = () => {
   const dispatch = useDispatch();
 
@@ -51,7 +74,12 @@ const Profile = () => {
 
   const { userToUpdate } = useSelector(state => state.auth);
 
+  // Address step Tab
+  const { states, citiesByState } = useSelector(state => state.localization);
+
   const { gender } = userToUpdate;
+
+  const [isUserEmailChanged, setIsUserEmailChanged] = useState(false);
 
   /**
    * Gender Tab
@@ -94,6 +122,12 @@ const Profile = () => {
   const [toggleVisibilityIcon, setToggleVisibilityIcon] = useState(false);
 
   /**
+   *  Modal confirmação perfil
+   */
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+  const handleCloseConfirmation = () => setOpenConfirmation(false);
+
+  /**
    * Profile picture field
    */
   const [imageFile, setImageFile] = useState(null);
@@ -128,6 +162,9 @@ const Profile = () => {
   const error = useSelector(state => state.auth.error);
   const response = useSelector(state => state.auth.response);
 
+  // Address step Tab
+  const errorLocalization = useSelector(state => state.localization.error);
+
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [growTransition, setGrowTransition] = useState(false);
@@ -139,6 +176,31 @@ const Profile = () => {
     setGrowTransition(false);
 
     dispatch(AuthReducer.clearSnackbar());
+    dispatch(LocalizationReducer.clearSnackbar());
+  };
+
+  /**
+   * Address step Tab
+   */
+  const handleClickFindAddressByZipcode = (zipcode, states) => {
+    if (zipcode) {
+      const firstPart = zipcode.slice(0, 5);
+      const secondPart = zipcode.slice(5);
+
+      const formatedZipCode = `${firstPart}-${secondPart}`;
+
+      const fromPage = 'profile';
+
+      dispatch(
+        LocalizationReducer.searchAddressByZipcodeRequest(
+          formatedZipCode,
+          states,
+          fromPage
+        )
+      );
+    } else {
+      console.warn('Padrão do CEP Incorreto (e.g. 99999-999)');
+    }
   };
 
   /**
@@ -177,19 +239,49 @@ const Profile = () => {
       setGrowTransition(true);
       setSeverity('success');
 
-      dispatch(AuthReducer.fetchUserDataRequest(profile, id));
+      // Do Logout when user's email change
+      if (isUserEmailChanged) {
+        dispatch(AuthReducer.signOut());
+      } else {
+        dispatch(AuthReducer.fetchUserDataRequest(profile, id));
+      }
     }
-  }, [error, response, dispatch, profile, id]);
+
+    // Address step Tab
+    if (errorLocalization && errorLocalization.status === 500) {
+      setAlertMessage('Ops! Parece que esse CEP não foi encontrado');
+      setOpenAlert(true);
+      setGrowTransition(true);
+      setSeverity('error');
+    }
+  }, [
+    error,
+    response,
+    dispatch,
+    profile,
+    id,
+    errorLocalization,
+    isUserEmailChanged,
+  ]);
 
   // Get user data to update
   useEffect(() => {
-    dispatch(AuthReducer.fetchUserDataRequest(profile, id));
+    if (profile) {
+      dispatch(AuthReducer.fetchUserDataRequest(profile, id));
+    }
   }, [dispatch, profile, id]);
 
   // Get gender on redux from request "fetchUserData"
   useEffect(() => {
     _getSelectedTab(gender);
   }, [gender]);
+
+  // Address step Tab
+  useEffect(() => {
+    (async () => {
+      await dispatch(LocalizationReducer.fetchStatesRequest());
+    })();
+  }, [dispatch]);
 
   return (
     <Grid container spacing={2}>
@@ -210,7 +302,7 @@ const Profile = () => {
               fontSize: '1.2rem',
             }}
           >
-            Clique no ícone da foto para alterar ;)
+            Clique no pequeno ícone da câmera para alterar sua foto :)
           </Typography>
           <div
             style={{
@@ -267,7 +359,11 @@ const Profile = () => {
             }}
           >
             {showInputField && (
-              <Button onClick={clearProfilePictureFields} color="secondary">
+              <Button
+                onClick={clearProfilePictureFields}
+                color="secondary"
+                variant="outlined"
+              >
                 Cancelar
               </Button>
             )}
@@ -277,6 +373,7 @@ const Profile = () => {
               variant="contained"
               color="primary"
               disabled={imageFile === null}
+              style={{ marginLeft: '15px' }}
             >
               Atualizar
             </Button>
@@ -291,8 +388,9 @@ const Profile = () => {
               value={tab}
               onChange={handleChangeTab}
               indicatorColor="primary"
-              aria-label="payment details tabs"
-              centered
+              variant="scrollable"
+              scrollButtons="auto"
+              aria-label="profile tabs"
             >
               <Tab label="Dados pessoais" />
               <Tab label="Endereço" />
@@ -375,6 +473,7 @@ const Profile = () => {
                 } = values;
 
                 const {
+                  submitForm,
                   setFieldError,
                   setFieldValue,
                   handleChange,
@@ -390,7 +489,6 @@ const Profile = () => {
                       <S.PanelContent>
                         {profile === 'ROLE_PERSONAL' && (
                           <TextField
-                            autoFocus
                             id="cref"
                             label="CREF"
                             variant="outlined"
@@ -422,7 +520,7 @@ const Profile = () => {
                               handleBlur(evt);
                             }}
                             InputLabelProps={{
-                              style: { /*color: 'white',*/ fontSize: '1.2rem' },
+                              style: { fontSize: '1rem' },
                             }}
                             style={{
                               marginBottom: '20px',
@@ -439,7 +537,7 @@ const Profile = () => {
                         )}
 
                         <TextField
-                          autoFocus={profile === 'ROLE_STUDENT'}
+                          autoFocus
                           id="name"
                           label="Nome"
                           variant="outlined"
@@ -447,7 +545,7 @@ const Profile = () => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           InputLabelProps={{
-                            style: { /*color: 'white',*/ fontSize: '1.2rem' },
+                            style: { fontSize: '1rem' },
                           }}
                           style={{ marginBottom: '20px' }}
                           error={errors.name && touched.name ? true : false}
@@ -467,7 +565,7 @@ const Profile = () => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           InputLabelProps={{
-                            style: { /*color: 'white',*/ fontSize: '1.2rem' },
+                            style: { fontSize: '1rem' },
                           }}
                           style={{ marginBottom: '20px', width: '140px' }}
                           error={errors.phone && touched.phone ? true : false}
@@ -487,7 +585,7 @@ const Profile = () => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           InputLabelProps={{
-                            style: { /*color: 'white',*/ fontSize: '1.2rem' },
+                            style: { fontSize: '1rem' },
                           }}
                           style={{ marginBottom: '20px', width: '160px' }}
                           error={errors.cpf && touched.cpf ? true : false}
@@ -581,7 +679,7 @@ const Profile = () => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           InputLabelProps={{
-                            style: { /*color: 'white',*/ fontSize: '1.2rem' },
+                            style: { fontSize: '1rem' },
                           }}
                           style={{ marginBottom: '20px' }}
                           error={errors.email && touched.email ? true : false}
@@ -602,7 +700,7 @@ const Profile = () => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           InputLabelProps={{
-                            style: { /*color: 'white',*/ fontSize: '1.2rem' },
+                            style: { fontSize: '1rem' },
                           }}
                           InputProps={{
                             endAdornment: (
@@ -641,6 +739,607 @@ const Profile = () => {
                           FormHelperTextProps={{
                             style: { fontSize: '1.1rem' },
                           }}
+                        />
+                      </S.PanelContent>
+
+                      <S.PanelActions>
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          onClick={() => {
+                            if (email !== userToUpdate.email) {
+                              setOpenConfirmation(true);
+                            } else {
+                              submitForm();
+                            }
+                          }}
+                        >
+                          Atualizar
+                        </Button>
+                      </S.PanelActions>
+
+                      <Dialog
+                        open={openConfirmation}
+                        onClose={handleCloseConfirmation}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                      >
+                        <DialogTitle id="alert-dialog-title">
+                          Calma, calma! Antes de confirmar...
+                        </DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-description">
+                            Ao alterar o seu email, você está ciente de que, por
+                            motivos de segurança, será preciso fazer login
+                            novamente em nossa plataforma.
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button
+                            onClick={handleCloseConfirmation}
+                            color="secondary"
+                            variant="outlined"
+                            autoFocus
+                          >
+                            Cancelar
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              submitForm();
+
+                              setIsUserEmailChanged(true);
+
+                              handleCloseConfirmation();
+                            }}
+                            color="primary"
+                            variant="contained"
+                          >
+                            Confirmar
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+                    </S.Panel>
+                  </SForm>
+                );
+              }}
+            </Formik>
+          )}
+
+          {tab === 1 && (
+            <Formik
+              initialValues={userToUpdate.address}
+              onSubmit={values => {
+                let address = values;
+
+                address = {
+                  ...address,
+                  number: String(address.number),
+                  state: String(address.state),
+                };
+
+                dispatch(
+                  AuthReducer.patchUserAddressDataRequest(profile, id, address)
+                );
+              }}
+              validationSchema={AddressSchema}
+              enableReinitialize
+            >
+              {({ values, ...formikProps }) => {
+                const {
+                  setFieldValue,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  touched,
+                  errors,
+                } = formikProps;
+
+                const {
+                  zipcode,
+                  street,
+                  neighborhood,
+                  number,
+                  complement,
+                  referenceLocation,
+                  city,
+                  state,
+                } = values;
+
+                return (
+                  <SForm onSubmit={handleSubmit}>
+                    <S.Panel>
+                      <S.PanelContent>
+                        <TextField
+                          autoFocus
+                          id="zipcode"
+                          label="CEP"
+                          variant="outlined"
+                          value={zipcode}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="find address by zipcode"
+                                  onClick={() =>
+                                    handleClickFindAddressByZipcode(
+                                      zipcode,
+                                      states
+                                    )
+                                  }
+                                >
+                                  <Search />
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
+                          style={{ marginBottom: '20px', width: '50%' }}
+                          error={
+                            (errors.zipcode && touched.zipcode) ||
+                            (errorLocalization &&
+                              errorLocalization.status === 500)
+                              ? true
+                              : false
+                          }
+                          helperText={
+                            errors.zipcode && touched.zipcode
+                              ? errors.zipcode
+                              : ''
+                          }
+                          FormHelperTextProps={{
+                            style: { fontSize: '1.1rem', minWidth: '280px' },
+                          }}
+                        />
+
+                        <TextField
+                          id="street"
+                          label="Rua"
+                          variant="outlined"
+                          value={street}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          style={{ marginBottom: '20px' }}
+                          error={errors.street && touched.street ? true : false}
+                          helperText={
+                            errors.street && touched.street ? errors.street : ''
+                          }
+                          FormHelperTextProps={{
+                            style: { fontSize: '1.1rem', minWidth: '280px' },
+                          }}
+                        />
+
+                        <TextField
+                          id="neighborhood"
+                          label="Bairro"
+                          variant="outlined"
+                          value={neighborhood}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          style={{ marginBottom: '20px', width: '50%' }}
+                          error={
+                            errors.neighborhood && touched.neighborhood
+                              ? true
+                              : false
+                          }
+                          helperText={
+                            errors.neighborhood && touched.neighborhood
+                              ? errors.neighborhood
+                              : ''
+                          }
+                          FormHelperTextProps={{
+                            style: { fontSize: '1.1rem', minWidth: '280px' },
+                          }}
+                        />
+
+                        <TextField
+                          id="number"
+                          label="N°"
+                          type="number"
+                          variant="outlined"
+                          value={number}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          inputProps={{ min: 1 }}
+                          style={{ marginBottom: '20px', width: '30%' }}
+                          error={errors.number && touched.number ? true : false}
+                          helperText={
+                            errors.number && touched.number ? errors.number : ''
+                          }
+                          FormHelperTextProps={{
+                            style: { fontSize: '1.1rem', minWidth: '280px' },
+                          }}
+                        />
+
+                        <TextField
+                          id="complement"
+                          label="Complemento"
+                          variant="outlined"
+                          value={complement}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          style={{ marginBottom: '20px' }}
+                        />
+                        <TextField
+                          id="referenceLocation"
+                          label="Ponto de Referência"
+                          variant="outlined"
+                          value={referenceLocation}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          multiline
+                          rows={2}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          style={{ marginBottom: '20px' }}
+                        />
+
+                        <TextField
+                          id="state"
+                          select
+                          label="Estado"
+                          variant="outlined"
+                          value={state}
+                          onChange={async evt => {
+                            const selectedState = evt.target.value;
+
+                            await setFieldValue('state', selectedState);
+
+                            await setFieldValue('city', '');
+
+                            return await dispatch(
+                              LocalizationReducer.fetchCitiesByStateIdRequest(
+                                selectedState
+                              )
+                            );
+                          }}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          SelectProps={{
+                            autoWidth: true,
+                          }}
+                          style={{ marginBottom: '20px', width: '30%' }}
+                          error={errors.state && touched.state ? true : false}
+                          helperText={
+                            errors.state && touched.state ? errors.state : ''
+                          }
+                          FormHelperTextProps={{
+                            style: { fontSize: '1.1rem', minWidth: '280px' },
+                          }}
+                        >
+                          {states &&
+                            states.map(state => (
+                              <MenuItem key={state.id} value={state.initials}>
+                                {state.initials}
+                              </MenuItem>
+                            ))}
+                        </TextField>
+
+                        <TextField
+                          id="city"
+                          select
+                          label="Cidade"
+                          variant="outlined"
+                          value={city}
+                          onChange={evt =>
+                            setFieldValue('city', evt.target.value)
+                          }
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          SelectProps={{
+                            autoWidth: true,
+                          }}
+                          style={{ marginBottom: '20px', width: '80%' }}
+                          error={errors.city && touched.city ? true : false}
+                          helperText={
+                            errors.city && touched.city ? errors.city : ''
+                          }
+                          FormHelperTextProps={{
+                            style: { fontSize: '1.1rem' },
+                          }}
+                        >
+                          {citiesByState && citiesByState.length > 0 ? (
+                            citiesByState.map(city => (
+                              <MenuItem key={city.id} value={city.name}>
+                                {city.name}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem value={city}>{city}</MenuItem>
+                          )}
+                        </TextField>
+                      </S.PanelContent>
+
+                      <S.PanelActions>
+                        <Button
+                          color="primary"
+                          variant="contained"
+                          type="submit"
+                        >
+                          Atualizar
+                        </Button>
+                      </S.PanelActions>
+                    </S.Panel>
+                  </SForm>
+                );
+              }}
+            </Formik>
+          )}
+
+          {tab === 2 && (
+            <Formik
+              initialValues={userToUpdate.healthCard}
+              onSubmit={values => {
+                dispatch(
+                  AuthReducer.patchUserHealthCardDataRequest(id, values)
+                );
+              }}
+              enableReinitialize
+            >
+              {({ values, ...formikProps }) => {
+                const {
+                  setFieldValue,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                } = formikProps;
+
+                const {
+                  sedentaryTime,
+                  regularPhysicalActivity,
+                  heartProblem,
+                  respiratoryAllergy,
+                  orthopedicProblem,
+                  surgicalIntervention,
+                  regularMedication,
+                  comments,
+                  diabetes,
+                  epilepsy,
+                  smoking,
+                  rheumatism,
+                  hypertension,
+                } = values;
+
+                return (
+                  <SForm onSubmit={handleSubmit}>
+                    <S.Panel>
+                      <S.PanelContent>
+                        <TextField
+                          autoFocus
+                          id="sedentaryTime"
+                          label="Sendentarismo"
+                          variant="outlined"
+                          value={sedentaryTime}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          multiline
+                          rows={2}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          inputProps={{ maxLength: 250 }}
+                          style={{ marginBottom: '20px' }}
+                        />
+
+                        <TextField
+                          id="regularPhysicalActivity"
+                          label="Atividade física regular"
+                          variant="outlined"
+                          value={regularPhysicalActivity}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          multiline
+                          rows={2}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          inputProps={{ maxLength: 250 }}
+                          style={{ marginBottom: '20px' }}
+                        />
+
+                        <TextField
+                          id="heartProblem"
+                          label="Problemas no coração"
+                          variant="outlined"
+                          value={heartProblem}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          multiline
+                          rows={2}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          inputProps={{ maxLength: 250 }}
+                          style={{ marginBottom: '20px' }}
+                        />
+
+                        <TextField
+                          id="respiratoryAllergy"
+                          label="Alergia respiratória"
+                          type="respiratoryAllergy"
+                          variant="outlined"
+                          value={respiratoryAllergy}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          multiline
+                          rows={2}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          inputProps={{ maxLength: 250 }}
+                          style={{ marginBottom: '20px' }}
+                        />
+
+                        <TextField
+                          id="orthopedicProblem"
+                          label="Problemas ortopédicos"
+                          variant="outlined"
+                          value={orthopedicProblem}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          multiline
+                          rows={2}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          inputProps={{ maxLength: 250 }}
+                          style={{ marginBottom: '20px' }}
+                        />
+
+                        <TextField
+                          id="surgicalIntervention"
+                          label="Interveção cirúrgica"
+                          variant="outlined"
+                          value={surgicalIntervention}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          multiline
+                          rows={2}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          inputProps={{ maxLength: 250 }}
+                          style={{ marginBottom: '20px' }}
+                        />
+
+                        <TextField
+                          id="regularMedication"
+                          label="Medicação regular"
+                          variant="outlined"
+                          value={regularMedication}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          multiline
+                          rows={2}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          inputProps={{ maxLength: 250 }}
+                          style={{ marginBottom: '20px' }}
+                        />
+
+                        <TextField
+                          id="comments"
+                          label="Comentários em geral"
+                          variant="outlined"
+                          value={comments}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          multiline
+                          rows={2}
+                          InputLabelProps={{
+                            style: { fontSize: '1rem' },
+                          }}
+                          inputProps={{ maxLength: 250 }}
+                          style={{ marginBottom: '20px' }}
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={diabetes}
+                              onChange={event => {
+                                setFieldValue(
+                                  `${event.target.name}`,
+                                  event.target.checked
+                                );
+                              }}
+                              color="primary"
+                              name="diabetes"
+                            />
+                          }
+                          label="Diabetes"
+                          labelPlacement="end"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={epilepsy}
+                              onChange={event => {
+                                setFieldValue(
+                                  `${event.target.name}`,
+                                  event.target.checked
+                                );
+                              }}
+                              color="primary"
+                              name="epilepsy"
+                            />
+                          }
+                          label="Epilepsia"
+                          labelPlacement="end"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={smoking}
+                              onChange={event => {
+                                setFieldValue(
+                                  `${event.target.name}`,
+                                  event.target.checked
+                                );
+                              }}
+                              color="primary"
+                              name="smoking"
+                            />
+                          }
+                          label="Fumante"
+                          labelPlacement="end"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={rheumatism}
+                              onChange={event => {
+                                setFieldValue(
+                                  `${event.target.name}`,
+                                  event.target.checked
+                                );
+                              }}
+                              color="primary"
+                              name="rheumatism"
+                            />
+                          }
+                          label="Reumatismo"
+                          labelPlacement="end"
+                        />
+
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={hypertension}
+                              onChange={event => {
+                                setFieldValue(
+                                  `${event.target.name}`,
+                                  event.target.checked
+                                );
+                              }}
+                              color="primary"
+                              name="hypertension"
+                            />
+                          }
+                          label="Hipertensão"
+                          labelPlacement="end"
                         />
                       </S.PanelContent>
 
