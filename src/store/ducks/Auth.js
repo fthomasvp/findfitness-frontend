@@ -52,6 +52,8 @@ export const PATCH_USER_HEALTH_CARD_DATA_SUCCESS =
 export const PATCH_USER_HEALTH_CARD_DATA_FAIL =
   '@auth/PATCH_USER_HEALTH_CARD_DATA_FAIL';
 
+export const CLEAR_FIELDS = '@auth/CLEAR_FIELDS';
+
 /**
  * Action Creators
  * */
@@ -125,10 +127,10 @@ export const signOut = () => {
   };
 };
 
-export const updateAddressData = ({ data }, states) => {
+export const updateAddressData = (response, states) => {
   return {
     type: UPDATE_ADDRESS_DATA,
-    data,
+    response,
     states,
   };
 };
@@ -270,6 +272,12 @@ export const patchUserHealthCardDataFail = error => {
   return {
     type: PATCH_USER_HEALTH_CARD_DATA_FAIL,
     error,
+  };
+};
+
+export const clearFields = () => {
+  return {
+    type: CLEAR_FIELDS,
   };
 };
 
@@ -459,15 +467,15 @@ export const auth = (state = INITIAL_STATE, action) => {
     case UPDATE_ADDRESS_DATA: {
       // Find the state object to return
       const myState = action.states.find(
-        state => state.name === action.data.state
+        state => state.name === action.response.data.state
       );
 
-      let addressFromAPI = {
-        street: action.data.street,
-        neighborhood: action.data.neighborhood,
-        city: action.data.city,
-        state: myState,
-        zipcode: action.data.zipcode,
+      const addressFromAPI = {
+        street: action.response.data.street,
+        neighborhood: action.response.data.neighborhood,
+        city: action.response.data.city,
+        state: myState.initials,
+        zipcode: action.response.data.zipcode,
       };
 
       return {
@@ -671,6 +679,12 @@ export const auth = (state = INITIAL_STATE, action) => {
         response: INITIAL_STATE.response,
       };
     }
+
+    case CLEAR_FIELDS:
+      return {
+        ...state,
+        activeStep: INITIAL_STATE.activeStep,
+      };
 
     default:
       return state;

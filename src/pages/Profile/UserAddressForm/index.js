@@ -294,14 +294,14 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                   label="Estado"
                   variant="outlined"
                   value={state}
-                  onChange={async evt => {
+                  onChange={evt => {
                     const selectedState = evt.target.value;
 
-                    await setFieldValue('state', selectedState);
+                    setFieldValue('state', selectedState);
 
-                    await setFieldValue('city', '');
+                    setFieldValue('city', '');
 
-                    return await dispatch(
+                    dispatch(
                       LocalizationReducer.fetchCitiesByStateIdRequest(
                         selectedState
                       )

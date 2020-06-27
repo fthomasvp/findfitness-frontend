@@ -196,7 +196,7 @@ function _makeUserBodyRequest(userToCreate) {
   // Get Address data
   const address = {
     ...addressFromForm,
-    state: addressFromForm.state.initials,
+    state: addressFromForm.state,
     number: addressFromForm.number || '',
     complement: addressFromForm.complement || '',
     referenceLocation: addressFromForm.referenceLocation || '',

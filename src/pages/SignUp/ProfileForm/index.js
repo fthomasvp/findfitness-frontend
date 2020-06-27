@@ -15,7 +15,11 @@ import Divider from '@material-ui/core/Divider';
 import Container from '@material-ui/core/Container';
 
 import * as S from '../styles';
-import { storeProfileType, handleNextStep } from '../../../store/ducks/Auth';
+import {
+  storeProfileType,
+  handleNextStep,
+  clearFields,
+} from '../../../store/ducks/Auth';
 
 const ProfileForm = () => {
   const history = useHistory();
@@ -50,6 +54,13 @@ const ProfileForm = () => {
     } else {
       setProfileTypeForm('PERSONAL');
     }
+  };
+
+  // Limpar valor do step ao sair da página
+  const leavePage = () => {
+    dispatch(clearFields());
+
+    history.goBack();
   };
 
   return (
@@ -100,13 +111,14 @@ const ProfileForm = () => {
           </S.PanelContent>
 
           <S.PanelActions id="sPanelActions">
-            <Button color="secondary" onClick={() => history.goBack()}>
+            <Button color="secondary" variant="outlined" onClick={leavePage}>
               Voltar
             </Button>
             <Button
               color="primary"
               variant="contained"
               onClick={handleClickNextButton}
+              style={{ marginLeft: '15px' }}
             >
               Próximo
             </Button>

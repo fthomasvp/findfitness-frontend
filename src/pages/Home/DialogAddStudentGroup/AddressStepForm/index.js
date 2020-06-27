@@ -272,19 +272,21 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   label="Estado"
                   variant="outlined"
                   value={state}
-                  onChange={async evt => {
+                  onChange={evt => {
                     const selectedState = evt.target.value;
 
-                    await setFieldValue('state', selectedState);
+                    setFieldValue('state', selectedState);
 
-                    return await dispatch(
+                    setFieldValue('city', '');
+
+                    dispatch(
                       LocalizationReducer.fetchCitiesByStateIdRequest(
                         selectedState
                       )
                     );
                   }}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   SelectProps={{
                     autoWidth: true,
@@ -298,7 +300,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                 >
                   {states &&
                     states.map(state => (
-                      <MenuItem key={state.id} value={state}>
+                      <MenuItem key={state.id} value={state.initials}>
                         {state.initials}
                       </MenuItem>
                     ))}

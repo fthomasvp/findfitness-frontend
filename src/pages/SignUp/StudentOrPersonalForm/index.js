@@ -197,7 +197,7 @@ const StudentOrPersonalForm = () => {
                   <S.PanelContent>
                     <S.PanelTitle>
                       <Typography variant="h5" align="center">
-                        Hey! Queremos te conhecer{' '}
+                        Queremos te conhecer melhor{' '}
                         <span role="img" aria-label="Blink emoction">
                           &#128521;
                         </span>
@@ -238,7 +238,7 @@ const StudentOrPersonalForm = () => {
                           handleBlur(evt);
                         }}
                         InputLabelProps={{
-                          style: { color: 'white', fontSize: '1.2rem' },
+                          style: { fontSize: '1rem' },
                         }}
                         style={{
                           marginBottom: '20px',
@@ -263,7 +263,7 @@ const StudentOrPersonalForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       style={{ marginBottom: '20px' }}
                       error={errors.name && touched.name ? true : false}
@@ -283,7 +283,7 @@ const StudentOrPersonalForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       style={{ marginBottom: '20px', width: '140px' }}
                       error={errors.phone && touched.phone ? true : false}
@@ -303,7 +303,7 @@ const StudentOrPersonalForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       style={{ marginBottom: '20px', width: '160px' }}
                       error={errors.cpf && touched.cpf ? true : false}
@@ -360,7 +360,7 @@ const StudentOrPersonalForm = () => {
                               setFieldValue('birthdate', value);
                             }}
                             InputLabelProps={{
-                              style: { color: 'white', fontSize: '1.2rem' },
+                              style: { fontSize: '1rem' },
                             }}
                             error={
                               errors.birthdate && touched.birthdate
@@ -392,7 +392,7 @@ const StudentOrPersonalForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       style={{ marginBottom: '20px' }}
                       error={errors.email && touched.email ? true : false}
@@ -413,7 +413,7 @@ const StudentOrPersonalForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       InputProps={{
                         endAdornment: (
@@ -452,6 +452,7 @@ const StudentOrPersonalForm = () => {
                   <S.PanelActions>
                     <Button
                       color="secondary"
+                      variant="outlined"
                       onClick={() => {
                         handleBack();
 
@@ -460,7 +461,12 @@ const StudentOrPersonalForm = () => {
                     >
                       Voltar
                     </Button>
-                    <Button color="primary" variant="contained" type="submit">
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      type="submit"
+                      style={{ marginLeft: '15px' }}
+                    >
                       Próximo
                     </Button>
                   </S.PanelActions>

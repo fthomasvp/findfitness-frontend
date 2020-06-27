@@ -99,10 +99,10 @@ export const handleBackStep = activeStep => {
   };
 };
 
-export const updateThirdStepData = ({ data }, states) => {
+export const updateThirdStepData = (response, states) => {
   return {
     type: UPDATE_THIRD_STEP_DATA,
-    data,
+    response,
     states,
   };
 };
@@ -266,17 +266,17 @@ export const studentGroup = (state = INITIAL_STATE, action) => {
     }
 
     case UPDATE_THIRD_STEP_DATA: {
-      // // Find the state object to return
+      // Find the state object to return
       const myState = action.states.find(
-        state => state.name === action.data.state
+        state => state.name === action.response.data.state
       );
 
-      let addressFromAPI = {
-        street: action.data.street,
-        neighborhood: action.data.neighborhood,
-        city: action.data.city,
-        state: myState,
-        zipcode: action.data.zipcode,
+      const addressFromAPI = {
+        street: action.response.data.street,
+        neighborhood: action.response.data.neighborhood,
+        city: action.response.data.city,
+        state: myState.initials,
+        zipcode: action.response.data.zipcode,
       };
 
       return {
