@@ -22,6 +22,38 @@ export const HANDLE_BACK_STEP = '@auth/HANDLE_BACK_STEP';
 
 export const CLEAR_SNACKBAR = '@auth/CLEAR_SNACKBAR';
 
+export const UPLOAD_PROFILE_PICTURE_REQUEST =
+  '@auth/UPLOAD_PROFILE_PICTURE_REQUEST';
+export const UPLOAD_PROFILE_PICTURE_SUCCESS =
+  '@auth/UPLOAD_PROFILE_PICTURE_SUCCESS';
+export const UPLOAD_PROFILE_PICTURE_FAIL = '@auth/UPLOAD_PROFILE_PICTURE_FAIL';
+
+export const FETCH_USER_DATA_REQUEST = '@auth/FETCH_USER_DATA_REQUEST';
+export const FETCH_USER_DATA_SUCCESS = '@auth/FETCH_USER_DATA_SUCCESS';
+export const FETCH_USER_DATA_FAIL = '@auth/FETCH_USER_DATA_FAIL';
+
+export const PATCH_USER_DATA_REQUEST = '@auth/PATCH_USER_DATA_REQUEST';
+export const PATCH_USER_DATA_SUCCESS = '@auth/PATCH_USER_DATA_SUCCESS';
+export const PATCH_USER_DATA_FAIL = '@auth/PATCH_USER_DATA_FAIL';
+
+export const PATCH_USER_ADDRESS_DATA_REQUEST =
+  '@auth/PATCH_USER_ADDRESS_DATA_REQUEST';
+export const PATCH_USER_ADDRESS_DATA_SUCCESS =
+  '@auth/PATCH_USER_ADDRESS_DATA_SUCCESS';
+export const PATCH_USER_ADDRESS_DATA_FAIL =
+  '@auth/PATCH_USER_ADDRESS_DATA_FAIL';
+
+export const UPDATE_ADDRESS_PROFILE_DATA = '@auth/UPDATE_ADDRESS_PROFILE_DATA';
+
+export const PATCH_USER_HEALTH_CARD_DATA_REQUEST =
+  '@auth/PATCH_USER_HEALTH_CARD_DATA_REQUEST';
+export const PATCH_USER_HEALTH_CARD_DATA_SUCCESS =
+  '@auth/PATCH_USER_HEALTH_CARD_DATA_SUCCESS';
+export const PATCH_USER_HEALTH_CARD_DATA_FAIL =
+  '@auth/PATCH_USER_HEALTH_CARD_DATA_FAIL';
+
+export const CLEAR_FIELDS = '@auth/CLEAR_FIELDS';
+
 /**
  * Action Creators
  * */
@@ -95,10 +127,10 @@ export const signOut = () => {
   };
 };
 
-export const updateAddressData = ({ data }, states) => {
+export const updateAddressData = (response, states) => {
   return {
     type: UPDATE_ADDRESS_DATA,
-    data,
+    response,
     states,
   };
 };
@@ -123,6 +155,132 @@ export const clearSnackbar = () => {
   };
 };
 
+export const uploadProfilePictureRequest = (formData, profile, id) => {
+  return {
+    type: UPLOAD_PROFILE_PICTURE_REQUEST,
+    formData,
+    profile,
+    id,
+  };
+};
+
+export const uploadProfilePictureSuccess = response => {
+  return {
+    type: UPLOAD_PROFILE_PICTURE_SUCCESS,
+    response,
+  };
+};
+
+export const uploadProfilePictureFail = error => {
+  return {
+    type: UPLOAD_PROFILE_PICTURE_FAIL,
+    error,
+  };
+};
+
+export const fetchUserDataRequest = (profile, id) => {
+  return {
+    type: FETCH_USER_DATA_REQUEST,
+    profile,
+    id,
+  };
+};
+
+export const fetchUserDataSuccess = response => {
+  return {
+    type: FETCH_USER_DATA_SUCCESS,
+    response,
+  };
+};
+
+export const fetchUserDataFail = error => {
+  return {
+    type: FETCH_USER_DATA_FAIL,
+    error,
+  };
+};
+
+export const patchUserDataRequest = (profile, userData) => {
+  return {
+    type: PATCH_USER_DATA_REQUEST,
+    profile,
+    userData,
+  };
+};
+
+export const patchUserDataSuccess = response => {
+  return {
+    type: PATCH_USER_DATA_SUCCESS,
+    response,
+  };
+};
+
+export const patchUserDataFail = error => {
+  return {
+    type: PATCH_USER_DATA_FAIL,
+    error,
+  };
+};
+
+export const patchUserAddressDataRequest = (profile, id, userAddressData) => {
+  return {
+    type: PATCH_USER_ADDRESS_DATA_REQUEST,
+    profile,
+    id,
+    userAddressData,
+  };
+};
+
+export const patchUserAddressDataSuccess = response => {
+  return {
+    type: PATCH_USER_ADDRESS_DATA_SUCCESS,
+    response,
+  };
+};
+
+export const patchUserAddressDataFail = error => {
+  return {
+    type: PATCH_USER_ADDRESS_DATA_FAIL,
+    error,
+  };
+};
+
+export const updateAddressProfileData = (response, states) => {
+  return {
+    type: UPDATE_ADDRESS_PROFILE_DATA,
+    response,
+    states,
+  };
+};
+
+export const patchUserHealthCardDataRequest = (id, userHealthCardData) => {
+  return {
+    type: PATCH_USER_HEALTH_CARD_DATA_REQUEST,
+    id,
+    userHealthCardData,
+  };
+};
+
+export const patchUserHealthCardDataSuccess = response => {
+  return {
+    type: PATCH_USER_HEALTH_CARD_DATA_SUCCESS,
+    response,
+  };
+};
+
+export const patchUserHealthCardDataFail = error => {
+  return {
+    type: PATCH_USER_HEALTH_CARD_DATA_FAIL,
+    error,
+  };
+};
+
+export const clearFields = () => {
+  return {
+    type: CLEAR_FIELDS,
+  };
+};
+
 /**
  * Reducer
  * */
@@ -140,7 +298,7 @@ const INITIAL_STATE = {
       phone: '',
       cpf: '',
       password: '',
-      gender: '',
+      gender: 'F',
       birthdate: '',
       email: '',
       validCref: false,
@@ -150,7 +308,7 @@ const INITIAL_STATE = {
       phone: '',
       cpf: '',
       password: '',
-      gender: '',
+      gender: 'F',
       birthdate: '',
       email: '',
     },
@@ -164,6 +322,45 @@ const INITIAL_STATE = {
       state: '',
       zipcode: '',
     },
+  },
+  userToUpdate: {
+    id: 0,
+    address: {
+      id: 0,
+      street: '',
+      number: '',
+      complement: '',
+      neighborhood: '',
+      referenceLocation: '',
+      city: '',
+      state: '',
+      zipcode: '',
+    },
+    birthdate: '',
+    cpf: '',
+    email: '',
+    password: '',
+    gender: 'F',
+    name: '',
+    phone: '',
+    profilePicture: '',
+    healthCard: {
+      id: 0,
+      sedentaryTime: '',
+      regularPhysicalActivity: '',
+      heartProblem: '',
+      respiratoryAllergy: '',
+      orthopedicProblem: '',
+      surgicalIntervention: '',
+      regularMedication: '',
+      comments: '',
+      diabetes: false,
+      epilepsy: false,
+      smoking: false,
+      rheumatism: false,
+      hypertension: false,
+    },
+    cref: '',
   },
   error: null,
   response: null,
@@ -270,15 +467,15 @@ export const auth = (state = INITIAL_STATE, action) => {
     case UPDATE_ADDRESS_DATA: {
       // Find the state object to return
       const myState = action.states.find(
-        state => state.name === action.data.state
+        state => state.name === action.response.data.state
       );
 
-      let addressFromAPI = {
-        street: action.data.street,
-        neighborhood: action.data.neighborhood,
-        city: action.data.city,
-        state: myState,
-        zipcode: action.data.zipcode,
+      const addressFromAPI = {
+        street: action.response.data.street,
+        neighborhood: action.response.data.neighborhood,
+        city: action.response.data.city,
+        state: myState.initials,
+        zipcode: action.response.data.zipcode,
       };
 
       return {
@@ -316,6 +513,177 @@ export const auth = (state = INITIAL_STATE, action) => {
         ...state,
         error: INITIAL_STATE.error,
         response: INITIAL_STATE.response,
+      };
+
+    case UPLOAD_PROFILE_PICTURE_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case UPLOAD_PROFILE_PICTURE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+        user: {
+          ...state.user,
+          profilePicture: action.response.data,
+        },
+      };
+    }
+
+    case UPLOAD_PROFILE_PICTURE_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
+
+    case FETCH_USER_DATA_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case FETCH_USER_DATA_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+        userToUpdate: {
+          ...state.userToUpdate,
+          ...action.response.data,
+          password: '',
+        },
+        user: {
+          ...state.user,
+          email: action.response.data.email,
+          username: action.response.data.name,
+          profilePicture: action.response.data.profilePicture,
+        },
+      };
+    }
+
+    case FETCH_USER_DATA_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
+
+    case PATCH_USER_DATA_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case PATCH_USER_DATA_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+      };
+    }
+
+    case PATCH_USER_DATA_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
+
+    case PATCH_USER_ADDRESS_DATA_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case PATCH_USER_ADDRESS_DATA_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+      };
+    }
+
+    case PATCH_USER_ADDRESS_DATA_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
+
+    case UPDATE_ADDRESS_PROFILE_DATA: {
+      const myState = action.states.find(
+        state => state.name === action.response.data.state
+      );
+
+      let addressFromAPI = {
+        street: action.response.data.street,
+        neighborhood: action.response.data.neighborhood,
+        city: action.response.data.city,
+        state: myState.initials,
+        zipcode: action.response.data.zipcode,
+      };
+
+      return {
+        ...state,
+        userToUpdate: {
+          ...state.userToUpdate,
+          address: {
+            ...state.userToUpdate.address,
+            ...addressFromAPI,
+          },
+        },
+      };
+    }
+
+    case PATCH_USER_HEALTH_CARD_DATA_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case PATCH_USER_HEALTH_CARD_DATA_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+      };
+    }
+
+    case PATCH_USER_HEALTH_CARD_DATA_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
+
+    case CLEAR_FIELDS:
+      return {
+        ...state,
+        activeStep: INITIAL_STATE.activeStep,
       };
 
     default:

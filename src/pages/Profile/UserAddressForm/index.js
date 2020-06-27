@@ -2,29 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { Formik } from 'formik';
+import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
+import { Formik } from 'formik';
 import Search from '@material-ui/icons/Search';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import * as StudentGroupReducer from '../../../../store/ducks/StudentGroup';
-import * as LocalizationReducer from '../../../../store/ducks/Localization';
+import * as AuthReducer from '../../../store/ducks/Auth';
+import * as LocalizationReducer from '../../../store/ducks/Localization';
+import * as S from '../styles';
+import SForm from '../../../components/Form';
 import YupSchema, {
   street,
   number,
   neighborhood,
   city,
   zipcode,
-} from '../../../validators';
-import SForm from '../../../../components/Form';
-import Alert from '../../../../components/Alert';
-import { ContainerActionButtons, ActionButtons } from '../styles';
+} from '../../validators';
+import Alert from '../../../components/Alert';
 
-// Yup Fields Schema
-const ThirdStepSchema = YupSchema({
+/**
+ * Yup Fields Schema
+ */
+const AddressSchema = YupSchema({
   street,
   number,
   neighborhood,
@@ -32,13 +34,8 @@ const ThirdStepSchema = YupSchema({
   zipcode,
 });
 
-const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
+const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
   const dispatch = useDispatch();
-
-  const { createStudentGroup } = useSelector(state => state.studentGroup);
-  const { thirdStepData } = createStudentGroup;
-
-  const { states, citiesByState } = useSelector(state => state.localization);
 
   const handleClickFindAddressByZipcode = (zipcode, states) => {
     if (zipcode) {
@@ -47,7 +44,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
 
       const formatedZipCode = `${firstPart}-${secondPart}`;
 
-      const fromPage = 'studentgroups';
+      const fromPage = 'profile';
 
       dispatch(
         LocalizationReducer.searchAddressByZipcodeRequest(
@@ -64,6 +61,9 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
   /**
    * Alert
    */
+  const error = useSelector(state => state.auth.error);
+  const response = useSelector(state => state.auth.response);
+
   const errorLocalization = useSelector(state => state.localization.error);
 
   const [openAlert, setOpenAlert] = useState(false);
@@ -76,6 +76,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
     setOpenAlert(false);
     setGrowTransition(false);
 
+    dispatch(AuthReducer.clearSnackbar());
     dispatch(LocalizationReducer.clearSnackbar());
   };
 
@@ -83,65 +84,77 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
    * Effects
    */
   useEffect(() => {
-    if (states.length === 0) {
-      dispatch(LocalizationReducer.fetchStatesRequest());
+    if (error && error.status !== 200) {
+      setAlertMessage(error.data?.message || error.message);
+      setOpenAlert(true);
+      setGrowTransition(true);
+      setSeverity('error');
     }
-  }, [dispatch, states]);
 
-  useEffect(() => {
-    // Error 500 - CEP Not found in API LocationIQ e.g. 54762222
+    if (
+      response &&
+      response.config?.method === 'patch' &&
+      response.status === 204
+    ) {
+      setAlertMessage('Seus dados foram atualizados');
+      setOpenAlert(true);
+      setGrowTransition(true);
+      setSeverity('success');
+
+      dispatch(AuthReducer.fetchUserDataRequest(profile, id));
+    }
+
+    // Address step Tab
     if (errorLocalization && errorLocalization.status === 500) {
       setAlertMessage('Ops! Parece que esse CEP não foi encontrado');
       setOpenAlert(true);
       setGrowTransition(true);
       setSeverity('error');
     }
-  }, [errorLocalization]);
+  }, [error, response, dispatch, profile, id, errorLocalization]);
 
   return (
-    <>
-      <Formik
-        initialValues={thirdStepData}
-        onSubmit={thirdStepData => {
-          dispatch(StudentGroupReducer.storeThirdStepForm(thirdStepData));
+    <Formik
+      initialValues={address}
+      onSubmit={values => {
+        let address = values;
 
-          handleNext();
-        }}
-        validationSchema={ThirdStepSchema}
-        validateOnChange={false}
-        enableReinitialize
-      >
-        {({ values, ...formikProps }) => {
-          const {
-            setFieldValue,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            touched,
-            errors,
-          } = formikProps;
+        address = {
+          ...address,
+          number: String(address.number),
+          state: String(address.state),
+        };
 
-          const {
-            zipcode,
-            street,
-            neighborhood,
-            number,
-            complement,
-            referenceLocation,
-            city,
-            state,
-          } = values;
+        dispatch(AuthReducer.patchUserAddressDataRequest(profile, id, address));
+      }}
+      validationSchema={AddressSchema}
+      enableReinitialize
+    >
+      {({ values, ...formikProps }) => {
+        const {
+          setFieldValue,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          touched,
+          errors,
+        } = formikProps;
 
-          return (
-            <SForm onSubmit={handleSubmit}>
-              <div
-                style={{
-                  maxHeight: '400px',
-                  display: 'flex',
-                  flexFlow: 'column',
-                  padding: '10px',
-                }}
-              >
+        const {
+          zipcode,
+          street,
+          neighborhood,
+          number,
+          complement,
+          referenceLocation,
+          city,
+          state,
+        } = values;
+
+        return (
+          <SForm onSubmit={handleSubmit}>
+            <S.Panel>
+              <S.PanelContent>
                 <TextField
                   autoFocus
                   id="zipcode"
@@ -151,7 +164,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   InputProps={{
                     endAdornment: (
@@ -169,7 +182,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   }}
                   style={{ marginBottom: '20px', width: '50%' }}
                   error={
-                    (errors && errors.zipcode && touched.zipcode) ||
+                    (errors.zipcode && touched.zipcode) ||
                     (errorLocalization && errorLocalization.status === 500)
                       ? true
                       : false
@@ -190,7 +203,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   style={{ marginBottom: '20px' }}
                   error={errors.street && touched.street ? true : false}
@@ -210,7 +223,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   style={{ marginBottom: '20px', width: '50%' }}
                   error={
@@ -235,11 +248,19 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   inputProps={{ min: 1 }}
                   style={{ marginBottom: '20px', width: '30%' }}
+                  error={errors.number && touched.number ? true : false}
+                  helperText={
+                    errors.number && touched.number ? errors.number : ''
+                  }
+                  FormHelperTextProps={{
+                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                  }}
                 />
+
                 <TextField
                   id="complement"
                   label="Complemento"
@@ -248,7 +269,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   style={{ marginBottom: '20px' }}
                 />
@@ -259,13 +280,14 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   value={referenceLocation}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  multiline
+                  rows={2}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   style={{ marginBottom: '20px' }}
                 />
 
-                {/* Serão Select Fields */}
                 <TextField
                   id="state"
                   select
@@ -314,7 +336,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   value={city}
                   onChange={evt => setFieldValue('city', evt.target.value)}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   SelectProps={{
                     autoWidth: true,
@@ -323,7 +345,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   error={errors.city && touched.city ? true : false}
                   helperText={errors.city && touched.city ? errors.city : ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                    style: { fontSize: '1.1rem' },
                   }}
                 >
                   {citiesByState && citiesByState.length > 0 ? (
@@ -336,47 +358,35 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                     <MenuItem value={city}>{city}</MenuItem>
                   )}
                 </TextField>
-              </div>
+              </S.PanelContent>
 
-              {/* Step Control Buttons */}
-              <ContainerActionButtons>
-                <ActionButtons>
-                  <div>
-                    <Button
-                      disabled={activeStep === 0}
-                      color="secondary"
-                      onClick={handleBack}
-                    >
-                      Voltar
-                    </Button>
-                  </div>
-                  <div>
-                    <Button variant="contained" color="primary" type="submit">
-                      Concluir
-                    </Button>
-                  </div>
-                </ActionButtons>
-              </ContainerActionButtons>
-            </SForm>
-          );
-        }}
-      </Formik>
+              <S.PanelActions>
+                <Button color="primary" variant="contained" type="submit">
+                  Atualizar
+                </Button>
+              </S.PanelActions>
 
-      <Alert
-        open={openAlert}
-        handleClose={handleCloseAlert}
-        growTransition={growTransition}
-        message={alertMessage}
-        severity={severity}
-      />
-    </>
+              <Alert
+                open={openAlert}
+                handleClose={handleCloseAlert}
+                growTransition={growTransition}
+                message={alertMessage}
+                severity={severity}
+              />
+            </S.Panel>
+          </SForm>
+        );
+      }}
+    </Formik>
   );
 };
 
-AddressStepForm.propTypes = {
-  activeStep: PropTypes.number.isRequired,
-  handleBack: PropTypes.func.isRequired,
-  handleNext: PropTypes.func.isRequired,
+UserAddressForm.propTypes = {
+  id: PropTypes.number.isRequired,
+  profile: PropTypes.string.isRequired,
+  states: PropTypes.array.isRequired,
+  citiesByState: PropTypes.array,
+  address: PropTypes.object.isRequired,
 };
 
-export default AddressStepForm;
+export default UserAddressForm;

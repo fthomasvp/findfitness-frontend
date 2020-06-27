@@ -73,8 +73,6 @@ const AddressForm = () => {
    */
   const { activeStep, steps } = useSelector(state => state.auth);
 
-  const handleNext = () => dispatch(AuthReducer.handleNextStep(activeStep));
-
   const handleBack = () => dispatch(AuthReducer.handleBackStep(activeStep));
 
   /**
@@ -140,8 +138,6 @@ const AddressForm = () => {
 
             userToCreate.address = address;
 
-            handleNext();
-
             dispatch(AuthReducer.storeAddressForm(address));
             dispatch(AuthReducer.signUpRequest(userToCreate));
           }}
@@ -189,7 +185,13 @@ const AddressForm = () => {
                   <S.PanelContent>
                     <S.PanelTitle>
                       <Typography variant="h5" align="center">
-                        Precisamos anotar os dados do seu endereço :)
+                        Precisamos anotar os dados do seu endereço{' '}
+                        <span
+                          role="img"
+                          aria-label="smiling face with smiling eyes"
+                        >
+                          &#128522;
+                        </span>
                       </Typography>
                     </S.PanelTitle>
 
@@ -202,7 +204,7 @@ const AddressForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       InputProps={{
                         endAdornment: (
@@ -240,7 +242,7 @@ const AddressForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       style={{ marginBottom: '20px' }}
                       error={errors.street && touched.street ? true : false}
@@ -260,7 +262,7 @@ const AddressForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       style={{ marginBottom: '20px', width: '50%' }}
                       error={
@@ -287,7 +289,7 @@ const AddressForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       inputProps={{ min: 1 }}
                       style={{ marginBottom: '20px', width: '30%' }}
@@ -308,7 +310,7 @@ const AddressForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       style={{ marginBottom: '20px' }}
                     />
@@ -320,7 +322,7 @@ const AddressForm = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       style={{ marginBottom: '20px' }}
                     />
@@ -331,19 +333,21 @@ const AddressForm = () => {
                       label="Estado"
                       variant="outlined"
                       value={state}
-                      onChange={async evt => {
+                      onChange={evt => {
                         const selectedState = evt.target.value;
 
-                        await setFieldValue('state', selectedState);
+                        setFieldValue('state', selectedState);
 
-                        return await dispatch(
+                        setFieldValue('city', '');
+
+                        dispatch(
                           LocalizationReducer.fetchCitiesByStateIdRequest(
                             selectedState
                           )
                         );
                       }}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       SelectProps={{
                         autoWidth: true,
@@ -354,12 +358,12 @@ const AddressForm = () => {
                         errors.state && touched.state ? errors.state : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem' },
+                        style: { fontSize: '1.1rem', minWidth: '280px' },
                       }}
                     >
                       {states &&
                         states.map(state => (
-                          <MenuItem key={state.id} value={state}>
+                          <MenuItem key={state.id} value={state.initials}>
                             {state.initials}
                           </MenuItem>
                         ))}
@@ -373,7 +377,7 @@ const AddressForm = () => {
                       value={city}
                       onChange={evt => setFieldValue('city', evt.target.value)}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       SelectProps={{
                         autoWidth: true,
@@ -402,6 +406,7 @@ const AddressForm = () => {
                   <S.PanelActions>
                     <Button
                       color="secondary"
+                      variant="outlined"
                       onClick={() => {
                         handleBack();
 
@@ -410,7 +415,12 @@ const AddressForm = () => {
                     >
                       VOLTAR
                     </Button>
-                    <Button color="primary" variant="contained" type="submit">
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      type="submit"
+                      style={{ marginLeft: '15px' }}
+                    >
                       FINALIZAR
                     </Button>
                   </S.PanelActions>

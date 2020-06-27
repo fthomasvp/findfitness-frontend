@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import GoogleMapReact from 'google-map-react';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import TextField from '@material-ui/core/TextField';
 
 import DialogAddStudentGroup from './DialogAddStudentGroup';
 import DialogStudentGroupDetails from '../../components/DialogStudentGroupDetails';
@@ -64,6 +65,25 @@ const StudentGroup = () => {
 
         setSelectedStudentGroup(studentGroup);
       });
+
+      // Places search
+
+      // Create the autocomplete object, restricting the search predictions to
+      // geographical location types.
+      // const autocomplete = new maps.places.Autocomplete(
+      //   document.getElementById('autocomplete'),
+      //   { types: ['geocode'] }
+      // );
+
+      // // Avoid paying for data that you don't need by restricting the set of
+      // // place fields that are returned to just the address components.
+      // autocomplete.setFields(['address_component']);
+
+      // // When the user selects an address from the drop-down, populate the
+      // // address fields in the form.
+      // autocomplete.addListener('place_changed', evt => {
+      //   console.log('places', evt);
+      // });
     });
   };
 
@@ -89,6 +109,8 @@ const StudentGroup = () => {
 
   return (
     <div style={{ width: '100%', height: '85%' }}>
+      {/* <TextField /> */}
+
       <GoogleMapReact
         // eslint-disable-next-line no-undef
         bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY }}

@@ -53,6 +53,16 @@ const Utils = {
     return formatedDateTime;
   },
 
+  formatDateToDatabase: date => {
+    let formatedDateTime = '';
+
+    if (date) {
+      formatedDateTime = moment(date).format('YYYY-MM-DD');
+    }
+
+    return formatedDateTime;
+  },
+
   isBeginDateTimeBeforeEndDateTime: (beginDateTime, endDateTime) => {
     return moment(beginDateTime).isBefore(moment(endDateTime));
   },

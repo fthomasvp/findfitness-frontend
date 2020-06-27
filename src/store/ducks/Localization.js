@@ -65,10 +65,10 @@ export const fetchCitiesByStateIdRequest = selectedState => {
   };
 };
 
-export const fetchCitiesByStateIdSuccess = ({ data }) => {
+export const fetchCitiesByStateIdSuccess = response => {
   return {
     type: FETCH_CITIES_BY_STATE_ID_SUCCESS,
-    data,
+    response,
   };
 };
 
@@ -135,12 +135,12 @@ export const localization = (state = INITIAL_STATE, action) => {
       };
 
     case FETCH_CITIES_BY_STATE_ID_SUCCESS: {
-      const cities = action.data;
-
       return {
         ...state,
         loading: false,
-        citiesByState: cities,
+        citiesByState: action.response.data,
+        error: INITIAL_STATE.error,
+        response: action.response,
       };
     }
 
@@ -149,6 +149,7 @@ export const localization = (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
         error: action.error,
+        response: INITIAL_STATE.response,
       };
 
     case CLEAR_SNACKBAR:
