@@ -36,6 +36,22 @@ export const PATCH_USER_DATA_REQUEST = '@auth/PATCH_USER_DATA_REQUEST';
 export const PATCH_USER_DATA_SUCCESS = '@auth/PATCH_USER_DATA_SUCCESS';
 export const PATCH_USER_DATA_FAIL = '@auth/PATCH_USER_DATA_FAIL';
 
+export const PATCH_USER_ADDRESS_DATA_REQUEST =
+  '@auth/PATCH_USER_ADDRESS_DATA_REQUEST';
+export const PATCH_USER_ADDRESS_DATA_SUCCESS =
+  '@auth/PATCH_USER_ADDRESS_DATA_SUCCESS';
+export const PATCH_USER_ADDRESS_DATA_FAIL =
+  '@auth/PATCH_USER_ADDRESS_DATA_FAIL';
+
+export const UPDATE_ADDRESS_PROFILE_DATA = '@auth/UPDATE_ADDRESS_PROFILE_DATA';
+
+export const PATCH_USER_HEALTH_CARD_DATA_REQUEST =
+  '@auth/PATCH_USER_HEALTH_CARD_DATA_REQUEST';
+export const PATCH_USER_HEALTH_CARD_DATA_SUCCESS =
+  '@auth/PATCH_USER_HEALTH_CARD_DATA_SUCCESS';
+export const PATCH_USER_HEALTH_CARD_DATA_FAIL =
+  '@auth/PATCH_USER_HEALTH_CARD_DATA_FAIL';
+
 /**
  * Action Creators
  * */
@@ -200,6 +216,59 @@ export const patchUserDataSuccess = response => {
 export const patchUserDataFail = error => {
   return {
     type: PATCH_USER_DATA_FAIL,
+    error,
+  };
+};
+
+export const patchUserAddressDataRequest = (profile, id, userAddressData) => {
+  return {
+    type: PATCH_USER_ADDRESS_DATA_REQUEST,
+    profile,
+    id,
+    userAddressData,
+  };
+};
+
+export const patchUserAddressDataSuccess = response => {
+  return {
+    type: PATCH_USER_ADDRESS_DATA_SUCCESS,
+    response,
+  };
+};
+
+export const patchUserAddressDataFail = error => {
+  return {
+    type: PATCH_USER_ADDRESS_DATA_FAIL,
+    error,
+  };
+};
+
+export const updateAddressProfileData = (response, states) => {
+  return {
+    type: UPDATE_ADDRESS_PROFILE_DATA,
+    response,
+    states,
+  };
+};
+
+export const patchUserHealthCardDataRequest = (id, userHealthCardData) => {
+  return {
+    type: PATCH_USER_HEALTH_CARD_DATA_REQUEST,
+    id,
+    userHealthCardData,
+  };
+};
+
+export const patchUserHealthCardDataSuccess = response => {
+  return {
+    type: PATCH_USER_HEALTH_CARD_DATA_SUCCESS,
+    response,
+  };
+};
+
+export const patchUserHealthCardDataFail = error => {
+  return {
+    type: PATCH_USER_HEALTH_CARD_DATA_FAIL,
     error,
   };
 };
@@ -520,6 +589,81 @@ export const auth = (state = INITIAL_STATE, action) => {
     }
 
     case PATCH_USER_DATA_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
+
+    case PATCH_USER_ADDRESS_DATA_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case PATCH_USER_ADDRESS_DATA_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+      };
+    }
+
+    case PATCH_USER_ADDRESS_DATA_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
+
+    case UPDATE_ADDRESS_PROFILE_DATA: {
+      const myState = action.states.find(
+        state => state.name === action.response.data.state
+      );
+
+      let addressFromAPI = {
+        street: action.response.data.street,
+        neighborhood: action.response.data.neighborhood,
+        city: action.response.data.city,
+        state: myState.initials,
+        zipcode: action.response.data.zipcode,
+      };
+
+      return {
+        ...state,
+        userToUpdate: {
+          ...state.userToUpdate,
+          address: {
+            ...state.userToUpdate.address,
+            ...addressFromAPI,
+          },
+        },
+      };
+    }
+
+    case PATCH_USER_HEALTH_CARD_DATA_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case PATCH_USER_HEALTH_CARD_DATA_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+      };
+    }
+
+    case PATCH_USER_HEALTH_CARD_DATA_FAIL: {
       return {
         ...state,
         loading: false,

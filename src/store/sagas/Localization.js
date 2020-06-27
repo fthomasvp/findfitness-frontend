@@ -13,9 +13,9 @@ import {
 } from '../ducks/Localization';
 import {
   updateThirdStepData,
-  updateThirdStepStateField,
+  // updateThirdStepStateField,
 } from '../ducks/StudentGroup';
-import { updateAddressData } from '../ducks/Auth';
+import { updateAddressData, updateAddressProfileData } from '../ducks/Auth';
 
 export function* fetchStates() {
   try {
@@ -43,6 +43,10 @@ export function* searchAddressByZipCode(action) {
       if (fromPage === 'studentgroups') {
         yield put(updateThirdStepData(response, states));
       }
+
+      if (fromPage === 'profile') {
+        yield put(updateAddressProfileData(response, states));
+      }
     }
   } catch (error) {
     yield put(searchAddressByZipcodeFail(error.response || error));
@@ -53,14 +57,14 @@ export function* fetchCitiesByStateId(action) {
   try {
     const response = yield call(
       API.get,
-      `/localizations/states/${action.selectedState.id}/cities`
+      `/localizations/states/${action.selectedState}/cities`
     );
 
     if (response && response.status === 200) {
       yield put(fetchCitiesByStateIdSuccess(response));
       // Foi preciso passar todo o objeto do Estado para renderizar no
       // campo do Step 3
-      yield put(updateThirdStepStateField(action.selectedState));
+      // yield put(updateThirdStepStateField(action.selectedState));
     }
   } catch (error) {
     yield put(fetchCitiesByStateIdFail(error.response || error));

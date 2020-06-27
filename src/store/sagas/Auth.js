@@ -16,6 +16,12 @@ import {
   PATCH_USER_DATA_REQUEST,
   patchUserDataSuccess,
   patchUserDataFail,
+  PATCH_USER_ADDRESS_DATA_REQUEST,
+  patchUserAddressDataSuccess,
+  patchUserAddressDataFail,
+  PATCH_USER_HEALTH_CARD_DATA_REQUEST,
+  patchUserHealthCardDataSuccess,
+  patchUserHealthCardDataFail,
 } from '../ducks/Auth';
 
 // put: faz a chamada de uma "Action Creators"
@@ -119,12 +125,52 @@ export function* patchUserData(action) {
   }
 }
 
+export function* patchUserAddressData(action) {
+  const { profile, id, userAddressData } = action;
+
+  const resource = profile === 'ROLE_STUDENT' ? 'students' : 'personals';
+
+  const data = {
+    address: userAddressData,
+  };
+
+  try {
+    const response = yield call(API.patch, `/${resource}/${id}/address`, data);
+
+    if (response && response.status === 204) {
+      yield put(patchUserAddressDataSuccess(response));
+    }
+  } catch (error) {
+    yield put(patchUserAddressDataFail(error.response || error));
+  }
+}
+
+export function* patchUserHealthCardData(action) {
+  const { id, userHealthCardData } = action;
+
+  const data = {
+    healthCard: userHealthCardData,
+  };
+
+  try {
+    const response = yield call(API.patch, `/students/${id}/health_card`, data);
+
+    if (response && response.status === 204) {
+      yield put(patchUserHealthCardDataSuccess(response));
+    }
+  } catch (error) {
+    yield put(patchUserHealthCardDataFail(error.response || error));
+  }
+}
+
 export default all([
   takeLatest(SIGN_UP_REQUEST, signUp),
   takeLatest(SIGN_IN_REQUEST, signIn),
   takeLatest(UPLOAD_PROFILE_PICTURE_REQUEST, uploadProfilePicture),
   takeLatest(FETCH_USER_DATA_REQUEST, fetchUserData),
   takeLatest(PATCH_USER_DATA_REQUEST, patchUserData),
+  takeLatest(PATCH_USER_ADDRESS_DATA_REQUEST, patchUserAddressData),
+  takeLatest(PATCH_USER_HEALTH_CARD_DATA_REQUEST, patchUserHealthCardData),
 ]);
 
 function _makeUserBodyRequest(userToCreate) {
