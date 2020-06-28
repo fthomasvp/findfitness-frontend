@@ -4,11 +4,7 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import Typography from '@material-ui/core/Typography';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import PhoneIcon from '@material-ui/icons/Phone';
-import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
@@ -25,6 +21,7 @@ import ImageIcon from '@material-ui/icons/Image';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import PaymentIcon from '@material-ui/icons/Payment';
+import Grid from '@material-ui/core/Grid';
 
 import Utils from '../../utils';
 import { DialogContent, DialogActions } from './styles';
@@ -73,76 +70,69 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
         </Tabs>
       </AppBar>
 
-      <DialogContent
-        dividers
-        style={{ minHeight: '645px', maxHeight: '645px' }}
-      >
+      <DialogContent dividers style={{ maxHeight: '600px' }}>
         {/* Info Tab */}
         {tab === 0 && (
-          <>
+          <Grid container spacing={3}>
             {/* Personal info */}
-            <Typography gutterBottom variant="h5" align="center">
-              <PersonIcon /> PERSONAL
-            </Typography>
-            <div style={{ display: 'flex', flex: 1, justifyContent: 'center' }}>
-              <Avatar
-                src={`${personal.profilePicture}?${Date.now()}`}
-                alt={'Personal profile'}
-                style={{ width: '64px', height: '64px' }}
-              />
-            </div>
-            <Typography
-              variant="h6"
-              align="center"
-              style={{
-                fontSize: '1.2em',
-                color: '#d3d3d3',
-              }}
-            >
-              {personal.name}
-            </Typography>
-            <div
-              style={{
-                display: 'flex',
-                width: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <PhoneIcon style={{ marginRight: '3px' }} />
+            <Grid item xs={12}>
+              <Typography gutterBottom variant="h5" align="center">
+                <PersonIcon /> PERSONAL
+              </Typography>
+              <div
+                style={{ display: 'flex', flex: 1, justifyContent: 'center' }}
+              >
+                <Avatar
+                  src={`${personal.profilePicture}?${Date.now()}`}
+                  alt={'Personal profile'}
+                  style={{ width: '100px', height: '100px' }}
+                />
+              </div>
               <Typography
+                variant="h6"
                 align="center"
                 style={{
                   fontSize: '1.2em',
                   color: '#d3d3d3',
                 }}
               >
-                {Utils.formatPhone(contactPhone)}
+                {personal.name}
               </Typography>
-            </div>
-            <Typography
-              align="center"
-              style={{
-                marginBottom: '20px',
-                fontSize: '1.2em',
-                color: '#d3d3d3',
-              }}
-            >
-              CREF: {personal.cref}
-            </Typography>
+              <div
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <PhoneIcon style={{ marginRight: '3px' }} />
+                <Typography
+                  align="center"
+                  style={{
+                    fontSize: '1.2em',
+                    color: '#d3d3d3',
+                  }}
+                >
+                  {Utils.formatPhone(contactPhone)}
+                </Typography>
+              </div>
+              <Typography
+                align="center"
+                style={{
+                  marginBottom: '20px',
+                  fontSize: '1.2em',
+                  color: '#d3d3d3',
+                }}
+              >
+                CREF: {personal.cref}
+              </Typography>
+            </Grid>
 
-            <Divider style={{ marginBottom: '20px' }} />
-
-            {/* Localization and StudentGroup info */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-around',
-                marginBottom: '20px',
-              }}
-            >
-              <div style={{ display: 'flex', flexFlow: 'column wrap' }}>
-                <Typography gutterBottom variant="h5">
+            {/* Localization */}
+            <Grid container justify="center" item xs={12} sm={6}>
+              <div>
+                <Typography gutterBottom variant="h5" align="center">
                   <LocationOnIcon /> ENDEREÇO
                 </Typography>
                 <Typography
@@ -183,8 +173,17 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
                   {formatedAddress.state}
                 </Typography>
               </div>
-              <div style={{ display: 'flex', flexFlow: 'column wrap' }}>
-                <Typography gutterBottom variant="h5" style={{ color: 'gold' }}>
+            </Grid>
+
+            {/* StudentGroup info */}
+            <Grid container justify="center" item xs={12} sm={6}>
+              <div>
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  style={{ color: 'gold' }}
+                  align="center"
+                >
                   <PriorityHighIcon /> IMPORTANTE
                 </Typography>
 
@@ -197,8 +196,18 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
                     color: '#d3d3d3',
                   }}
                 >
-                  Quando: {Utils.formatDateTime(eventDateTimeBegin)} ~{' '}
-                  {Utils.formatDateTime(eventDateTimeEnd)}
+                  Começa em: {Utils.formatDateTime(eventDateTimeBegin)}
+                </Typography>
+                <Typography
+                  gutterBottom
+                  variant="button"
+                  display="block"
+                  style={{
+                    fontSize: '1.2em',
+                    color: '#d3d3d3',
+                  }}
+                >
+                  Término em: {Utils.formatDateTime(eventDateTimeEnd)}
                 </Typography>
                 <Typography
                   variant="button"
@@ -212,61 +221,47 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
                   Valor: R$ {eventPrice}
                 </Typography>
               </div>
-            </div>
-
-            <Divider style={{ marginBottom: '20px' }} />
+            </Grid>
 
             {/* Exercises info */}
-            <Typography gutterBottom variant="h5">
-              <FitnessCenterIcon /> ATIVIDADE
-            </Typography>
-
-            <div style={{ marginTop: '10px' }}>
+            <Grid item xs={12}>
+              <Typography gutterBottom variant="h5" align="center">
+                <FitnessCenterIcon /> ATIVIDADE
+              </Typography>
               {exercises.map(({ name, description }, index) => (
-                <ExpansionPanel expanded key={index}>
-                  <ExpansionPanelSummary>
-                    <Typography variant="h6" gutterBottom>
+                <Grid container key={index}>
+                  <Grid item xs={12}>
+                    <Typography gutterBottom variant="h6">
                       {name}
                     </Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>
-                    <div
+                  </Grid>
+
+                  <Grid container justify="center" item xs={12} sm={3}>
+                    <div>
+                      <img
+                        src="https://media.istockphoto.com/vectors/cartoon-people-doing-wrist-extension-stretch-exercise-vector-id540566306"
+                        width="200px"
+                        height="200px"
+                        alt="Activity Example"
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid container justify="center" item xs={12} sm={9}>
+                    <Typography
+                      variant="h6"
                       style={{
-                        display: 'flex',
-                        flex: 1,
+                        fontSize: '1.1rem',
+                        color: '#d3d3d3',
                       }}
                     >
-                      <div style={{ display: 'flex', width: '20%' }}>
-                        <img
-                          src="https://media.istockphoto.com/vectors/cartoon-people-doing-wrist-extension-stretch-exercise-vector-id540566306"
-                          width="100%"
-                          height="100%"
-                          alt="Activity Example"
-                        />
-                      </div>
-                      <div
-                        style={{
-                          display: 'flex',
-                          width: '80%',
-                          marginLeft: '45px',
-                        }}
-                      >
-                        <Typography
-                          variant="h6"
-                          style={{
-                            fontSize: '1.1rem',
-                            color: '#d3d3d3',
-                          }}
-                        >
-                          {description}
-                        </Typography>
-                      </div>
-                    </div>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
+                      {description}
+                    </Typography>
+                  </Grid>
+                </Grid>
               ))}
-            </div>
-          </>
+            </Grid>
+          </Grid>
         )}
 
         {tab === 1 && (
@@ -303,12 +298,13 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
       <DialogActions>
         <Button
           autoFocus
+          variant="outlined"
+          color="secondary"
           onClick={() => {
             setTab(0);
 
             handleClose();
           }}
-          color="secondary"
         >
           Voltar
         </Button>
