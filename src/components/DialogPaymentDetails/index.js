@@ -228,7 +228,7 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
               <Typography gutterBottom variant="h5" align="center">
                 <FitnessCenterIcon /> ATIVIDADE
               </Typography>
-              {exercises.map(({ name, description }, index) => (
+              {exercises.map(({ name, description, picture }, index) => (
                 <Grid container key={index}>
                   <Grid item xs={12}>
                     <Typography gutterBottom variant="h6">
@@ -239,7 +239,7 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
                   <Grid container justify="center" item xs={12} sm={3}>
                     <div>
                       <img
-                        src="https://media.istockphoto.com/vectors/cartoon-people-doing-wrist-extension-stretch-exercise-vector-id540566306"
+                        src={picture}
                         width="200px"
                         height="200px"
                         alt="Activity Example"
