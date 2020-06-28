@@ -436,7 +436,6 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
         <DialogEnrollStudentGroup
           openDialogEnroll={openDialogEnroll}
           handleCloseDialogEnroll={handleCloseDialogEnroll}
-          handleClose={handleClose}
           idStudentGroup={studentGroup.id}
           idStudent={idStudent}
         />

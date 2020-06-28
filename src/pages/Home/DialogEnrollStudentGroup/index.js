@@ -22,7 +22,6 @@ import STextLink from '../../../components/TextLink';
 const DialogEnrollStudentGroup = ({
   openDialogEnroll,
   handleCloseDialogEnroll,
-  handleClose,
   idStudentGroup,
   idStudent,
 }) => {
@@ -166,7 +165,6 @@ const DialogEnrollStudentGroup = ({
 DialogEnrollStudentGroup.propTypes = {
   openDialogEnroll: PropTypes.bool.isRequired,
   handleCloseDialogEnroll: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
   idStudentGroup: PropTypes.number.isRequired,
   idStudent: PropTypes.number,
 };
