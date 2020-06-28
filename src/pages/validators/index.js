@@ -66,6 +66,18 @@ export const neighborhood = Yup.string()
   .max(120, 'Não pode ultrapassar 120 caracteres')
   .required('Preencha o campo apenas com letras');
 
+export const cardNumber = Yup.string()
+  .max(16, 'Não pode ultrapassar 16 caracteres')
+  .required('Preencha o campo apenas com números');
+
+export const cardOwnerName = Yup.string().required(
+  'Preencha o campo da mesma forma que está no cartão'
+);
+
+export const cardVerificationValue = Yup.string()
+  .max(4, 'Não pode ultrapassar 4 caracteres')
+  .required('Preencha o campo da mesma forma que está no cartão');
+
 const YupSchema = fields => {
   return Yup.object().shape(fields);
 };
