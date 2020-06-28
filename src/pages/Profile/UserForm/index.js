@@ -349,7 +349,6 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                   style={{ marginBottom: '20px' }}
                 >
                   <Tabs
-                    // value={_getSelectedTab(gender)}
                     value={tabGender}
                     onChange={handleChangeTabGender}
                     indicatorColor="primary"
@@ -380,9 +379,11 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                           setFieldValue('birthdate', value);
                         }}
                         inputVariant="outlined"
+                        cancelLabel="Cancelar"
+                        okLabel="Confirmar"
                         InputLabelProps={{
                           style: {
-                            /*color: 'white',*/ fontSize: '1.2rem',
+                            fontSize: '1rem',
                           },
                         }}
                         error={

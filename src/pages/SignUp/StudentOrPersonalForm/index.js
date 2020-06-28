@@ -360,6 +360,8 @@ const StudentOrPersonalForm = () => {
                               setFieldValue('birthdate', value);
                             }}
                             inputVariant="outlined"
+                            cancelLabel="Cancelar"
+                            okLabel="Confirmar"
                             InputLabelProps={{
                               style: { fontSize: '1rem' },
                             }}

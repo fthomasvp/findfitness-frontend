@@ -15,7 +15,7 @@ import { storeFirstStepForm } from '../../../../store/ducks/StudentGroup';
 import { errorMessages } from '../../../validators';
 import Utils from '../../../../utils';
 import { ContainerActionButtons, ActionButtons } from '../styles';
-import "moment/locale/pt-br";
+import 'moment/locale/pt-br';
 
 const FirstStepForm = ({ handleBack, handleNext }) => {
   const dispatch = useDispatch();
@@ -175,6 +175,8 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                     setFieldValue('selectedBeginDateTime', value);
                   }}
                   inputVariant="outlined"
+                  cancelLabel="Cancelar"
+                  okLabel="Confirmar"
                   InputLabelProps={{
                     style: { color: 'white', fontSize: '1.2rem' },
                   }}
