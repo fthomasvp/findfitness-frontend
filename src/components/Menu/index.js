@@ -6,9 +6,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
+// import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 import MapIcon from '@material-ui/icons/Map';
-import SchoolIcon from '@material-ui/icons/School';
+// import SchoolIcon from '@material-ui/icons/School';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HomeIcon from '@material-ui/icons/Home';
 import AppBar from '@material-ui/core/AppBar';
@@ -26,6 +26,7 @@ import MenuList from '@material-ui/core/MenuList';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Divider from '@material-ui/core/Divider';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import PaymentIcon from '@material-ui/icons/Payment';
 
 import * as AuthReducer from '../../store/ducks/Auth';
 import { useStyles } from './styles';
@@ -35,7 +36,7 @@ const Menu = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const { profile, profilePicture, username } = useSelector(
+  const { /*profile,*/ profilePicture, username } = useSelector(
     state => state.auth.user
   );
 
@@ -71,6 +72,9 @@ const Menu = () => {
       case 4:
         return history.push('/profile');
 
+      case 5:
+        return history.push('/paymentmethod');
+
       default:
         return history.push('/home');
     }
@@ -99,6 +103,9 @@ const Menu = () => {
       case '/profile':
         return setPageTitle('Perfil');
 
+        case '/paymentmethod':
+        return setPageTitle('Pagamento');
+
       default:
         return setPageTitle('Início');
     }
@@ -124,11 +131,11 @@ const Menu = () => {
           <MenuIcon />
         </IconButton>
 
-        <Typography variant="h6" align="center" className={classes.title}>
+        <Typography variant="h6" align="left" className={classes.title}>
           {pageTitle}
         </Typography>
 
-        <Typography variant="button" align="right">
+        <Typography variant="button" align="right" className={classes.title}>
           Olá, {username}
         </Typography>
 
@@ -212,7 +219,7 @@ const Menu = () => {
             <ListItemText primary="Minhas aulas" />
           </ListItem>
 
-          {profile && profile !== 'ROLE_STUDENT' && (
+          {/* {profile && profile !== 'ROLE_STUDENT' && (
             <ListItem
               button
               selected={selectedIndex === 2}
@@ -236,7 +243,20 @@ const Menu = () => {
               </ListItemIcon>
               <ListItemText primary="Especializações" />
             </ListItem>
-          )}
+          )} */}
+
+          <Divider style={{ marginBottom: '5px', marginTop: '5px' }} />
+
+          <ListItem
+            button
+            selected={selectedIndex === 5}
+            onClick={event => handleListItemClick(event, 5)}
+          >
+            <ListItemIcon>
+              <PaymentIcon />
+            </ListItemIcon>
+            <ListItemText primary="Pagamento" />
+          </ListItem>
 
           <Divider style={{ marginBottom: '5px', marginTop: '5px' }} />
 
