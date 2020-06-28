@@ -118,7 +118,7 @@ const ProfileForm = () => {
               color="primary"
               variant="contained"
               onClick={handleClickNextButton}
-              style={{ marginLeft: '15px' }}
+              style={{ marginLeft: '8px' }}
             >
               Próximo
             </Button>

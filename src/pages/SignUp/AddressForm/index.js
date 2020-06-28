@@ -382,7 +382,7 @@ const AddressForm = () => {
                       SelectProps={{
                         autoWidth: true,
                       }}
-                      style={{ marginBottom: '20px', width: '80%' }}
+                      style={{ marginBottom: '20px' }}
                       error={errors.city && touched.city ? true : false}
                       helperText={
                         errors.city && touched.city ? errors.city : ''
@@ -419,7 +419,7 @@ const AddressForm = () => {
                       color="primary"
                       variant="contained"
                       type="submit"
-                      style={{ marginLeft: '15px' }}
+                      style={{ marginLeft: '8px' }}
                     >
                       FINALIZAR
                     </Button>

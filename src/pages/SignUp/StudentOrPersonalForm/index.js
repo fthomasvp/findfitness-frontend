@@ -36,6 +36,7 @@ import YupSchema, {
 } from '../../validators';
 import * as S from '../styles';
 import SForm from '../../../components/Form';
+import "moment/locale/pt-br";
 
 /**
  * Yup Fields Schema
@@ -340,7 +341,7 @@ const StudentOrPersonalForm = () => {
                       </Tabs>
                     </AppBar>
 
-                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <MuiPickersUtilsProvider utils={MomentUtils} locale={'pt-br'}>
                       <div
                         style={{
                           width: '100%',
@@ -354,11 +355,11 @@ const StudentOrPersonalForm = () => {
                             label="Data de Nascimento"
                             format="DD/MM/YYYY"
                             margin="normal"
-                            size="medium"
                             value={birthdate}
                             onChange={value => {
                               setFieldValue('birthdate', value);
                             }}
+                            inputVariant="outlined"
                             InputLabelProps={{
                               style: { fontSize: '1rem' },
                             }}
@@ -465,7 +466,7 @@ const StudentOrPersonalForm = () => {
                       color="primary"
                       variant="contained"
                       type="submit"
-                      style={{ marginLeft: '15px' }}
+                      style={{ marginLeft: '8px' }}
                     >
                       Próximo
                     </Button>
