@@ -63,6 +63,16 @@ const Utils = {
     return formatedDateTime;
   },
 
+  dateToDisplay: date => {
+    let formatedDate = '';
+
+    if (date) {
+      formatedDate = moment(date).format('DD/MM/YYYY');
+    }
+
+    return formatedDate;
+  },
+
   isBeginDateTimeBeforeEndDateTime: (beginDateTime, endDateTime) => {
     return moment(beginDateTime).isBefore(moment(endDateTime));
   },
