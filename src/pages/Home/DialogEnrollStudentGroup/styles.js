@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { withStyles } from '@material-ui/core/styles';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Styled from 'styled-components';
 
 const styles = theme => ({
   root: {
@@ -46,14 +46,9 @@ export const DialogContent = withStyles(theme => ({
   },
 }))(MuiDialogContent);
 
-export const ContainerActionButtons = Styled.div`
-  position: absolute;
-  bottom: 10px;
-  right: 25px;
-`;
-
-export const ActionButtons = Styled.div`
-  display: flex;
-  flex-flow: row;
-  justify-content: flex-end;
-`;
+export const DialogActions = withStyles(theme => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);

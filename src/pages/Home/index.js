@@ -4,14 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import GoogleMapReact from 'google-map-react';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-import TextField from '@material-ui/core/TextField';
 
 import DialogAddStudentGroup from './DialogAddStudentGroup';
 import DialogStudentGroupDetails from '../../components/DialogStudentGroupDetails';
-import {
-  searchStudentGroupRequest,
-  clearCreateStudentGroupData,
-} from '../../store/ducks/StudentGroup';
+import * as StudentGroupReducer from '../../store/ducks/StudentGroup';
 
 const StudentGroup = () => {
   const dispatch = useDispatch();
@@ -34,14 +30,16 @@ const StudentGroup = () => {
   const handleClose = () => {
     setOpen(false);
 
-    dispatch(clearCreateStudentGroupData());
+    dispatch(StudentGroupReducer.clearCreateStudentGroupData());
   };
 
   /**
    * Variables and functions to DialogStudentGroupDetails
    */
   const [openDialogDetails, setOpenDialogDetails] = useState(false);
-  const [selectedStudentGroup, setSelectedStudentGroup] = useState(null);
+  const [selectedStudentGroupIndex, setSelectedStudentGroupIndex] = useState(
+    null
+  );
 
   const handleCloseDialogDetails = () => setOpenDialogDetails(false);
 
@@ -49,7 +47,7 @@ const StudentGroup = () => {
    * About Google Maps (Markers...)
    */
   const handleApiLoaded = (map, maps) => {
-    studentGroups.forEach(studentGroup => {
+    studentGroups.forEach((studentGroup, index) => {
       const { id, latitude: lat, longitude: lng } = studentGroup;
 
       const marker = new maps.Marker({
@@ -63,7 +61,7 @@ const StudentGroup = () => {
       marker.addListener('click', () => {
         setOpenDialogDetails(true);
 
-        setSelectedStudentGroup(studentGroup);
+        setSelectedStudentGroupIndex(index);
       });
 
       // Places search
@@ -91,7 +89,7 @@ const StudentGroup = () => {
    * Effects
    */
   useEffect(() => {
-    dispatch(searchStudentGroupRequest(pagination));
+    dispatch(StudentGroupReducer.searchStudentGroupRequest(pagination));
   }, [dispatch, pagination]);
 
   // Get user's latitude and longitude
@@ -109,12 +107,10 @@ const StudentGroup = () => {
 
   return (
     <div style={{ width: '100%', height: '85%' }}>
-      {/* <TextField /> */}
-
       <GoogleMapReact
         // eslint-disable-next-line no-undef
         bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY }}
-        center={MAP_CENTER_POSITION} // defaultCenter needs a constant object
+        center={MAP_CENTER_POSITION} // defaultCenter prop needs a constant object
         defaultZoom={13}
         yesIWantToUseGoogleMapApiInternals={true}
         onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
@@ -135,11 +131,11 @@ const StudentGroup = () => {
         </Fab>
       )}
 
-      {selectedStudentGroup && (
+      {studentGroups && studentGroups[selectedStudentGroupIndex] && (
         <DialogStudentGroupDetails
           open={openDialogDetails}
           handleClose={handleCloseDialogDetails}
-          studentGroup={selectedStudentGroup}
+          studentGroup={studentGroups[selectedStudentGroupIndex]}
         />
       )}
 

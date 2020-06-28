@@ -14,7 +14,6 @@ import * as StudentGroupReducer from '../../../../store/ducks/StudentGroup';
 import * as LocalizationReducer from '../../../../store/ducks/Localization';
 import YupSchema, {
   street,
-  number,
   neighborhood,
   city,
   zipcode,
@@ -26,7 +25,6 @@ import { ContainerActionButtons, ActionButtons } from '../styles';
 // Yup Fields Schema
 const ThirdStepSchema = YupSchema({
   street,
-  number,
   neighborhood,
   city,
   zipcode,
@@ -151,7 +149,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   InputProps={{
                     endAdornment: (
@@ -167,7 +165,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                       </InputAdornment>
                     ),
                   }}
-                  style={{ marginBottom: '20px', width: '50%' }}
+                  style={{ marginBottom: '20px', width: '60%' }}
                   error={
                     (errors && errors.zipcode && touched.zipcode) ||
                     (errorLocalization && errorLocalization.status === 500)
@@ -190,7 +188,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   style={{ marginBottom: '20px' }}
                   error={errors.street && touched.street ? true : false}
@@ -210,7 +208,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   style={{ marginBottom: '20px', width: '50%' }}
                   error={
@@ -235,7 +233,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   inputProps={{ min: 1 }}
                   style={{ marginBottom: '20px', width: '30%' }}
@@ -248,7 +246,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   style={{ marginBottom: '20px' }}
                 />
@@ -260,7 +258,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   style={{ marginBottom: '20px' }}
                 />
@@ -291,7 +289,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   SelectProps={{
                     autoWidth: true,
                   }}
-                  style={{ marginBottom: '20px', width: '30%' }}
+                  style={{ marginBottom: '20px', width: '40%' }}
                   error={errors.state && touched.state ? true : false}
                   helperText={errors.state && touched.state ? errors.state : ''}
                   FormHelperTextProps={{
@@ -314,12 +312,12 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   value={city}
                   onChange={evt => setFieldValue('city', evt.target.value)}
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   SelectProps={{
                     autoWidth: true,
                   }}
-                  style={{ marginBottom: '20px', width: '80%' }}
+                  style={{ marginBottom: '20px' }}
                   error={errors.city && touched.city ? true : false}
                   helperText={errors.city && touched.city ? errors.city : ''}
                   FormHelperTextProps={{

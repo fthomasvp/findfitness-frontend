@@ -76,18 +76,16 @@ const DialogAddStudentGroup = ({ open, handleClose }) => {
 
       <DialogContent
         dividers
-        style={{ minHeight: '645px', maxHeight: '645px' }}
+        style={{ minHeight: '600px', maxHeight: '645px' }}
       >
-        <div>
-          <Stepper activeStep={activeStep} alternativeLabel>
-            {steps.length > 0 &&
-              steps.map(label => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-          </Stepper>
-        </div>
+        <Stepper activeStep={activeStep} alternativeLabel>
+          {steps.length > 0 &&
+            steps.map(label => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+        </Stepper>
 
         {/* Step Forms */}
         {activeStep === 0 && (
