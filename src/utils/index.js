@@ -3,19 +3,16 @@ import moment from 'moment';
 const Utils = {
   formatAddress: completeAddress => {
     const splitedAddress = completeAddress.split('|');
-    const nullRegex = /null/i;
 
     const formatedAddress = {
       street: splitedAddress[0],
-      number: nullRegex.test(splitedAddress[1]) ? '' : `, ${splitedAddress[1]}`,
+      number: !splitedAddress[1] ? '' : `, ${splitedAddress[1]}`,
 
-      complemento: nullRegex.test(splitedAddress[2])
-        ? ''
-        : ` - ${splitedAddress[2]}`,
+      complemento: !splitedAddress[2] ? '' : ` - ${splitedAddress[2]}`,
 
       neighboor: splitedAddress[3],
 
-      referenceLocation: nullRegex.test(splitedAddress[4])
+      referenceLocation: !splitedAddress[4]
         ? 'Sem Ponto de Referência'
         : splitedAddress[4],
 
