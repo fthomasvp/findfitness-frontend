@@ -8,6 +8,9 @@ import {
   FETCH_PAYMENTS_REQUEST,
   fetchPaymentsSuccess,
   fetchPaymentsFail,
+  CREATE_PAYMENT_METHODS_REQUEST,
+  createPaymentMethodsSuccess,
+  createPaymentMethodsFail,
 } from '../ducks/Student';
 
 export function* fetchPaymentMethods(action) {
@@ -46,7 +49,26 @@ export function* fetchPayments(action) {
   }
 }
 
+export function* createPaymentMethod(action) {
+  const { idStudent, paymentMethod } = action;
+
+  try {
+    const response = yield call(
+      API.post,
+      `/students/${idStudent}/payment_methods`,
+      paymentMethod
+    );
+
+    if (response && response.status === 201) {
+      yield put(createPaymentMethodsSuccess(response));
+    }
+  } catch (error) {
+    yield put(createPaymentMethodsFail(error.response || error));
+  }
+}
+
 export default all([
   takeLatest(FETCH_PAYMENT_METHODS_REQUEST, fetchPaymentMethods),
   takeLatest(FETCH_PAYMENTS_REQUEST, fetchPayments),
+  takeLatest(CREATE_PAYMENT_METHODS_REQUEST, createPaymentMethod),
 ]);
