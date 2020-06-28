@@ -22,6 +22,9 @@ import {
   PATCH_USER_HEALTH_CARD_DATA_REQUEST,
   patchUserHealthCardDataSuccess,
   patchUserHealthCardDataFail,
+  CREATE_USER_HEALTH_CARD_REQUEST,
+  createUserHealthCardSuccess,
+  createUserHealthCardFail,
 } from '../ducks/Auth';
 
 // put: faz a chamada de uma "Action Creators"
@@ -163,6 +166,24 @@ export function* patchUserHealthCardData(action) {
   }
 }
 
+export function* createUserHealthCard(action) {
+  const { id, healthCard } = action;
+
+  try {
+    const response = yield call(
+      API.post,
+      `/students/${id}/health_card`,
+      healthCard
+    );
+
+    if (response && response.status === 201) {
+      yield put(createUserHealthCardSuccess(response));
+    }
+  } catch (error) {
+    yield put(createUserHealthCardFail(error.response || error));
+  }
+}
+
 export default all([
   takeLatest(SIGN_UP_REQUEST, signUp),
   takeLatest(SIGN_IN_REQUEST, signIn),
@@ -171,6 +192,7 @@ export default all([
   takeLatest(PATCH_USER_DATA_REQUEST, patchUserData),
   takeLatest(PATCH_USER_ADDRESS_DATA_REQUEST, patchUserAddressData),
   takeLatest(PATCH_USER_HEALTH_CARD_DATA_REQUEST, patchUserHealthCardData),
+  takeLatest(CREATE_USER_HEALTH_CARD_REQUEST, createUserHealthCard),
 ]);
 
 function _makeUserBodyRequest(userToCreate) {

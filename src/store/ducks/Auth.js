@@ -54,6 +54,13 @@ export const PATCH_USER_HEALTH_CARD_DATA_FAIL =
 
 export const CLEAR_FIELDS = '@auth/CLEAR_FIELDS';
 
+export const CREATE_USER_HEALTH_CARD_REQUEST =
+  '@auth/CREATE_USER_HEALTH_CARD_REQUEST';
+export const CREATE_USER_HEALTH_CARD_SUCCESS =
+  '@auth/CREATE_USER_HEALTH_CARD_SUCCESS';
+export const CREATE_USER_HEALTH_CARD_FAIL =
+  '@auth/CREATE_USER_HEALTH_CARD_FAIL';
+
 /**
  * Action Creators
  * */
@@ -278,6 +285,28 @@ export const patchUserHealthCardDataFail = error => {
 export const clearFields = () => {
   return {
     type: CLEAR_FIELDS,
+  };
+};
+
+export const createUserHealthCardRequest = (id, healthCard) => {
+  return {
+    type: CREATE_USER_HEALTH_CARD_REQUEST,
+    id,
+    healthCard,
+  };
+};
+
+export const createUserHealthCardSuccess = response => {
+  return {
+    type: CREATE_USER_HEALTH_CARD_SUCCESS,
+    response,
+  };
+};
+
+export const createUserHealthCardFail = error => {
+  return {
+    type: CREATE_USER_HEALTH_CARD_FAIL,
+    error,
   };
 };
 
@@ -560,6 +589,9 @@ export const auth = (state = INITIAL_STATE, action) => {
         userToUpdate: {
           ...state.userToUpdate,
           ...action.response.data,
+          healthCard:
+            action.response.data.healthCard ||
+            INITIAL_STATE.userToUpdate.healthCard,
           password: '',
         },
         user: {
@@ -672,6 +704,31 @@ export const auth = (state = INITIAL_STATE, action) => {
     }
 
     case PATCH_USER_HEALTH_CARD_DATA_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
+
+    case CREATE_USER_HEALTH_CARD_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case CREATE_USER_HEALTH_CARD_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+      };
+    }
+
+    case CREATE_USER_HEALTH_CARD_FAIL: {
       return {
         ...state,
         loading: false,

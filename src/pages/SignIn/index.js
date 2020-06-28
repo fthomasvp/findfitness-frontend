@@ -137,7 +137,7 @@ const SignIn = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       style={{ marginBottom: '40px' }}
                       error={errors.email && touched.email ? true : false}
@@ -158,7 +158,7 @@ const SignIn = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1.2rem' },
+                        style: { fontSize: '1rem' },
                       }}
                       InputProps={{
                         endAdornment: (
@@ -203,7 +203,9 @@ const SignIn = () => {
                   </S.PanelContent>
 
                   <S.PanelActions>
-                    <STextLink to="/signup">Crie uma conta gratuita</STextLink>
+                    <STextLink to="/signup" color="#08041f">
+                      Crie uma conta gratuita
+                    </STextLink>
                   </S.PanelActions>
                 </S.Panel>
               </SForm>

@@ -48,8 +48,9 @@ const UserHealthCardForm = ({ id, profile, healthCard }) => {
 
     if (
       response &&
-      response.config?.method === 'patch' &&
-      response.status === 204
+      (response.config?.method === 'patch' ||
+        response.config?.method === 'post') &&
+      (response.status === 201 || response.status === 204)
     ) {
       setAlertMessage('Seus dados foram atualizados');
       setOpenAlert(true);
@@ -64,7 +65,12 @@ const UserHealthCardForm = ({ id, profile, healthCard }) => {
     <Formik
       initialValues={healthCard}
       onSubmit={values => {
-        dispatch(AuthReducer.patchUserHealthCardDataRequest(id, values));
+        // Means that the health card does not exist yet
+        if (values.id === 0) {
+          dispatch(AuthReducer.createUserHealthCardRequest(id, values));
+        } else {
+          dispatch(AuthReducer.patchUserHealthCardDataRequest(id, values));
+        }
       }}
       enableReinitialize
     >
