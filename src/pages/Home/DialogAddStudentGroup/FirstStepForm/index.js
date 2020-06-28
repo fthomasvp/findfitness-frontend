@@ -15,6 +15,7 @@ import { storeFirstStepForm } from '../../../../store/ducks/StudentGroup';
 import { errorMessages } from '../../../validators';
 import Utils from '../../../../utils';
 import { ContainerActionButtons, ActionButtons } from '../styles';
+import "moment/locale/pt-br";
 
 const FirstStepForm = ({ handleBack, handleNext }) => {
   const dispatch = useDispatch();
@@ -120,7 +121,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 InputLabelProps={{
-                  style: { color: 'white', fontSize: '1.2rem' },
+                  style: { fontSize: '1rem' },
                 }}
                 inputProps={{ min: 1 }}
                 error={
@@ -146,7 +147,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 InputLabelProps={{
-                  style: { color: 'white', fontSize: '1.2rem' },
+                  style: { fontSize: '1rem' },
                 }}
                 inputProps={{ min: 1 }}
                 error={
@@ -162,18 +163,18 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 }}
               />
 
-              <MuiPickersUtilsProvider utils={MomentUtils}>
+              <MuiPickersUtilsProvider utils={MomentUtils} locale={'pt-br'}>
                 <DateTimePicker
                   id="selectedBeginDateTime"
                   label="Começa em"
                   format="DD/MM/YYYY HH:mm"
                   margin="normal"
-                  size="small"
                   minDate={Date.now()}
                   value={selectedBeginDateTime}
                   onChange={value => {
                     setFieldValue('selectedBeginDateTime', value);
                   }}
+                  inputVariant="outlined"
                   InputLabelProps={{
                     style: { color: 'white', fontSize: '1.2rem' },
                   }}
@@ -189,12 +190,12 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                   label="Termina em"
                   format="DD/MM/YYYY HH:mm"
                   margin="normal"
-                  size="small"
                   minDate={Date.now()}
                   value={selectedEndDateTime}
                   onChange={value => {
                     setFieldValue('selectedEndDateTime', value);
                   }}
+                  inputVariant="outlined"
                   InputLabelProps={{
                     style: { color: 'white', fontSize: '1.2rem' },
                   }}
@@ -215,7 +216,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 InputLabelProps={{
-                  style: { color: 'white', fontSize: '1.2rem' },
+                  style: { fontSize: '1rem' },
                 }}
                 InputProps={{
                   startAdornment: (
@@ -251,7 +252,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 InputLabelProps={{
-                  style: { color: 'white', fontSize: '1.2rem' },
+                  style: { fontSize: '1rem' },
                 }}
                 InputProps={{
                   startAdornment: (

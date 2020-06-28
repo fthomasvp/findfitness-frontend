@@ -40,6 +40,8 @@ export const ENROLL_STUDENT_GROUP_SUCCESS =
 export const ENROLL_STUDENT_GROUP_FAIL =
   '@studentGroup/ENROLL_STUDENT_GROUP_FAIL';
 
+export const CLEAR_SNACKBAR = '@studentGroup/CLEAR_SNACKBAR';
+
 /**
  * Action Creators
  * */
@@ -147,9 +149,10 @@ export const enrollStudentGroupRequest = enrollData => {
   };
 };
 
-export const enrollStudentGroupSuccess = () => {
+export const enrollStudentGroupSuccess = response => {
   return {
     type: ENROLL_STUDENT_GROUP_SUCCESS,
+    response,
   };
 };
 
@@ -157,6 +160,12 @@ export const enrollStudentGroupFail = error => {
   return {
     type: ENROLL_STUDENT_GROUP_FAIL,
     error,
+  };
+};
+
+export const clearSnackbar = () => {
+  return {
+    type: CLEAR_SNACKBAR,
   };
 };
 
@@ -345,6 +354,8 @@ export const studentGroup = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
       };
     }
 
@@ -353,8 +364,16 @@ export const studentGroup = (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
         error: action.error,
+        response: INITIAL_STATE.response,
       };
     }
+
+    case CLEAR_SNACKBAR:
+      return {
+        ...state,
+        error: INITIAL_STATE.error,
+        response: INITIAL_STATE.response,
+      };
 
     default:
       return state;

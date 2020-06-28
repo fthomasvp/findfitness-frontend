@@ -55,7 +55,7 @@ export function* enrollStudent(action) {
     );
 
     if (response && response.status === 201) {
-      yield put(enrollStudentGroupSuccess());
+      yield put(enrollStudentGroupSuccess(response));
     }
   } catch (error) {
     yield put(enrollStudentGroupFail(error.response || error));
@@ -82,7 +82,7 @@ function _makeStudentGroupBodyRequest(studentGroup) {
   // Get Address data
   const address = {
     ...thirdStepData,
-    state: thirdStepData.state.initials,
+    state: thirdStepData.state,
     number: thirdStepData.number || null,
     complement: thirdStepData.complement || null,
     referenceLocation: thirdStepData.referenceLocation || null,

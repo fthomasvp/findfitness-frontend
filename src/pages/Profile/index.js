@@ -80,12 +80,14 @@ const Profile = () => {
             />
           )}
 
-          {tab === 2 && (
+          {tab === 2 && userToUpdate.healthCard ? (
             <UserHealthCardForm
               id={id}
               profile={profile}
               healthCard={userToUpdate.healthCard}
             />
+          ) : (
+            <div>Parece que você ainda não possui um cartão de saúde</div>
           )}
         </Paper>
       </Grid>

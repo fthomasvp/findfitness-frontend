@@ -172,7 +172,7 @@ const UserProfilePicture = ({ id, profilePicture, profile }) => {
           variant="contained"
           color="primary"
           disabled={imageFile === null}
-          style={{ marginLeft: '15px' }}
+          style={{ marginLeft: '8px' }}
         >
           Atualizar
         </Button>

@@ -14,6 +14,7 @@ import Specialization from '../pages/Specialization';
 import Home from '../pages/Home';
 import StudentGroup from '../pages/StudentGroup';
 import Profile from '../pages/Profile';
+import PaymentMethod from '../pages/PaymentMethod';
 import API from '../services/API';
 
 const Routes = () => {
@@ -70,6 +71,12 @@ const Routes = () => {
         <Route exact path="/profile">
           {!isAuthenticated && <Redirect to="/" />}
           <MainLayout menuArea={Menu} mainArea={Profile} />
+        </Route>
+
+        {/* Payment */}
+        <Route exact path="/paymentmethod">
+          {!isAuthenticated && <Redirect to="/" />}
+          <MainLayout menuArea={Menu} mainArea={PaymentMethod} />
         </Route>
       </Switch>
     </BrowserRouter>
