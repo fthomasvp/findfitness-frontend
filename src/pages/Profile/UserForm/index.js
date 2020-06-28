@@ -33,6 +33,7 @@ import Alert from '../../../components/Alert';
 import SForm from '../../../components/Form';
 import * as S from '../styles';
 import Utils from '../../../utils';
+import 'moment/locale/pt-br';
 
 /**
  * Yup Fields Schema
@@ -360,7 +361,7 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                   </Tabs>
                 </AppBar>
 
-                <MuiPickersUtilsProvider utils={MomentUtils}>
+                <MuiPickersUtilsProvider utils={MomentUtils} locale={'pt-br'}>
                   <div
                     style={{
                       width: '100%',
@@ -374,11 +375,11 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                         label="Data de Nascimento"
                         format="DD/MM/YYYY"
                         margin="normal"
-                        size="medium"
                         value={birthdate}
                         onChange={value => {
                           setFieldValue('birthdate', value);
                         }}
+                        inputVariant="outlined"
                         InputLabelProps={{
                           style: {
                             /*color: 'white',*/ fontSize: '1.2rem',

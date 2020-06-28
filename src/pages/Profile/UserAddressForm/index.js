@@ -341,7 +341,7 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                   SelectProps={{
                     autoWidth: true,
                   }}
-                  style={{ marginBottom: '20px', width: '80%' }}
+                  style={{ marginBottom: '20px' }}
                   error={errors.city && touched.city ? true : false}
                   helperText={errors.city && touched.city ? errors.city : ''}
                   FormHelperTextProps={{
