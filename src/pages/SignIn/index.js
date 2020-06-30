@@ -91,7 +91,7 @@ const SignIn = () => {
         alignSelf: 'center',
       }}
     >
-      <Paper>
+      <Paper style={{ backgroundColor: '#08041f' }}>
         <Formik
           initialValues={{ email: '', password: '' }}
           onSubmit={({ email, password }) => {
@@ -137,7 +137,7 @@ const SignIn = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        style: { color: 'white', fontSize: '1rem' },
                       }}
                       style={{ marginBottom: '40px' }}
                       error={errors.email && touched.email ? true : false}
@@ -158,7 +158,7 @@ const SignIn = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        style: { color: 'white', fontSize: '1rem' },
                       }}
                       InputProps={{
                         endAdornment: (
@@ -168,14 +168,14 @@ const SignIn = () => {
                                 aria-label="show password text"
                                 onClick={() => setToggleVisibilityIcon(true)}
                               >
-                                <VisibilityIcon />
+                                <VisibilityIcon color="primary" />
                               </IconButton>
                             ) : (
                               <IconButton
                                 aria-label="hide password text"
                                 onClick={() => setToggleVisibilityIcon(false)}
                               >
-                                <VisibilityOffIcon />
+                                <VisibilityOffIcon color="primary" />
                               </IconButton>
                             )}
                           </InputAdornment>
@@ -203,7 +203,7 @@ const SignIn = () => {
                   </S.PanelContent>
 
                   <S.PanelActions>
-                    <STextLink to="/signup" color="#08041f">
+                    <STextLink to="/signup" color="#3b9eff">
                       Crie uma conta gratuita
                     </STextLink>
                   </S.PanelActions>

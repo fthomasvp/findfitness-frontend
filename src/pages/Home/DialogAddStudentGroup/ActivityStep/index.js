@@ -153,6 +153,7 @@ const ActivityStep = ({ activeStep, handleBack, handleNext }) => {
           <div>
             <Button
               disabled={activeStep === 0}
+              variant="outlined"
               color="secondary"
               onClick={handleBack}
             >
@@ -165,6 +166,7 @@ const ActivityStep = ({ activeStep, handleBack, handleNext }) => {
               color="primary"
               onClick={handleClickNext}
               disabled={!exerciseIds || exerciseIds.length === 0}
+              style={{ marginLeft: '8px' }}
             >
               Próximo
             </Button>

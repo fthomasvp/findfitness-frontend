@@ -131,7 +131,6 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
           >
             <Tab label="Informações" />
             <Tab label="Alunos" />
-            <Tab label="Avaliações" />
           </Tabs>
         </AppBar>
 

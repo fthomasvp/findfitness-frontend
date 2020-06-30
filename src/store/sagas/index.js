@@ -10,7 +10,15 @@ import StudentGroup from './StudentGroup';
 import Exercise from './Exercise';
 import Localization from './Localization';
 import Student from './Student';
+import Personal from './Personal';
 
 export default function* rootSaga() {
-  return yield all([Auth, StudentGroup, Exercise, Localization, Student]);
+  return yield all([
+    Auth,
+    StudentGroup,
+    Exercise,
+    Localization,
+    Student,
+    Personal,
+  ]);
 }

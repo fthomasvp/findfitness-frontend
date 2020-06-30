@@ -342,6 +342,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   <div>
                     <Button
                       disabled={activeStep === 0}
+                      variant="outlined"
                       color="secondary"
                       onClick={handleBack}
                     >
@@ -349,7 +350,12 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                     </Button>
                   </div>
                   <div>
-                    <Button variant="contained" color="primary" type="submit">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      type="submit"
+                      style={{ marginLeft: '8px' }}
+                    >
                       Concluir
                     </Button>
                   </div>

@@ -5,6 +5,7 @@ import { studentGroup } from './StudentGroup';
 import { exercise } from './Exercise';
 import { localization } from './Localization';
 import { student } from './Student';
+import { personal } from './Personal';
 
 export default combineReducers({
   auth,
@@ -12,4 +13,5 @@ export default combineReducers({
   exercise,
   localization,
   student,
+  personal,
 });

@@ -17,16 +17,16 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ImageIcon from '@material-ui/icons/Image';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
-import PaymentIcon from '@material-ui/icons/Payment';
 import Grid from '@material-ui/core/Grid';
+import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
+import DialogPersonalEvaluation from '../../components/DialogPersonalEvaluation';
 
 import Utils from '../../utils';
 import { DialogContent, DialogActions } from './styles';
 
-const DialogPaymentDetails = ({ open, handleClose, payment }) => {
+const DialogPaymentDetails = ({ open, handleClose, payment, profile }) => {
   const {
     studentGroup: {
       completeAddress,
@@ -37,8 +37,6 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
       eventPrice,
       personal,
     },
-    paymentMethod,
-    status,
   } = payment;
 
   const formatedAddress = Utils.formatAddress(completeAddress);
@@ -46,6 +44,31 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
   const [tab, setTab] = useState(0);
 
   const handleChangeTab = (event, tabValue) => setTab(tabValue);
+
+  /**
+   * Evaluation Dialog
+   */
+  const INITIAL_STUDENT_EVALUATION = {
+    commentary: '',
+    id: 0,
+    liked: false,
+    personal: {
+      id: 0,
+      name: '',
+      profilePicture: '',
+    },
+    idStudentGroup: 0,
+  };
+
+  const [openDialogEvaluation, setOpenDialogEvaluation] = useState(false);
+  const [studentEvaluation, setStudentEvaluation] = useState(
+    INITIAL_STUDENT_EVALUATION
+  );
+
+  const handleCloseDialogEvaluation = () => {
+    setStudentEvaluation(INITIAL_STUDENT_EVALUATION);
+    setOpenDialogEvaluation(false);
+  };
 
   return (
     <Dialog
@@ -65,12 +88,15 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
           aria-label="payment details tabs"
         >
           <Tab label="Informações" />
-          <Tab label="Pagamento" />
+          <Tab label="Alunos" />
           <Tab label="Avaliações" />
         </Tabs>
       </AppBar>
 
-      <DialogContent dividers style={{ maxHeight: '600px' }}>
+      <DialogContent
+        dividers
+        style={{ minHeight: '565px', maxHeight: '565px' }}
+      >
         {/* Info Tab */}
         {tab === 0 && (
           <Grid container spacing={3}>
@@ -264,34 +290,68 @@ const DialogPaymentDetails = ({ open, handleClose, payment }) => {
           </Grid>
         )}
 
+        {/* Student list Tab */}
         {tab === 1 && (
-          <div>
-            {paymentMethod && (
-              <List style={{ marginBottom: '20px' }}>
-                <ListItem>
-                  <ListItemAvatar>
-                    <Avatar>
-                      <ImageIcon />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={`****${paymentMethod.cardNumber.slice(-4)}`}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end">
-                      <PaymentIcon />
-                    </IconButton>
+          <List>
+            {profile === 'ROLE_PERSONAL'
+              ? payment.studentGroup.payments.map(({ id, student }) => (
+                  <ListItem key={id}>
+                    <ListItemAvatar>
+                      <Avatar
+                        src={`${student.profilePicture}?${Date.now()}`}
+                        style={{
+                          width: '64px',
+                          height: '64px',
+                          marginRight: '20px',
+                        }}
+                      ></Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={student.name} />
+                    <IconButton
+                      onClick={() => {
+                        const {
+                          studentGroup: { id, personal, personalEvaluations },
+                        } = payment;
 
-                    <Typography variant="button" style={{ marginLeft: '10px' }}>
-                      {status.length > 0
-                        ? status.description
-                        : 'Aguardando confirmação'}
-                    </Typography>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
-            )}
-          </div>
+                        // Verificar se o personal já possui avaliação
+                        const storedEvaluation = personalEvaluations.find(
+                          evaluation => evaluation.personal.id === personal.id
+                        );
+
+                        // Caso não possua, add alguns dados do personal mesmo assim
+                        const studentInfo = {
+                          id: personal.id,
+                          name: personal.name,
+                          profilePicture: personal.profilePicture,
+                        };
+
+                        setStudentEvaluation({
+                          ...studentEvaluation,
+                          ...storedEvaluation,
+                          personal: {
+                            ...studentInfo,
+                          },
+                          idStudentGroup: id,
+                        });
+
+                        // Abrir o modal
+                        setOpenDialogEvaluation(true);
+                      }}
+                    >
+                      <ThumbsUpDownIcon color="primary" />
+                    </IconButton>
+                  </ListItem>
+                ))
+              : null}
+          </List>
+        )}
+
+        {studentEvaluation && (
+          <DialogPersonalEvaluation
+            open={openDialogEvaluation}
+            handleClose={handleCloseDialogEvaluation}
+            evaluation={studentEvaluation}
+          />
         )}
       </DialogContent>
 
@@ -340,8 +400,6 @@ DialogPaymentDetails.propTypes = {
       personalEvaluations: PropTypes.array,
       studentEvaluations: PropTypes.array,
     }).isRequired,
-    paymentMethod: PropTypes.object.isRequired,
-    status: PropTypes.array.isRequired,
   }),
 };
 
