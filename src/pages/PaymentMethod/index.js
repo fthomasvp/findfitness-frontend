@@ -370,8 +370,8 @@ const PaymentMethod = () => {
                       <Button
                         autoFocus
                         onClick={handleCloseDialog}
-                        color="secondary"
                         variant="outlined"
+                        color="secondary"
                       >
                         Cancelar
                       </Button>

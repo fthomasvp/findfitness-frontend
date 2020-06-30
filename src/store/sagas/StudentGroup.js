@@ -11,6 +11,9 @@ import {
   ENROLL_STUDENT_GROUP_REQUEST,
   enrollStudentGroupSuccess,
   enrollStudentGroupFail,
+  CREATE_STUDENT_EVALUATION_REQUEST,
+  createStudentEvaluationSuccess,
+  createStudentEvaluationFail,
 } from '../ducks/StudentGroup';
 
 export function* searchStudentGroup(action) {
@@ -62,10 +65,29 @@ export function* enrollStudent(action) {
   }
 }
 
+export function* createStudentEvaluation(action) {
+  const { idStudentGroup, idStudent, evaluation } = action;
+
+  try {
+    const response = yield call(
+      API.post,
+      `student_groups/${idStudentGroup}/students/${idStudent}/evaluations`,
+      evaluation
+    );
+
+    if (response && response.status === 201) {
+      yield put(createStudentEvaluationSuccess(response));
+    }
+  } catch (error) {
+    yield put(createStudentEvaluationFail(error.response || error));
+  }
+}
+
 export default all([
   takeLatest(SEARCH_STUDENT_GROUP_REQUEST, searchStudentGroup),
   takeLatest(CREATE_STUDENT_GROUP_REQUEST, createStudentGroup),
   takeLatest(ENROLL_STUDENT_GROUP_REQUEST, enrollStudent),
+  takeLatest(CREATE_STUDENT_EVALUATION_REQUEST, createStudentEvaluation),
 ]);
 
 function _makeStudentGroupBodyRequest(studentGroup) {
@@ -83,9 +105,9 @@ function _makeStudentGroupBodyRequest(studentGroup) {
   const address = {
     ...thirdStepData,
     state: thirdStepData.state,
-    number: thirdStepData.number || null,
-    complement: thirdStepData.complement || null,
-    referenceLocation: thirdStepData.referenceLocation || null,
+    number: thirdStepData.number || '',
+    complement: thirdStepData.complement || '',
+    referenceLocation: thirdStepData.referenceLocation || '',
   };
   const firstPart = address.zipcode.slice(0, 5);
   const secondPart = address.zipcode.slice(5);

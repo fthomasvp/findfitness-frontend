@@ -42,6 +42,15 @@ export const ENROLL_STUDENT_GROUP_FAIL =
 
 export const CLEAR_SNACKBAR = '@studentGroup/CLEAR_SNACKBAR';
 
+export const CREATE_STUDENT_EVALUATION_REQUEST =
+  '@studentGroup/CREATE_STUDENT_EVALUATION_REQUEST';
+
+export const CREATE_STUDENT_EVALUATION_SUCCESS =
+  '@studentGroup/CREATE_STUDENT_EVALUATION_SUCCESS';
+
+export const CREATE_STUDENT_EVALUATION_FAIL =
+  '@studentGroup/CREATE_STUDENT_EVALUATION_FAIL';
+
 /**
  * Action Creators
  * */
@@ -169,6 +178,33 @@ export const clearSnackbar = () => {
   };
 };
 
+export const createStudentEvaluationRequest = (
+  idStudentGroup,
+  idStudent,
+  evaluation
+) => {
+  return {
+    type: CREATE_STUDENT_EVALUATION_REQUEST,
+    idStudentGroup,
+    idStudent,
+    evaluation,
+  };
+};
+
+export const createStudentEvaluationSuccess = response => {
+  return {
+    type: CREATE_STUDENT_EVALUATION_SUCCESS,
+    response,
+  };
+};
+
+export const createStudentEvaluationFail = error => {
+  return {
+    type: CREATE_STUDENT_EVALUATION_FAIL,
+    error,
+  };
+};
+
 /**
  * Reducer
  * */
@@ -199,9 +235,10 @@ const INITIAL_STATE = {
   studentGroups: [],
   pagination: {
     page: 0,
-    size: 20,
+    size: 30,
   },
   error: null,
+  response: null,
 };
 
 export const studentGroup = (state = INITIAL_STATE, action) => {
@@ -374,6 +411,31 @@ export const studentGroup = (state = INITIAL_STATE, action) => {
         error: INITIAL_STATE.error,
         response: INITIAL_STATE.response,
       };
+
+    case CREATE_STUDENT_EVALUATION_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+
+    case CREATE_STUDENT_EVALUATION_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: INITIAL_STATE.error,
+        response: action.response,
+      };
+    }
+
+    case CREATE_STUDENT_EVALUATION_FAIL: {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
+        response: INITIAL_STATE.response,
+      };
+    }
 
     default:
       return state;

@@ -6,11 +6,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-// import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 import MapIcon from '@material-ui/icons/Map';
-// import SchoolIcon from '@material-ui/icons/School';
+import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
+import ListIcon from '@material-ui/icons/List';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import HomeIcon from '@material-ui/icons/Home';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -25,7 +24,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Divider from '@material-ui/core/Divider';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import PaymentIcon from '@material-ui/icons/Payment';
 
 import * as AuthReducer from '../../store/ducks/Auth';
@@ -45,7 +43,7 @@ const Menu = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openProfileMenu, setOpenProfileMenu] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [pageTitle, setPageTitle] = useState('Início');
+  const [pageTitle, setPageTitle] = useState('Aulas disponíveis');
 
   const handleCloseDrawer = () => setOpenDrawer(false);
 
@@ -88,26 +86,41 @@ const Menu = () => {
 
   const getPageTitle = pathname => {
     switch (pathname) {
-      case '/home':
-        return setPageTitle('Início');
+      case '/home': {
+        setSelectedIndex(0);
 
-      case '/studentgroups':
+        return setPageTitle('Aulas disponíveis');
+      }
+
+      case '/studentgroups': {
+        setSelectedIndex(1);
         return setPageTitle('Minhas aulas');
+      }
 
-      case '/activities':
+      case '/activities': {
+        setSelectedIndex(2);
         return setPageTitle('Atividades');
+      }
 
-      case '/specializations':
+      case '/specializations': {
+        setSelectedIndex(3);
         return setPageTitle('Especializações');
+      }
 
-      case '/profile':
+      case '/profile': {
+        setSelectedIndex(4);
         return setPageTitle('Perfil');
+      }
 
-        case '/paymentmethod':
+      case '/paymentmethod': {
+        setSelectedIndex(5);
         return setPageTitle('Pagamento');
+      }
 
-      default:
-        return setPageTitle('Início');
+      default: {
+        setSelectedIndex(0);
+        return setPageTitle('Aulas disponíveis');
+      }
     }
   };
 
@@ -201,9 +214,9 @@ const Menu = () => {
             onClick={event => handleListItemClick(event, 0)}
           >
             <ListItemIcon>
-              <HomeIcon />
+              <MapIcon />
             </ListItemIcon>
-            <ListItemText primary="Início" />
+            <ListItemText primary="Aulas disponíveis" />
           </ListItem>
 
           <Divider style={{ marginBottom: '5px', marginTop: '5px' }} />
@@ -214,7 +227,7 @@ const Menu = () => {
             onClick={event => handleListItemClick(event, 1)}
           >
             <ListItemIcon>
-              <MapIcon />
+              <ListIcon />
             </ListItemIcon>
             <ListItemText primary="Minhas aulas" />
           </ListItem>
@@ -266,7 +279,7 @@ const Menu = () => {
             onClick={event => handleListItemClick(event, 4)}
           >
             <ListItemIcon>
-              <AccountBoxIcon />
+              <PersonOutlineIcon />
             </ListItemIcon>
             <ListItemText primary="Perfil" />
           </ListItem>

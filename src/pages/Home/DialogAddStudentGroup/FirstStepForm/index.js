@@ -178,7 +178,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                   cancelLabel="Cancelar"
                   okLabel="Confirmar"
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   error={errors && errors.selectedBeginDateTime ? true : false}
                   helperText={errors.selectedBeginDateTime || ''}
@@ -199,7 +199,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                   }}
                   inputVariant="outlined"
                   InputLabelProps={{
-                    style: { color: 'white', fontSize: '1.2rem' },
+                    style: { fontSize: '1rem' },
                   }}
                   error={errors && errors.selectedEndDateTime ? true : false}
                   helperText={errors.selectedEndDateTime || ''}
@@ -270,12 +270,21 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
             <ContainerActionButtons>
               <ActionButtons>
                 <div>
-                  <Button color="secondary" onClick={handleBack}>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={handleBack}
+                  >
                     Voltar
                   </Button>
                 </div>
                 <div>
-                  <Button variant="contained" color="primary" type="submit">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    style={{ marginLeft: '8px' }}
+                  >
                     Próximo
                   </Button>
                 </div>
