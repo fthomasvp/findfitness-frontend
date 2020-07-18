@@ -6,15 +6,13 @@ import { ThemeProvider } from '@material-ui/styles';
 
 import { store, persistor } from './store';
 import Routes from './routes';
-import { theme } from './global/theme';
+import { defaultTheme } from './global/theme';
 
 const App = () => {
-  // console.log('myTheme', theme);
-
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={defaultTheme}>
           <Routes />
         </ThemeProvider>
       </PersistGate>

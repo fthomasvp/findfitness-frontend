@@ -1,20 +1,7 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 
 import API from '../../services/API';
-import {
-  SEARCH_STUDENT_GROUP_REQUEST,
-  searchStudentGroupSuccess,
-  searchStudentGroupFail,
-  CREATE_STUDENT_GROUP_REQUEST,
-  createStudentGroupSucess,
-  createStudentGroupFail,
-  ENROLL_STUDENT_GROUP_REQUEST,
-  enrollStudentGroupSuccess,
-  enrollStudentGroupFail,
-  CREATE_STUDENT_EVALUATION_REQUEST,
-  createStudentEvaluationSuccess,
-  createStudentEvaluationFail,
-} from '../ducks/StudentGroup';
+import * as StudentGroupReducer from '../ducks/student_group';
 
 export function* searchStudentGroup(action) {
   const { pagination } = action;
@@ -26,26 +13,30 @@ export function* searchStudentGroup(action) {
     );
 
     if (response && response.status === 200) {
-      yield put(searchStudentGroupSuccess(response));
+      yield put(StudentGroupReducer.searchStudentGroupSuccess(response));
     }
   } catch (error) {
-    yield put(searchStudentGroupFail(error.response || error));
+    yield put(
+      StudentGroupReducer.searchStudentGroupFail(error.response || error)
+    );
   }
 }
 
 export function* createStudentGroup(action) {
-  const { studentGroup } = action;
+  const { studentGroup, idPersonal } = action;
 
-  const requestBody = _makeStudentGroupBodyRequest(studentGroup);
+  const requestBody = _makeStudentGroupBodyRequest(studentGroup, idPersonal);
 
   try {
     const response = yield call(API.post, `/student_groups`, requestBody);
 
     if (response && response.status === 201) {
-      yield put(createStudentGroupSucess());
+      yield put(StudentGroupReducer.createStudentGroupSucess(response));
     }
   } catch (error) {
-    yield put(createStudentGroupFail(error.response || error));
+    yield put(
+      StudentGroupReducer.createStudentGroupFail(error.response || error)
+    );
   }
 }
 
@@ -58,10 +49,12 @@ export function* enrollStudent(action) {
     );
 
     if (response && response.status === 201) {
-      yield put(enrollStudentGroupSuccess(response));
+      yield put(StudentGroupReducer.enrollStudentGroupSuccess(response));
     }
   } catch (error) {
-    yield put(enrollStudentGroupFail(error.response || error));
+    yield put(
+      StudentGroupReducer.enrollStudentGroupFail(error.response || error)
+    );
   }
 }
 
@@ -76,30 +69,33 @@ export function* createStudentEvaluation(action) {
     );
 
     if (response && response.status === 201) {
-      yield put(createStudentEvaluationSuccess(response));
+      yield put(StudentGroupReducer.createStudentEvaluationSuccess(response));
     }
   } catch (error) {
-    yield put(createStudentEvaluationFail(error.response || error));
+    yield put(
+      StudentGroupReducer.createStudentEvaluationFail(error.response || error)
+    );
   }
 }
 
 export default all([
-  takeLatest(SEARCH_STUDENT_GROUP_REQUEST, searchStudentGroup),
-  takeLatest(CREATE_STUDENT_GROUP_REQUEST, createStudentGroup),
-  takeLatest(ENROLL_STUDENT_GROUP_REQUEST, enrollStudent),
-  takeLatest(CREATE_STUDENT_EVALUATION_REQUEST, createStudentEvaluation),
+  takeLatest(
+    StudentGroupReducer.SEARCH_STUDENT_GROUP_REQUEST,
+    searchStudentGroup
+  ),
+  takeLatest(
+    StudentGroupReducer.CREATE_STUDENT_GROUP_REQUEST,
+    createStudentGroup
+  ),
+  takeLatest(StudentGroupReducer.ENROLL_STUDENT_GROUP_REQUEST, enrollStudent),
+  takeLatest(
+    StudentGroupReducer.CREATE_STUDENT_EVALUATION_REQUEST,
+    createStudentEvaluation
+  ),
 ]);
 
-function _makeStudentGroupBodyRequest(studentGroup) {
+const _makeStudentGroupBodyRequest = (studentGroup, idPersonal) => {
   const { firstStepData, secondStepData, thirdStepData } = studentGroup;
-
-  // Get Personal id
-  const persistedSession = JSON.parse(
-    sessionStorage.getItem('persist:findfitness')
-  );
-  const AUTH = JSON.parse(persistedSession.auth);
-  const { user } = AUTH;
-  const { id: idPersonal } = user;
 
   // Get Address data
   const address = {
@@ -144,4 +140,4 @@ function _makeStudentGroupBodyRequest(studentGroup) {
   };
 
   return requestBody;
-}
+};

@@ -1,31 +1,19 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 
 import API from '../../services/API';
-import {
-  FETCH_STATES_REQUEST,
-  fetchStatesSuccess,
-  fetchStatesFail,
-  SEARCH_ADDRESS_BY_ZIPCODE_REQUEST,
-  searchAddressByZipcodeFail,
-  FETCH_CITIES_BY_STATE_ID_REQUEST,
-  fetchCitiesByStateIdSuccess,
-  fetchCitiesByStateIdFail,
-} from '../ducks/Localization';
-import {
-  updateThirdStepData,
-  // updateThirdStepStateField,
-} from '../ducks/StudentGroup';
-import { updateAddressData, updateAddressProfileData } from '../ducks/Auth';
+import * as LocalizationReducer from '../ducks/localization';
+import * as StudentGroupReducer from '../ducks/student_group';
+import * as AuthReducer from '../ducks/auth';
 
 export function* fetchStates() {
   try {
     const response = yield call(API.get, `/localizations/states`);
 
     if (response && response.status === 200) {
-      yield put(fetchStatesSuccess(response));
+      yield put(LocalizationReducer.fetchStatesSuccess(response));
     }
   } catch (error) {
-    yield put(fetchStatesFail(error.response || error));
+    yield put(LocalizationReducer.fetchStatesFail(error.response || error));
   }
 }
 
@@ -37,19 +25,21 @@ export function* searchAddressByZipCode(action) {
 
     if (response && response.status === 200) {
       if (fromPage === 'signup') {
-        yield put(updateAddressData(response, states));
+        yield put(AuthReducer.updateAddressData(response, states));
       }
 
       if (fromPage === 'studentgroups') {
-        yield put(updateThirdStepData(response, states));
+        yield put(StudentGroupReducer.updateThirdStepData(response, states));
       }
 
       if (fromPage === 'profile') {
-        yield put(updateAddressProfileData(response, states));
+        yield put(AuthReducer.updateAddressProfileData(response, states));
       }
     }
   } catch (error) {
-    yield put(searchAddressByZipcodeFail(error.response || error));
+    yield put(
+      LocalizationReducer.searchAddressByZipcodeFail(error.response || error)
+    );
   }
 }
 
@@ -61,18 +51,23 @@ export function* fetchCitiesByStateId(action) {
     );
 
     if (response && response.status === 200) {
-      yield put(fetchCitiesByStateIdSuccess(response));
-      // Foi preciso passar todo o objeto do Estado para renderizar no
-      // campo do Step 3
-      // yield put(updateThirdStepStateField(action.selectedState));
+      yield put(LocalizationReducer.fetchCitiesByStateIdSuccess(response));
     }
   } catch (error) {
-    yield put(fetchCitiesByStateIdFail(error.response || error));
+    yield put(
+      LocalizationReducer.fetchCitiesByStateIdFail(error.response || error)
+    );
   }
 }
 
 export default all([
-  takeLatest(FETCH_STATES_REQUEST, fetchStates),
-  takeLatest(SEARCH_ADDRESS_BY_ZIPCODE_REQUEST, searchAddressByZipCode),
-  takeLatest(FETCH_CITIES_BY_STATE_ID_REQUEST, fetchCitiesByStateId),
+  takeLatest(LocalizationReducer.FETCH_STATES_REQUEST, fetchStates),
+  takeLatest(
+    LocalizationReducer.SEARCH_ADDRESS_BY_ZIPCODE_REQUEST,
+    searchAddressByZipCode
+  ),
+  takeLatest(
+    LocalizationReducer.FETCH_CITIES_BY_STATE_ID_REQUEST,
+    fetchCitiesByStateId
+  ),
 ]);

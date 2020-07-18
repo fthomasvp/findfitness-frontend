@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import GoogleMapReact from 'google-map-react';
 import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 
+import * as StudentGroupReducer from '../../store/ducks/student_group';
 import DialogAddStudentGroup from './DialogAddStudentGroup';
 import DialogStudentGroupDetails from '../../components/DialogStudentGroupDetails';
-import * as StudentGroupReducer from '../../store/ducks/StudentGroup';
 
 const StudentGroup = () => {
   const dispatch = useDispatch();
 
-  const { studentGroups, pagination } = useSelector(
+  const { studentGroups, pagination, activeStep } = useSelector(
     state => state.studentGroup
   );
 
@@ -27,11 +29,15 @@ const StudentGroup = () => {
 
   const handleOpen = () => setOpen(true);
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleClose = useCallback(async () => {
+    await setOpen(false);
 
-    dispatch(StudentGroupReducer.clearCreateStudentGroupData());
-  };
+    if (activeStep !== 0) {
+      await dispatch(StudentGroupReducer.clearCreateStudentGroupData());
+
+      await dispatch(StudentGroupReducer.searchStudentGroupRequest(pagination));
+    }
+  }, [dispatch, pagination, activeStep]);
 
   /**
    * Variables and functions to DialogStudentGroupDetails
@@ -41,49 +47,10 @@ const StudentGroup = () => {
     null
   );
 
-  const handleCloseDialogDetails = () => setOpenDialogDetails(false);
-
-  /**
-   * About Google Maps (Markers...)
-   */
-  const handleApiLoaded = (map, maps) => {
-    studentGroups.forEach((studentGroup, index) => {
-      const { id, latitude: lat, longitude: lng } = studentGroup;
-
-      const marker = new maps.Marker({
-        title: `Aula ${id}`,
-        animation: maps.Animation.DROP,
-        position: { lat, lng },
-        map,
-      });
-
-      // Trigger DialogDetails by click on Marker
-      marker.addListener('click', () => {
-        setOpenDialogDetails(true);
-
-        setSelectedStudentGroupIndex(index);
-      });
-
-      // Places search
-
-      // Create the autocomplete object, restricting the search predictions to
-      // geographical location types.
-      // const autocomplete = new maps.places.Autocomplete(
-      //   document.getElementById('autocomplete'),
-      //   { types: ['geocode'] }
-      // );
-
-      // // Avoid paying for data that you don't need by restricting the set of
-      // // place fields that are returned to just the address components.
-      // autocomplete.setFields(['address_component']);
-
-      // // When the user selects an address from the drop-down, populate the
-      // // address fields in the form.
-      // autocomplete.addListener('place_changed', evt => {
-      //   console.log('places', evt);
-      // });
-    });
-  };
+  const handleCloseDialogDetails = useCallback(
+    () => setOpenDialogDetails(false),
+    []
+  );
 
   /**
    * Effects
@@ -107,19 +74,39 @@ const StudentGroup = () => {
 
   return (
     <div style={{ width: '100%', height: '85%' }}>
-      <GoogleMapReact
-        // eslint-disable-next-line no-undef
-        bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY }}
-        center={MAP_CENTER_POSITION} // defaultCenter prop needs a constant object
-        defaultZoom={13}
-        yesIWantToUseGoogleMapApiInternals={true}
-        onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
-        options={{ fullscreenControl: false, zoomControl: false }}
-      />
+      {studentGroups?.length > 0 && (
+        <GoogleMapReact
+          // eslint-disable-next-line no-undef
+          bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY }}
+          center={MAP_CENTER_POSITION} // defaultCenter prop needs a constant object
+          defaultZoom={13}
+          options={{ fullscreenControl: false, zoomControl: false }}
+        >
+          {studentGroups.map(({ latitude, longitude }, index) => (
+            <IconButton
+              key={index}
+              lat={latitude}
+              lng={longitude}
+              onClick={() => {
+                setOpenDialogDetails(true);
+
+                setSelectedStudentGroupIndex(index);
+              }}
+              style={{
+                position: 'absolute',
+                transform: 'translate(-50%, -50%)',
+              }}
+            >
+              <LocationOnIcon fontSize="large" style={{ color: '#51389b' }} />
+            </IconButton>
+          ))}
+        </GoogleMapReact>
+      )}
 
       {user.profile !== 'ROLE_STUDENT' && (
         <Fab
           aria-label="add"
+          color="primary"
           style={{
             position: 'absolute',
             bottom: '150px',

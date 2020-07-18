@@ -17,8 +17,8 @@ import Step from '@material-ui/core/Step';
 import Container from '@material-ui/core/Container';
 import StepLabel from '@material-ui/core/StepLabel';
 
-import * as AuthReducer from '../../../store/ducks/Auth';
-import * as LocalizationReducer from '../../../store/ducks/Localization';
+import * as AuthReducer from '../../../store/ducks/auth';
+import * as LocalizationReducer from '../../../store/ducks/localization';
 import YupSchema, {
   street,
   number,
@@ -26,9 +26,10 @@ import YupSchema, {
   city,
   zipcode,
 } from '../../validators';
-import * as S from '../styles';
 import SForm from '../../../components/Form';
 import Alert from '../../../components/Alert';
+import { useGlobalStyles } from '../../../global/styles';
+import * as S from '../styles';
 
 // Yup Fields Schema
 const AddressSchema = YupSchema({
@@ -42,6 +43,7 @@ const AddressSchema = YupSchema({
 const AddressForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const { states, citiesByState } = useSelector(state => state.localization);
 
@@ -203,8 +205,10 @@ const AddressForm = () => {
                       value={zipcode}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
+                      style={{ width: '50%' }}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
                       InputProps={{
                         endAdornment: (
@@ -220,7 +224,6 @@ const AddressForm = () => {
                           </InputAdornment>
                         ),
                       }}
-                      style={{ marginBottom: '20px', width: '50%' }}
                       error={
                         (errors.zipcode && touched.zipcode) ||
                         (errorLocalization && errorLocalization.status === 500)
@@ -231,7 +234,7 @@ const AddressForm = () => {
                         errors.zipcode && touched.zipcode ? errors.zipcode : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem', minWidth: '280px' },
+                        className: globalClasses.formHelperText,
                       }}
                     />
                     <TextField
@@ -241,16 +244,16 @@ const AddressForm = () => {
                       value={street}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
-                      style={{ marginBottom: '20px' }}
                       error={errors.street && touched.street ? true : false}
                       helperText={
                         errors.street && touched.street ? errors.street : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem', minWidth: '280px' },
+                        className: globalClasses.formHelperText,
                       }}
                     />
 
@@ -261,10 +264,11 @@ const AddressForm = () => {
                       value={neighborhood}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
+                      style={{ width: '50%' }}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
-                      style={{ marginBottom: '20px', width: '50%' }}
                       error={
                         errors.neighborhood && touched.neighborhood
                           ? true
@@ -276,7 +280,7 @@ const AddressForm = () => {
                           : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem', minWidth: '280px' },
+                        className: globalClasses.formHelperText,
                       }}
                     />
 
@@ -288,17 +292,18 @@ const AddressForm = () => {
                       value={number}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
+                      style={{ width: '30%' }}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
                       inputProps={{ min: 1 }}
-                      style={{ marginBottom: '20px', width: '30%' }}
                       error={errors.number && touched.number ? true : false}
                       helperText={
                         errors.number && touched.number ? errors.number : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem', minWidth: '280px' },
+                        className: globalClasses.formHelperText,
                       }}
                     />
 
@@ -309,10 +314,10 @@ const AddressForm = () => {
                       value={complement}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
-                      style={{ marginBottom: '20px' }}
                     />
                     <TextField
                       id="referenceLocation"
@@ -321,10 +326,10 @@ const AddressForm = () => {
                       value={referenceLocation}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
-                      style={{ marginBottom: '20px' }}
                     />
 
                     <TextField
@@ -346,19 +351,20 @@ const AddressForm = () => {
                           )
                         );
                       }}
+                      className={globalClasses.textField}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
                       SelectProps={{
                         autoWidth: true,
                       }}
-                      style={{ marginBottom: '20px', width: '30%' }}
+                      style={{ width: '30%' }}
                       error={errors.state && touched.state ? true : false}
                       helperText={
                         errors.state && touched.state ? errors.state : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem', minWidth: '280px' },
+                        className: globalClasses.formHelperText,
                       }}
                     >
                       {states &&
@@ -376,19 +382,19 @@ const AddressForm = () => {
                       variant="outlined"
                       value={city}
                       onChange={evt => setFieldValue('city', evt.target.value)}
+                      className={globalClasses.textField}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
                       SelectProps={{
                         autoWidth: true,
                       }}
-                      style={{ marginBottom: '20px' }}
                       error={errors.city && touched.city ? true : false}
                       helperText={
                         errors.city && touched.city ? errors.city : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem' },
+                        className: globalClasses.formHelperText,
                       }}
                     >
                       {citiesByState && citiesByState.length > 0 ? (
@@ -412,14 +418,15 @@ const AddressForm = () => {
 
                         history.goBack();
                       }}
+                      className={globalClasses.secondaryButton}
                     >
                       VOLTAR
                     </Button>
                     <Button
+                      type="submit"
                       color="primary"
                       variant="contained"
-                      type="submit"
-                      style={{ marginLeft: '8px' }}
+                      className={globalClasses.primaryButton}
                     >
                       FINALIZAR
                     </Button>

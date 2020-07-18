@@ -11,14 +11,17 @@ import Button from '@material-ui/core/Button';
 import PhoneIcon from '@material-ui/icons/Phone';
 
 import SForm from '../../../../components/Form';
-import { storeFirstStepForm } from '../../../../store/ducks/StudentGroup';
+import { storeFirstStepForm } from '../../../../store/ducks/student_group';
 import { errorMessages } from '../../../validators';
 import Utils from '../../../../utils';
+import { useGlobalStyles } from '../../../../global/styles';
 import { ContainerActionButtons, ActionButtons } from '../styles';
+
 import 'moment/locale/pt-br';
 
 const FirstStepForm = ({ handleBack, handleNext }) => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const { createStudentGroup } = useSelector(state => state.studentGroup);
   const { firstStepData } = createStudentGroup;
@@ -120,8 +123,9 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 value={minQtyStudents}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                className={globalClasses.textField}
                 InputLabelProps={{
-                  style: { fontSize: '1rem' },
+                  className: globalClasses.inputLabel,
                 }}
                 inputProps={{ min: 1 }}
                 error={
@@ -133,9 +137,8 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                     : ''
                 }
                 FormHelperTextProps={{
-                  style: { fontSize: '1.1rem', minWidth: '280px' },
+                  className: globalClasses.formHelperText,
                 }}
-                style={{ marginBottom: '20px' }}
               />
 
               <TextField
@@ -146,8 +149,9 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 value={maxQtyStudents}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                className={globalClasses.textField}
                 InputLabelProps={{
-                  style: { fontSize: '1rem' },
+                  className: globalClasses.inputLabel,
                 }}
                 inputProps={{ min: 1 }}
                 error={
@@ -159,7 +163,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                     : ''
                 }
                 FormHelperTextProps={{
-                  style: { fontSize: '1.1rem', minWidth: '280px' },
+                  className: globalClasses.formHelperText,
                 }}
               />
 
@@ -174,16 +178,17 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                   onChange={value => {
                     setFieldValue('selectedBeginDateTime', value);
                   }}
+                  className={globalClasses.textField}
+                  InputLabelProps={{
+                    className: globalClasses.inputLabel,
+                  }}
                   inputVariant="outlined"
                   cancelLabel="Cancelar"
                   okLabel="Confirmar"
-                  InputLabelProps={{
-                    style: { fontSize: '1rem' },
-                  }}
                   error={errors && errors.selectedBeginDateTime ? true : false}
                   helperText={errors.selectedBeginDateTime || ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -197,14 +202,17 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                   onChange={value => {
                     setFieldValue('selectedEndDateTime', value);
                   }}
-                  inputVariant="outlined"
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
+                  inputVariant="outlined"
+                  cancelLabel="Cancelar"
+                  okLabel="Confirmar"
                   error={errors && errors.selectedEndDateTime ? true : false}
                   helperText={errors.selectedEndDateTime || ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
               </MuiPickersUtilsProvider>
@@ -217,8 +225,9 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 value={contactPhone}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                className={globalClasses.textField}
                 InputLabelProps={{
-                  style: { fontSize: '1rem' },
+                  className: globalClasses.inputLabel,
                 }}
                 InputProps={{
                   startAdornment: (
@@ -237,11 +246,7 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                     : ''
                 }
                 FormHelperTextProps={{
-                  style: { fontSize: '1.1rem', minWidth: '280px' },
-                }}
-                style={{
-                  marginTop: '20px',
-                  marginBottom: '20px',
+                  className: globalClasses.formHelperText,
                 }}
               />
 
@@ -253,8 +258,9 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                 value={eventPrice}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                className={globalClasses.textField}
                 InputLabelProps={{
-                  style: { fontSize: '1rem' },
+                  className: globalClasses.inputLabel,
                 }}
                 InputProps={{
                   startAdornment: (
@@ -262,7 +268,6 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
                   ),
                 }}
                 inputProps={{ min: 0, step: '.01' }}
-                style={{ marginBottom: '20px' }}
               />
             </div>
 
@@ -271,19 +276,20 @@ const FirstStepForm = ({ handleBack, handleNext }) => {
               <ActionButtons>
                 <div>
                   <Button
-                    variant="outlined"
                     color="secondary"
+                    variant="outlined"
                     onClick={handleBack}
+                    className={globalClasses.secondaryButton}
                   >
                     Voltar
                   </Button>
                 </div>
                 <div>
                   <Button
-                    variant="contained"
-                    color="primary"
                     type="submit"
-                    style={{ marginLeft: '8px' }}
+                    color="primary"
+                    variant="contained"
+                    className={globalClasses.primaryButton}
                   >
                     Próximo
                   </Button>

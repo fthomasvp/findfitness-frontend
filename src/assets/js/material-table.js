@@ -34,3 +34,32 @@ export const tableIcons = {
   SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 };
+
+export const tableOptions = {
+  pageSizeOptions: [], // Don't show Row size option
+  actionsColumnIndex: -1, // Add actions on the end of row
+  headerStyle: {
+    fontSize: '1.2rem',
+  },
+  cellStyle: {
+    fontSize: '1.2rem',
+    color: '#d3d3d3',
+  },
+  searchFieldStyle: {
+    fontSize: '1.2rem',
+  },
+  paginationType: 'stepped',
+};
+
+export const tableLocalization = {
+  toolbar: {
+    searchPlaceholder: 'Buscar',
+    searchTooltip: 'Buscar',
+  },
+  pagination: {
+    firstTooltip: 'Primeira página',
+    previousTooltip: 'Página anterior',
+    nextTooltip: 'Próxima página',
+    lastTooltip: 'Última página',
+  },
+};

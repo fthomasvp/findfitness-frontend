@@ -7,15 +7,17 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import * as AuthReducer from '../../store/ducks/Auth';
-import * as LocalizationReducer from '../../store/ducks/Localization';
+import * as AuthReducer from '../../store/ducks/auth';
+import * as LocalizationReducer from '../../store/ducks/localization';
 import UserProfilePicture from './UserProfilePicture';
 import UserHealthCardForm from './UserHealthCardForm';
 import UserAddressForm from './UserAddressForm';
 import UserForm from './UserForm';
+import { useGlobalStyles } from '../../global/styles';
 
 const Profile = () => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const { profilePicture, profile, id } = useSelector(state => state.auth.user);
   const { userToUpdate } = useSelector(state => state.auth);
@@ -51,14 +53,14 @@ const Profile = () => {
 
       <Grid item xs={12}>
         <Paper>
-          <AppBar position="relative" color="transparent">
+          <AppBar position="relative" className={globalClasses.appBar}>
             <Tabs
               value={tab}
               onChange={handleChangeTab}
-              indicatorColor="primary"
               variant="scrollable"
               scrollButtons="auto"
               aria-label="profile tabs"
+              classes={{ indicator: globalClasses.tabIndicator }}
             >
               <Tab label="Dados pessoais" />
               <Tab label="Endereço" />

@@ -26,17 +26,17 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Divider from '@material-ui/core/Divider';
 import PaymentIcon from '@material-ui/icons/Payment';
 
-import * as AuthReducer from '../../store/ducks/Auth';
+import * as AuthReducer from '../../store/ducks/auth';
+import { useGlobalStyles } from '../../global/styles';
 import { useStyles } from './styles';
 
 const Menu = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const globalClasses = useGlobalStyles();
 
-  const { /*profile,*/ profilePicture, username } = useSelector(
-    state => state.auth.user
-  );
+  const { profilePicture, username } = useSelector(state => state.auth.user);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -132,8 +132,12 @@ const Menu = () => {
   }, [history.location.pathname]);
 
   return (
-    <AppBar position="static" style={{ marginBottom: '10px' }}>
-      <Toolbar>
+    <AppBar
+      position="static"
+      className={globalClasses.appBar}
+      style={{ marginBottom: '10px' }}
+    >
+      <Toolbar className={globalClasses.toolbar}>
         <IconButton
           edge="start"
           color="inherit"
