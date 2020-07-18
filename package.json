@@ -2,6 +2,11 @@
   "name": "findfitness-frontend",
   "version": "1.13.1",
   "private": true,
+  "engines": {
+    "node": "10.x",
+    "npm": "6.x",
+    "yarn": "1.x"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
