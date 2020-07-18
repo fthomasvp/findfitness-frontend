@@ -22,11 +22,7 @@ import Container from '@material-ui/core/Container';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
-import {
-  storePersonForm,
-  handleBackStep,
-  handleNextStep,
-} from '../../../store/ducks/Auth';
+import * as AuthReducer from '../../../store/ducks/auth';
 import YupSchema, {
   errorMessages,
   email,
@@ -34,9 +30,11 @@ import YupSchema, {
   name,
   birthdate,
 } from '../../validators';
-import * as S from '../styles';
 import SForm from '../../../components/Form';
-import "moment/locale/pt-br";
+import { useGlobalStyles } from '../../../global/styles';
+import * as S from '../styles';
+
+import 'moment/locale/pt-br';
 
 /**
  * Yup Fields Schema
@@ -51,6 +49,7 @@ const StudentOrPersonalSchema = YupSchema({
 const StudentOrPersonalForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const { userToCreate } = useSelector(state => state.auth);
   const { gender } =
@@ -95,9 +94,9 @@ const StudentOrPersonalForm = () => {
    */
   const { activeStep, steps } = useSelector(state => state.auth);
 
-  const handleNext = () => dispatch(handleNextStep(activeStep));
+  const handleNext = () => dispatch(AuthReducer.handleNextStep(activeStep));
 
-  const handleBack = () => dispatch(handleBackStep(activeStep));
+  const handleBack = () => dispatch(AuthReducer.handleBackStep(activeStep));
 
   return (
     <Container maxWidth="sm" style={{ alignSelf: 'center' }}>
@@ -111,7 +110,7 @@ const StudentOrPersonalForm = () => {
           onSubmit={values => {
             const person = { ...values, gender: userGender };
 
-            dispatch(storePersonForm(person));
+            dispatch(AuthReducer.storePersonForm(person));
 
             handleNext();
 
@@ -238,19 +237,17 @@ const StudentOrPersonalForm = () => {
 
                           handleBlur(evt);
                         }}
+                        className={globalClasses.textField}
+                        style={{ width: '40%' }}
                         InputLabelProps={{
-                          style: { fontSize: '1rem' },
-                        }}
-                        style={{
-                          marginBottom: '20px',
-                          width: '40%',
+                          className: globalClasses.inputLabel,
                         }}
                         error={errors.cref && touched.cref ? true : false}
                         helperText={
                           errors.cref && touched.cref ? errors.cref : ''
                         }
                         FormHelperTextProps={{
-                          style: { fontSize: '1.1rem' },
+                          className: globalClasses.formHelperText,
                         }}
                       />
                     )}
@@ -263,16 +260,16 @@ const StudentOrPersonalForm = () => {
                       value={name}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
-                      style={{ marginBottom: '20px' }}
                       error={errors.name && touched.name ? true : false}
                       helperText={
                         errors.name && touched.name ? errors.name : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem' },
+                        className: globalClasses.formHelperText,
                       }}
                     />
 
@@ -283,16 +280,17 @@ const StudentOrPersonalForm = () => {
                       value={phone}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
+                      style={{ width: '140px' }}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
-                      style={{ marginBottom: '20px', width: '140px' }}
                       error={errors.phone && touched.phone ? true : false}
                       helperText={
                         errors.phone && touched.phone ? errors.phone : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem' },
+                        className: globalClasses.formHelperText,
                       }}
                     />
 
@@ -303,14 +301,15 @@ const StudentOrPersonalForm = () => {
                       value={cpf}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
+                      style={{ width: '160px' }}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
-                      style={{ marginBottom: '20px', width: '160px' }}
                       error={errors.cpf && touched.cpf ? true : false}
                       helperText={errors.cpf && touched.cpf ? errors.cpf : ''}
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem' },
+                        className: globalClasses.formHelperText,
                       }}
                     />
 
@@ -326,14 +325,14 @@ const StudentOrPersonalForm = () => {
                     </Typography>
                     <AppBar
                       position="relative"
-                      color="transparent"
+                      className={globalClasses.appBar}
                       style={{ marginBottom: '20px' }}
                     >
                       <Tabs
                         value={tab}
                         onChange={handleChangeTab}
-                        indicatorColor="primary"
                         centered
+                        classes={{ indicator: globalClasses.tabIndicator }}
                       >
                         <Tab label="FEMININO" />
                         <Tab label="MASCULINO" />
@@ -341,12 +340,14 @@ const StudentOrPersonalForm = () => {
                       </Tabs>
                     </AppBar>
 
-                    <MuiPickersUtilsProvider utils={MomentUtils} locale={'pt-br'}>
+                    <MuiPickersUtilsProvider
+                      utils={MomentUtils}
+                      locale={'pt-br'}
+                    >
                       <div
                         style={{
                           width: '100%',
                           display: 'flex',
-                          marginBottom: '20px',
                         }}
                       >
                         <div>
@@ -359,11 +360,12 @@ const StudentOrPersonalForm = () => {
                             onChange={value => {
                               setFieldValue('birthdate', value);
                             }}
+                            className={globalClasses.textField}
                             inputVariant="outlined"
                             cancelLabel="Cancelar"
                             okLabel="Confirmar"
                             InputLabelProps={{
-                              style: { fontSize: '1rem' },
+                              className: globalClasses.inputLabel,
                             }}
                             error={
                               errors.birthdate && touched.birthdate
@@ -376,10 +378,7 @@ const StudentOrPersonalForm = () => {
                                 : ''
                             }
                             FormHelperTextProps={{
-                              style: {
-                                width: 'max-content',
-                                fontSize: '1.1rem',
-                              },
+                              className: globalClasses.formHelperText,
                             }}
                           />
                         </div>
@@ -394,16 +393,16 @@ const StudentOrPersonalForm = () => {
                       value={email}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
-                      style={{ marginBottom: '20px' }}
                       error={errors.email && touched.email ? true : false}
                       helperText={
                         errors.email && touched.email ? errors.email : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem' },
+                        className: globalClasses.formHelperText,
                       }}
                     />
 
@@ -415,8 +414,9 @@ const StudentOrPersonalForm = () => {
                       value={password}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
                       InputLabelProps={{
-                        style: { fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
                       InputProps={{
                         endAdornment: (
@@ -439,7 +439,6 @@ const StudentOrPersonalForm = () => {
                           </InputAdornment>
                         ),
                       }}
-                      style={{ marginBottom: '20px' }}
                       error={errors.password && touched.password ? true : false}
                       helperText={
                         errors.password && touched.password
@@ -447,7 +446,7 @@ const StudentOrPersonalForm = () => {
                           : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem' },
+                        className: globalClasses.formHelperText,
                       }}
                     />
                   </S.PanelContent>
@@ -456,19 +455,22 @@ const StudentOrPersonalForm = () => {
                     <Button
                       color="secondary"
                       variant="outlined"
+                      title="Voltar"
                       onClick={() => {
                         handleBack();
 
                         history.goBack();
                       }}
+                      className={globalClasses.secondaryButton}
                     >
                       Voltar
                     </Button>
                     <Button
+                      type="submit"
                       color="primary"
                       variant="contained"
-                      type="submit"
-                      style={{ marginLeft: '8px' }}
+                      title="Próximo"
+                      className={globalClasses.primaryButton}
                     >
                       Próximo
                     </Button>

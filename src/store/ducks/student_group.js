@@ -131,16 +131,18 @@ export const clearCreateStudentGroupData = () => {
   };
 };
 
-export const createStudentGroupRequest = studentGroup => {
+export const createStudentGroupRequest = (studentGroup, idPersonal) => {
   return {
     type: CREATE_STUDENT_GROUP_REQUEST,
     studentGroup,
+    idPersonal,
   };
 };
 
-export const createStudentGroupSucess = () => {
+export const createStudentGroupSucess = response => {
   return {
     type: CREATE_STUDENT_GROUP_SUCCESS,
+    response,
   };
 };
 
@@ -358,25 +360,19 @@ export const studentGroup = (state = INITIAL_STATE, action) => {
       };
     }
 
-    case CREATE_STUDENT_GROUP_REQUEST: {
-      return {
-        ...state,
-        loading: true,
-      };
-    }
-
     case CREATE_STUDENT_GROUP_SUCCESS: {
       return {
         ...state,
-        loading: false,
+        response: action.response,
+        error: INITIAL_STATE.error,
       };
     }
 
     case CREATE_STUDENT_GROUP_FAIL: {
       return {
         ...state,
-        loading: false,
         error: action.error,
+        response: INITIAL_STATE.response,
       };
     }
 

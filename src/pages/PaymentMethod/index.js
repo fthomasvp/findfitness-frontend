@@ -16,22 +16,28 @@ import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
-import { tableIcons } from '../../assets/js/material-table-icons';
-import * as StudentReducer from '../../store/ducks/Student';
-import {
-  DialogTitle,
-  DialogContent,
-  ContainerActionButtons,
-  ActionButtons,
-} from './styles';
-import SForm from '../../components/Form';
+import * as StudentReducer from '../../store/ducks/student';
 import YupSchema, {
   cardNumber,
   cardOwnerName,
   cardVerificationValue,
 } from '../validators';
 import Utils from '../../utils';
+import SForm from '../../components/Form';
 import Alert from '../../components/Alert';
+import {
+  tableIcons,
+  tableOptions,
+  tableLocalization,
+} from '../../assets/js/material-table';
+import { useGlobalStyles } from '../../global/styles';
+import {
+  DialogTitle,
+  DialogContent,
+  ContainerActionButtons,
+  ActionButtons,
+} from './styles';
+
 import 'moment/locale/pt-br';
 
 /**
@@ -45,6 +51,7 @@ const PaymentMethodSchema = YupSchema({
 
 const PaymentMethod = () => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   // Only useful when the user is a Student
   const id = useSelector(state => state.auth.user.id);
@@ -69,7 +76,10 @@ const PaymentMethod = () => {
       field: 'expiryDate',
       defaultSort: 'asc',
       render: rowData => (
-        <Typography style={{ fontSize: '1.2rem' }}>
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
           {Utils.dateToDisplay(rowData.expiryDate)}
         </Typography>
       ),
@@ -78,7 +88,10 @@ const PaymentMethod = () => {
       title: 'NÚMERO DO CARTÃO',
       field: 'cardNumber',
       render: rowData => (
-        <Typography style={{ fontSize: '1.2rem' }}>
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
           {`****${rowData.cardNumber.slice(-4)}`}
         </Typography>
       ),
@@ -86,6 +99,14 @@ const PaymentMethod = () => {
     {
       title: 'TITULAR',
       field: 'cardOwnerName',
+      render: rowData => (
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
+          {rowData.cardOwnerName}
+        </Typography>
+      ),
     },
   ];
 
@@ -151,42 +172,19 @@ const PaymentMethod = () => {
           },
         ]}
         options={{
-          padding: 'dense',
-          pageSizeOptions: [], // Don't show Row size option
-          actionsColumnIndex: -1, // Add actions on the end of row
-          headerStyle: {
-            fontSize: '1.2rem',
-          },
-          cellStyle: {
-            fontSize: '1.2rem',
-            color: '#d3d3d3',
-          },
-          searchFieldStyle: {
-            fontSize: '1.2rem',
-          },
-          paginationType: 'stepped',
+          ...tableOptions,
           pageSize: 4,
         }}
         localization={{
-          toolbar: {
-            searchPlaceholder: 'Buscar',
-            searchTooltip: 'Buscar',
-          },
+          ...tableLocalization,
           body: {
             emptyDataSourceMessage:
               'Hmmm... Parece que você ainda não possui dados :(',
-          },
-          pagination: {
-            firstTooltip: 'Primeira página',
-            previousTooltip: 'Página anterior',
-            nextTooltip: 'Próxima página',
-            lastTooltip: 'Última página',
           },
           header: {
             actions: 'Detalhes',
           },
         }}
-        style={{ fontSize: '1.2rem' }}
       />
 
       <Dialog
@@ -369,18 +367,19 @@ const PaymentMethod = () => {
                     <ActionButtons>
                       <Button
                         autoFocus
-                        onClick={handleCloseDialog}
-                        variant="outlined"
                         color="secondary"
+                        variant="outlined"
+                        onClick={handleCloseDialog}
+                        className={globalClasses.secondaryButton}
                       >
                         Cancelar
                       </Button>
 
                       <Button
+                        type="submit"
                         color="primary"
                         variant="contained"
-                        type="submit"
-                        style={{ marginLeft: '8px' }}
+                        className={globalClasses.primaryButton}
                       >
                         Adicionar
                       </Button>

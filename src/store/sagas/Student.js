@@ -1,17 +1,7 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 
 import API from '../../services/API';
-import {
-  FETCH_PAYMENT_METHODS_REQUEST,
-  fetchPaymentMethodsSuccess,
-  fetchPaymentMethodsFail,
-  FETCH_PAYMENTS_REQUEST,
-  fetchPaymentsSuccess,
-  fetchPaymentsFail,
-  CREATE_PAYMENT_METHODS_REQUEST,
-  createPaymentMethodsSuccess,
-  createPaymentMethodsFail,
-} from '../ducks/Student';
+import * as StudentReducer from '../ducks/student';
 
 export function* fetchPaymentMethods(action) {
   const { idStudent } = action;
@@ -23,10 +13,10 @@ export function* fetchPaymentMethods(action) {
     );
 
     if (response && response.status === 200) {
-      yield put(fetchPaymentMethodsSuccess(response));
+      yield put(StudentReducer.fetchPaymentMethodsSuccess(response));
     }
   } catch (error) {
-    yield put(fetchPaymentMethodsFail(error.response || error));
+    yield put(StudentReducer.fetchPaymentMethodsFail(error.response || error));
   }
 }
 
@@ -42,10 +32,10 @@ export function* fetchPayments(action) {
     );
 
     if (response && response.status === 200) {
-      yield put(fetchPaymentsSuccess(response));
+      yield put(StudentReducer.fetchPaymentsSuccess(response));
     }
   } catch (error) {
-    yield put(fetchPaymentsFail(error.response || error));
+    yield put(StudentReducer.fetchPaymentsFail(error.response || error));
   }
 }
 
@@ -60,15 +50,18 @@ export function* createPaymentMethod(action) {
     );
 
     if (response && response.status === 201) {
-      yield put(createPaymentMethodsSuccess(response));
+      yield put(StudentReducer.createPaymentMethodsSuccess(response));
     }
   } catch (error) {
-    yield put(createPaymentMethodsFail(error.response || error));
+    yield put(StudentReducer.createPaymentMethodsFail(error.response || error));
   }
 }
 
 export default all([
-  takeLatest(FETCH_PAYMENT_METHODS_REQUEST, fetchPaymentMethods),
-  takeLatest(FETCH_PAYMENTS_REQUEST, fetchPayments),
-  takeLatest(CREATE_PAYMENT_METHODS_REQUEST, createPaymentMethod),
+  takeLatest(StudentReducer.FETCH_PAYMENT_METHODS_REQUEST, fetchPaymentMethods),
+  takeLatest(StudentReducer.FETCH_PAYMENTS_REQUEST, fetchPayments),
+  takeLatest(
+    StudentReducer.CREATE_PAYMENT_METHODS_REQUEST,
+    createPaymentMethod
+  ),
 ]);

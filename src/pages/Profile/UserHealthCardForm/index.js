@@ -8,13 +8,15 @@ import { Formik } from 'formik';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-import * as AuthReducer from '../../../store/ducks/Auth';
-import * as S from '../styles';
+import * as AuthReducer from '../../../store/ducks/auth';
 import SForm from '../../../components/Form';
 import Alert from '../../../components/Alert';
+import { useGlobalStyles } from '../../../global/styles';
+import * as S from '../styles';
 
 const UserHealthCardForm = ({ id, profile, healthCard }) => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   /**
    * Alert
@@ -110,13 +112,13 @@ const UserHealthCardForm = ({ id, profile, healthCard }) => {
                   value={sedentaryTime}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   multiline
                   rows={2}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   inputProps={{ maxLength: 250 }}
-                  style={{ marginBottom: '20px' }}
                 />
 
                 <TextField
@@ -126,13 +128,13 @@ const UserHealthCardForm = ({ id, profile, healthCard }) => {
                   value={regularPhysicalActivity}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   multiline
                   rows={2}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   inputProps={{ maxLength: 250 }}
-                  style={{ marginBottom: '20px' }}
                 />
 
                 <TextField
@@ -142,13 +144,13 @@ const UserHealthCardForm = ({ id, profile, healthCard }) => {
                   value={heartProblem}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   multiline
                   rows={2}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   inputProps={{ maxLength: 250 }}
-                  style={{ marginBottom: '20px' }}
                 />
 
                 <TextField
@@ -159,13 +161,13 @@ const UserHealthCardForm = ({ id, profile, healthCard }) => {
                   value={respiratoryAllergy}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   multiline
                   rows={2}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   inputProps={{ maxLength: 250 }}
-                  style={{ marginBottom: '20px' }}
                 />
 
                 <TextField
@@ -175,13 +177,13 @@ const UserHealthCardForm = ({ id, profile, healthCard }) => {
                   value={orthopedicProblem}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   multiline
                   rows={2}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   inputProps={{ maxLength: 250 }}
-                  style={{ marginBottom: '20px' }}
                 />
 
                 <TextField
@@ -191,13 +193,13 @@ const UserHealthCardForm = ({ id, profile, healthCard }) => {
                   value={surgicalIntervention}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   multiline
                   rows={2}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   inputProps={{ maxLength: 250 }}
-                  style={{ marginBottom: '20px' }}
                 />
 
                 <TextField
@@ -207,13 +209,13 @@ const UserHealthCardForm = ({ id, profile, healthCard }) => {
                   value={regularMedication}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   multiline
                   rows={2}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   inputProps={{ maxLength: 250 }}
-                  style={{ marginBottom: '20px' }}
                 />
 
                 <TextField
@@ -223,13 +225,13 @@ const UserHealthCardForm = ({ id, profile, healthCard }) => {
                   value={comments}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   multiline
                   rows={2}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   inputProps={{ maxLength: 250 }}
-                  style={{ marginBottom: '20px' }}
                 />
 
                 <FormControlLabel
@@ -324,7 +326,12 @@ const UserHealthCardForm = ({ id, profile, healthCard }) => {
               </S.PanelContent>
 
               <S.PanelActions>
-                <Button color="primary" variant="contained" type="submit">
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  className={globalClasses.primaryButton}
+                >
                   Atualizar
                 </Button>
               </S.PanelActions>

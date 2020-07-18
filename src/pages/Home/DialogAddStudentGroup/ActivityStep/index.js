@@ -6,14 +6,22 @@ import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 import Button from '@material-ui/core/Button';
 import Radio from '@material-ui/core/Radio';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
-import { storeSecondStepForm } from '../../../../store/ducks/StudentGroup';
-import { searchExercisesRequest } from '../../../../store/ducks/Exercise';
+import { storeSecondStepForm } from '../../../../store/ducks/student_group';
+import { searchExercisesRequest } from '../../../../store/ducks/exercise';
+import {
+  tableIcons,
+  tableOptions,
+  tableLocalization,
+} from '../../../../assets/js/material-table';
+import { useGlobalStyles } from '../../../../global/styles';
 import { ContainerActionButtons, ActionButtons } from '../styles';
-import { tableIcons } from '../../../../assets/js/material-table-icons';
 
 const ActivityStep = ({ activeStep, handleBack, handleNext }) => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const secondStepData = useSelector(
     state => state.studentGroup.createStudentGroup.secondStepData
@@ -42,12 +50,28 @@ const ActivityStep = ({ activeStep, handleBack, handleNext }) => {
     {
       title: 'ATIVIDADE',
       field: 'name',
+      render: rowData => (
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
+          {rowData.name}
+        </Typography>
+      ),
     },
     {
       title: 'DESCRIÇÃO',
       field: 'description',
       sorting: false,
       hidden: true,
+      render: rowData => (
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
+          {rowData.description}
+        </Typography>
+      ),
     },
   ];
 
@@ -80,27 +104,30 @@ const ActivityStep = ({ activeStep, handleBack, handleNext }) => {
           data={exercises}
           detailPanel={rowData => {
             return (
-              <div style={{ display: 'flex', flex: 1, padding: '15px' }}>
-                <div style={{ display: 'flex', width: '20%' }}>
-                  <img
-                    src="https://media.istockphoto.com/vectors/cartoon-people-doing-wrist-extension-stretch-exercise-vector-id540566306"
-                    width="100%"
-                    height="100%"
-                    alt="Activity Example"
-                  />
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    width: '80%',
-                    marginLeft: '45px',
-                    fontSize: '1.2rem',
-                    color: '#d3d3d3',
-                  }}
-                >
-                  {rowData.description}
-                </div>
-              </div>
+              <Grid item xs={12}>
+                <Grid container style={{ padding: '10px' }}>
+                  <Grid container justify="center" item xs={12} sm={3}>
+                    <div>
+                      <img
+                        src={rowData.picture}
+                        width="200px"
+                        height="200px"
+                        alt="Activity Example"
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid container justify="center" item xs={12} sm={9}>
+                    <Typography
+                      color="textSecondary"
+                      variant="h6"
+                      className={globalClasses.primaryTypography}
+                    >
+                      {rowData.description}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
             );
           }}
           onRowClick={(event, rowData) => {
@@ -108,42 +135,20 @@ const ActivityStep = ({ activeStep, handleBack, handleNext }) => {
             setExerciseIds(rowData);
           }}
           options={{
+            ...tableOptions,
             padding: 'dense',
-            pageSizeOptions: [], // Don't show Row size option
-            actionsColumnIndex: -1, // Add actions on the end of row
-            headerStyle: {
-              fontSize: '1.2rem',
-            },
-            cellStyle: {
-              fontSize: '1.2rem',
-              color: '#d3d3d3',
-            },
-            searchFieldStyle: {
-              fontSize: '1.2rem',
-            },
-            paginationType: 'stepped',
             pageSize: 4,
           }}
           localization={{
-            toolbar: {
-              searchPlaceholder: 'Buscar',
-              searchTooltip: 'Buscar',
-            },
+            ...tableLocalization,
             body: {
               emptyDataSourceMessage:
                 'Hmmm... Parece que você ainda não entrou numa aula :(',
-            },
-            pagination: {
-              firstTooltip: 'Primeira página',
-              previousTooltip: 'Página anterior',
-              nextTooltip: 'Próxima página',
-              lastTooltip: 'Última página',
             },
             header: {
               actions: 'Detalhes',
             },
           }}
-          style={{ fontSize: '1.2rem' }}
         />
       </div>
 
@@ -152,21 +157,22 @@ const ActivityStep = ({ activeStep, handleBack, handleNext }) => {
         <ActionButtons>
           <div>
             <Button
-              disabled={activeStep === 0}
-              variant="outlined"
               color="secondary"
+              variant="outlined"
               onClick={handleBack}
+              disabled={activeStep === 0}
+              className={globalClasses.secondaryButton}
             >
               Voltar
             </Button>
           </div>
           <div>
             <Button
-              variant="contained"
               color="primary"
+              variant="contained"
               onClick={handleClickNext}
               disabled={!exerciseIds || exerciseIds.length === 0}
-              style={{ marginLeft: '8px' }}
+              className={globalClasses.primaryButton}
             >
               Próximo
             </Button>

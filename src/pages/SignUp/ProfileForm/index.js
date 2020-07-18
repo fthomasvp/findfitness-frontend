@@ -14,16 +14,14 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Divider from '@material-ui/core/Divider';
 import Container from '@material-ui/core/Container';
 
+import * as AuthReducer from '../../../store/ducks/auth';
 import * as S from '../styles';
-import {
-  storeProfileType,
-  handleNextStep,
-  clearFields,
-} from '../../../store/ducks/Auth';
+import { useGlobalStyles } from '../../../global/styles';
 
 const ProfileForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const { profileType } = useSelector(state => state.auth.userToCreate);
 
@@ -36,10 +34,10 @@ const ProfileForm = () => {
    */
   const { activeStep, steps } = useSelector(state => state.auth);
 
-  const handleNext = () => dispatch(handleNextStep(activeStep));
+  const handleNext = () => dispatch(AuthReducer.handleNextStep(activeStep));
 
-  const handleClickNextButton = () => {
-    dispatch(storeProfileType(profileTypeForm));
+  const handleClickNextButton = async () => {
+    await dispatch(AuthReducer.storeProfileType(profileTypeForm));
 
     handleNext();
 
@@ -57,8 +55,8 @@ const ProfileForm = () => {
   };
 
   // Limpar valor do step ao sair da página
-  const leavePage = () => {
-    dispatch(clearFields());
+  const leavePage = async () => {
+    await dispatch(AuthReducer.clearFields());
 
     history.goBack();
   };
@@ -97,12 +95,12 @@ const ProfileForm = () => {
           </S.PanelTitle>
 
           <S.PanelContent id="SPanelContent">
-            <AppBar position="relative" color="transparent">
+            <AppBar position="relative" className={globalClasses.appBar}>
               <Tabs
                 value={tab}
                 onChange={handleChangeTab}
-                indicatorColor="primary"
                 centered
+                classes={{ indicator: globalClasses.tabIndicator }}
               >
                 <Tab label="ESTUDANTE" />
                 <Tab label="PERSONAL" />
@@ -111,14 +109,19 @@ const ProfileForm = () => {
           </S.PanelContent>
 
           <S.PanelActions id="sPanelActions">
-            <Button color="secondary" variant="outlined" onClick={leavePage}>
+            <Button
+              color="secondary"
+              variant="outlined"
+              onClick={leavePage}
+              className={globalClasses.secondaryButton}
+            >
               Voltar
             </Button>
             <Button
               color="primary"
               variant="contained"
               onClick={handleClickNextButton}
-              style={{ marginLeft: '8px' }}
+              className={globalClasses.primaryButton}
             >
               Próximo
             </Button>
