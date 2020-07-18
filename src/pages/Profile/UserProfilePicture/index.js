@@ -11,11 +11,13 @@ import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 import Typography from '@material-ui/core/Typography';
 
-import * as AuthReducer from '../../../store/ducks/Auth';
+import * as AuthReducer from '../../../store/ducks/auth';
+import { useGlobalStyles } from '../../../global/styles';
 import Alert from '../../../components/Alert';
 
 const UserProfilePicture = ({ id, profilePicture, profile }) => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   /**
    * Profile picture field
@@ -121,7 +123,7 @@ const UserProfilePicture = ({ id, profilePicture, profile }) => {
               aria-label="add profile picture"
               onClick={() => setShowInputField(true)}
             >
-              <AddAPhotoIcon />
+              <AddAPhotoIcon fontSize="large" color="primary" />
             </IconButton>
           }
         >
@@ -159,20 +161,21 @@ const UserProfilePicture = ({ id, profilePicture, profile }) => {
       >
         {showInputField && (
           <Button
-            onClick={clearProfilePictureFields}
             color="secondary"
             variant="outlined"
+            onClick={clearProfilePictureFields}
+            className={globalClasses.secondaryButton}
           >
             Cancelar
           </Button>
         )}
 
         <Button
-          onClick={handleClickUpload}
-          variant="contained"
           color="primary"
+          variant="contained"
+          onClick={handleClickUpload}
           disabled={imageFile === null}
-          style={{ marginLeft: '8px' }}
+          className={globalClasses.primaryButton}
         >
           Atualizar
         </Button>

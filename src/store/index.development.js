@@ -1,14 +1,15 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import { persistStore, persistReducer } from 'redux-persist';
-import session from 'redux-persist/lib/storage/session';
+import storage from 'redux-persist/lib/storage';
+
 import reducers from './ducks';
 import sagas from './sagas';
 import Reactotron from '../config/ReactotronConfig';
 
 const persistConfig = {
   key: 'findfitness',
-  storage: session,
+  storage,
   whitelist: ['auth'],
 };
 

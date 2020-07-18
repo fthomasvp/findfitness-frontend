@@ -13,7 +13,7 @@ import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import ThumbDownOutlinedIcon from '@material-ui/icons/ThumbDownOutlined';
 import TextField from '@material-ui/core/TextField';
 
-import * as StudentGroupReducer from '../../store/ducks/StudentGroup';
+import * as StudentGroupReducer from '../../store/ducks/student_group';
 import { DialogTitle, DialogContent, DialogActions } from './styles';
 
 const DialogStudentGroupEvaluation = ({ open, handleClose, evaluation }) => {

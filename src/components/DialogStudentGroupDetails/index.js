@@ -22,14 +22,16 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Grid from '@material-ui/core/Grid';
 
-import * as StudentGroupReducer from '../../store/ducks/StudentGroup';
+import * as StudentGroupReducer from '../../store/ducks/student_group';
 import Utils from '../../utils';
 import DialogEnrollStudentGroup from '../../pages/Home/DialogEnrollStudentGroup';
-import { DialogContent, DialogActions } from './styles';
 import Alert from '../../components/Alert';
+import { useGlobalStyles } from '../../global/styles';
+import { DialogContent, DialogActions } from './styles';
 
 const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const {
     completeAddress,
@@ -98,7 +100,10 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
       setSeverity('error');
     }
 
-    if (response && response.status === 201) {
+    if (
+      response?.status === 201 &&
+      response?.config?.url === '/student_groups/enroll'
+    ) {
       setAlertMessage('Hey! Te vejo na aula :)');
       setOpenAlert(true);
       setGrowTransition(true);
@@ -109,7 +114,7 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
 
       dispatch(StudentGroupReducer.searchStudentGroupRequest(pagination));
     }
-  }, [error, response, dispatch, pagination]);
+  }, [dispatch, pagination, handleClose, error, response]);
 
   return (
     <>
@@ -121,20 +126,23 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
         maxWidth="md"
         fullWidth
       >
-        <AppBar position="relative" color="transparent">
+        <AppBar position="relative" className={globalClasses.appBar}>
           <Tabs
             value={tab}
             onChange={handleChangeTab}
-            indicatorColor="primary"
             centered
-            aria-label="simple tabs example"
+            aria-label="student group detail tabs"
+            classes={{ indicator: globalClasses.tabIndicator }}
           >
             <Tab label="Informações" />
             <Tab label="Alunos" />
           </Tabs>
         </AppBar>
 
-        <DialogContent dividers style={{ maxHeight: '600px' }}>
+        <DialogContent
+          dividers
+          style={{ maxHeight: '600px', minHeight: '600px' }}
+        >
           {/* Show content by Tab */}
           {tab === 0 && (
             <Grid container spacing={3}>
@@ -144,7 +152,12 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                   <PersonIcon /> PERSONAL
                 </Typography>
                 <div
-                  style={{ display: 'flex', flex: 1, justifyContent: 'center' }}
+                  style={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'center',
+                    marginBottom: '15px',
+                  }}
                 >
                   <Avatar
                     src={`${personal.profilePicture}?${Date.now()}`}
@@ -153,12 +166,10 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                   />
                 </div>
                 <Typography
+                  color="textSecondary"
                   variant="h6"
                   align="center"
-                  style={{
-                    fontSize: '1.2em',
-                    color: '#d3d3d3',
-                  }}
+                  className={globalClasses.primaryTypography}
                 >
                   {personal.name}
                 </Typography>
@@ -172,22 +183,17 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                 >
                   <PhoneIcon style={{ marginRight: '3px' }} />
                   <Typography
+                    color="textSecondary"
                     align="center"
-                    style={{
-                      fontSize: '1.2em',
-                      color: '#d3d3d3',
-                    }}
+                    className={globalClasses.primaryTypography}
                   >
                     {Utils.formatPhone(contactPhone)}
                   </Typography>
                 </div>
                 <Typography
+                  color="textSecondary"
                   align="center"
-                  style={{
-                    marginBottom: '20px',
-                    fontSize: '1.2em',
-                    color: '#d3d3d3',
-                  }}
+                  className={globalClasses.primaryTypography}
                 >
                   CREF: {personal.cref}
                 </Typography>
@@ -200,37 +206,31 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                     <LocationOnIcon /> ENDEREÇO
                   </Typography>
                   <Typography
+                    color="textSecondary"
                     variant="button"
                     display="block"
                     gutterBottom
-                    style={{
-                      fontSize: '1.2em',
-                      color: '#d3d3d3',
-                    }}
+                    className={globalClasses.primaryTypography}
                   >
                     {formatedAddress.street}
                     {formatedAddress.number}
                     {formatedAddress.complemento}
                   </Typography>
                   <Typography
+                    color="textSecondary"
                     variant="button"
                     display="block"
                     gutterBottom
-                    style={{
-                      fontSize: '1.2em',
-                      color: '#d3d3d3',
-                    }}
+                    className={globalClasses.primaryTypography}
                   >
                     {formatedAddress.referenceLocation}
                   </Typography>
                   <Typography
+                    color="textSecondary"
                     variant="button"
                     display="block"
                     gutterBottom
-                    style={{
-                      fontSize: '1.2em',
-                      color: '#d3d3d3',
-                    }}
+                    className={globalClasses.primaryTypography}
                   >
                     {formatedAddress.neighboor}
                     {formatedAddress.city}
@@ -243,22 +243,20 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
               <Grid container justify="center" item xs={12} sm={6}>
                 <div>
                   <Typography
+                    color="primary"
                     gutterBottom
                     variant="h5"
                     align="center"
-                    style={{ color: 'gold' }}
                   >
-                    <PriorityHighIcon /> IMPORTANTE
+                    <PriorityHighIcon color="primary" /> IMPORTANTE
                   </Typography>
 
                   <Typography
+                    color="textSecondary"
                     gutterBottom
                     variant="button"
                     display="block"
-                    style={{
-                      fontSize: '1.2em',
-                      color: '#d3d3d3',
-                    }}
+                    className={globalClasses.primaryTypography}
                   >
                     Vagas restantes:{' '}
                     {payments && payments.length > 0 ? (
@@ -271,48 +269,50 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                         }
                         showZero
                       >
-                        <GroupIcon />
+                        <GroupIcon
+                          color={
+                            maxStudentGroupAmount - payments.length !== 0
+                              ? 'primary'
+                              : 'secondary'
+                          }
+                        />
                       </Badge>
                     ) : (
                       <Badge
                         badgeContent={maxStudentGroupAmount}
                         color="primary"
                       >
-                        <GroupIcon />
+                        <GroupIcon color="primary" />
                       </Badge>
                     )}
                   </Typography>
 
                   <Typography
+                    color="textSecondary"
                     gutterBottom
                     variant="button"
                     display="block"
-                    style={{
-                      fontSize: '1.2em',
-                      color: '#d3d3d3',
-                    }}
+                    className={globalClasses.primaryTypography}
                   >
                     Começa em: {Utils.formatDateTime(eventDateTimeBegin)}
                   </Typography>
                   <Typography
+                    color="textSecondary"
                     gutterBottom
                     variant="button"
                     display="block"
                     style={{
                       fontSize: '1.2em',
-                      color: '#d3d3d3',
                     }}
                   >
                     Término em: {Utils.formatDateTime(eventDateTimeEnd)}
                   </Typography>
                   <Typography
+                    color="textSecondary"
                     gutterBottom
                     variant="button"
                     display="block"
-                    style={{
-                      fontSize: '1.2em',
-                      color: '#d3d3d3',
-                    }}
+                    className={globalClasses.primaryTypography}
                   >
                     Valor: R$ {eventPrice}
                   </Typography>
@@ -345,11 +345,9 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
 
                     <Grid container justify="center" item xs={12} sm={9}>
                       <Typography
+                        color="textSecondary"
                         variant="h6"
-                        style={{
-                          fontSize: '1.1rem',
-                          color: '#d3d3d3',
-                        }}
+                        className={globalClasses.primaryTypography}
                       >
                         {description}
                       </Typography>
@@ -388,6 +386,7 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   padding: '5px',
+                  minHeight: '600px',
                 }}
               >
                 <Typography variant="h5">
@@ -414,16 +413,17 @@ const DialogStudentGroupDetails = ({ open, handleClose, studentGroup }) => {
             !isEnrolledStudent() &&
             payments.length < maxStudentGroupAmount && (
               <Button
+                color="primary"
                 variant="contained"
                 onClick={() => setOpenDialogEnroll(true)}
-                color="primary"
+                className={globalClasses.primaryButton}
               >
                 Participar
               </Button>
             )}
         </DialogActions>
 
-        {/* Exibir apenas quando o usuário clicar no botão de PARTICIPAR */}
+        {/* Show only when user clicks on PARTICIPAR button */}
         <DialogEnrollStudentGroup
           openDialogEnroll={openDialogEnroll}
           handleCloseDialogEnroll={handleCloseDialogEnroll}

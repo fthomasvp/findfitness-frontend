@@ -1,155 +1,165 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Dialog from '@material-ui/core/Dialog';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 
+import * as StudentGroupReducer from '../../../store/ducks/student_group';
 import FirstStepForm from './FirstStepForm';
 import ActivityStep from './ActivityStep';
-import {
-  handleNextStep,
-  handleBackStep,
-  createStudentGroupRequest,
-  searchStudentGroupRequest,
-} from '../../../store/ducks/StudentGroup';
 import AddressStepForm from './AddressStepForm';
+import Alert from '../../../components/Alert';
 import { DialogTitle, DialogContent } from './styles';
 
 const DialogAddStudentGroup = ({ open, handleClose }) => {
   const dispatch = useDispatch();
 
-  const { activeStep, createStudentGroup, pagination } = useSelector(
+  const { activeStep, pagination, createStudentGroup } = useSelector(
     state => state.studentGroup
   );
+
+  const { user } = useSelector(state => state.auth);
+  const { id: idPersonal } = user;
 
   /**
    * Stepper Info
    */
   const steps = ['Importante !', 'Atividade', 'Localização'];
 
-  const handleNext = () => dispatch(handleNextStep(activeStep));
+  const handleNext = () =>
+    dispatch(StudentGroupReducer.handleNextStep(activeStep));
+
   const handleBack = () => {
     if (activeStep === 0) {
       return handleClose();
     }
 
-    return dispatch(handleBackStep(activeStep));
+    return dispatch(StudentGroupReducer.handleBackStep(activeStep));
   };
 
-  const handleClickDone = () => {
-    dispatch(searchStudentGroupRequest(pagination));
+  /**
+   * Alert
+   */
+  const error = useSelector(state => state.studentGroup.error);
+  const response = useSelector(state => state.studentGroup.response);
 
-    handleClose();
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [growTransition, setGrowTransition] = useState(false);
+  const [severity, setSeverity] = useState('error');
+
+  const handleCloseAlert = () => {
+    setAlertMessage('');
+    setOpenAlert(false);
+    setGrowTransition(false);
+
+    dispatch(StudentGroupReducer.clearSnackbar());
   };
 
   /**
    * Effects
    */
   useEffect(() => {
-    if (activeStep === 3) {
-      dispatch(createStudentGroupRequest(createStudentGroup));
+    if (error && error.status === 400) {
+      setAlertMessage(error.data?.message || error.message);
+      setOpenAlert(true);
+      setGrowTransition(true);
+      setSeverity('error');
     }
-  }, [dispatch, activeStep, createStudentGroup]);
+
+    if (
+      response?.status === 201 &&
+      response?.config?.url === '/student_groups'
+    ) {
+      setAlertMessage('Parabéns! Sua aula já está disponível no mapa');
+      setOpenAlert(true);
+      setGrowTransition(true);
+      setSeverity('success');
+
+      handleClose();
+    }
+  }, [dispatch, pagination, error, response, handleClose]);
+
+  useEffect(() => {
+    if (activeStep === 3) {
+      dispatch(
+        StudentGroupReducer.createStudentGroupRequest(
+          createStudentGroup,
+          idPersonal
+        )
+      );
+    }
+  }, [dispatch, activeStep, createStudentGroup, idPersonal]);
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      onBackdropClick={handleClose}
-      aria-labelledby="add-student_group"
-      maxWidth="md"
-      fullWidth
-    >
-      <DialogTitle
-        id="add-student_group"
+    <>
+      <Dialog
+        open={open}
         onClose={handleClose}
-        style={{ textAlign: 'center' }}
+        onBackdropClick={handleClose}
+        aria-labelledby="add-student_group"
+        maxWidth="md"
+        fullWidth
       >
-        Marcar aula
-      </DialogTitle>
+        <DialogTitle
+          id="add-student_group"
+          onClose={handleClose}
+          style={{ textAlign: 'center' }}
+        >
+          Marcar aula
+        </DialogTitle>
 
-      <DialogContent
-        dividers
-        style={{ minHeight: '600px', maxHeight: '645px' }}
-      >
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.length > 0 &&
-            steps.map(label => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-        </Stepper>
+        <DialogContent
+          dividers
+          style={{ minHeight: '600px', maxHeight: '645px' }}
+        >
+          <Stepper activeStep={activeStep} alternativeLabel>
+            {steps.length > 0 &&
+              steps.map(label => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+          </Stepper>
 
-        {/* Step Forms */}
-        {activeStep === 0 && (
-          <FirstStepForm
-            activeStep={activeStep}
-            handleBack={handleBack}
-            handleNext={handleNext}
-          />
-        )}
+          {/* Step Forms */}
+          {activeStep === 0 && (
+            <FirstStepForm
+              activeStep={activeStep}
+              handleBack={handleBack}
+              handleNext={handleNext}
+            />
+          )}
 
-        {activeStep === 1 && (
-          <ActivityStep
-            activeStep={activeStep}
-            handleBack={handleBack}
-            handleNext={handleNext}
-          />
-        )}
+          {activeStep === 1 && (
+            <ActivityStep
+              activeStep={activeStep}
+              handleBack={handleBack}
+              handleNext={handleNext}
+            />
+          )}
 
-        {activeStep === 2 && (
-          <AddressStepForm
-            activeStep={activeStep}
-            handleBack={handleBack}
-            handleNext={handleNext}
-          />
-        )}
+          {activeStep === 2 && (
+            <AddressStepForm
+              activeStep={activeStep}
+              handleBack={handleBack}
+              handleNext={handleNext}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
-        {activeStep === 3 && (
-          <div
-            style={{
-              display: 'flex',
-              flexFlow: 'column wrap',
-              alignContent: 'center',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                marginBottom: '20px',
-              }}
-            >
-              <AssignmentTurnedInIcon
-                style={{ color: 'lightgreen', fontSize: '4rem' }}
-              />
-            </div>
-            <div style={{ marginBottom: '20px' }}>
-              <Typography variant="h6">
-                Sua aula foi marcada com sucesso!
-              </Typography>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                onClick={handleClickDone}
-              >
-                OK
-              </Button>
-            </div>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+      <Alert
+        open={openAlert}
+        handleClose={handleCloseAlert}
+        growTransition={growTransition}
+        message={alertMessage}
+        severity={severity}
+      />
+    </>
   );
 };
 

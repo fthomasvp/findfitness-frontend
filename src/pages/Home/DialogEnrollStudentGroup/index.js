@@ -14,10 +14,11 @@ import ImageIcon from '@material-ui/icons/Image';
 import Radio from '@material-ui/core/Radio';
 import TextField from '@material-ui/core/TextField';
 
-import * as StudentGroupReducer from '../../../store/ducks/StudentGroup';
-import { fetchPaymentMethodsRequest } from '../../../store/ducks/Student';
-import { DialogTitle, DialogContent, DialogActions } from './styles';
+import * as StudentGroupReducer from '../../../store/ducks/student_group';
+import { fetchPaymentMethodsRequest } from '../../../store/ducks/student';
 import STextLink from '../../../components/TextLink';
+import { useGlobalStyles } from '../../../global/styles';
+import { DialogTitle, DialogContent, DialogActions } from './styles';
 
 const DialogEnrollStudentGroup = ({
   openDialogEnroll,
@@ -26,6 +27,7 @@ const DialogEnrollStudentGroup = ({
   idStudent,
 }) => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const paymentMethods = useSelector(state => state.student.paymentMethods);
   const errorStudent = useSelector(
@@ -79,7 +81,7 @@ const DialogEnrollStudentGroup = ({
         <DialogContent dividers>
           {paymentMethods && paymentMethods.length > 0 ? (
             <>
-              <Typography variant="button" style={{ color: 'gold' }}>
+              <Typography color="primary" variant="button">
                 Selecione a forma de pagamento
               </Typography>
               <List style={{ marginBottom: '20px' }}>
@@ -110,11 +112,12 @@ const DialogEnrollStudentGroup = ({
                 value={cardVerificationValue}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                InputLabelProps={{ style: { color: 'white' } }}
+                className={globalClasses.textField}
+                InputLabelProps={{ className: globalClasses.inputLabel }}
               />
             </>
           ) : (
-            // Display error message
+            // Display error message and an option to add a payment method
             <div
               style={{
                 display: 'flex',
@@ -138,21 +141,22 @@ const DialogEnrollStudentGroup = ({
         <DialogActions>
           <Button
             autoFocus
-            onClick={handleCloseDialogEnroll}
             color="secondary"
             variant="outlined"
+            onClick={handleCloseDialogEnroll}
           >
             Cancelar
           </Button>
           <Button
-            onClick={makeEnrollRequest}
             color="primary"
             variant="contained"
+            onClick={makeEnrollRequest}
             disabled={
               errorStudent !== null ||
               cardVerificationValue.length !== 3 ||
               paymentMethodSelected === 0
             }
+            className={globalClasses.primaryButton}
           >
             Concluir
           </Button>

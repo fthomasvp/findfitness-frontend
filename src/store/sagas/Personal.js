@@ -1,14 +1,7 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
 
 import API from '../../services/API';
-import {
-  FETCH_PERSONAL_STUDENT_GROUPS_REQUEST,
-  fetchPersonalStudentGroupsSuccess,
-  fetchPersonalStudentGroupsFail,
-  CREATE_PERSONAL_EVALUATION_REQUEST,
-  createPersonalEvaluationSuccess,
-  createPersonalEvaluationFail,
-} from '../ducks/Personal';
+import * as PersonalReducer from '../ducks/personal';
 
 export function* fetchPersonalStudentGroups(action) {
   const { userId } = action;
@@ -17,10 +10,12 @@ export function* fetchPersonalStudentGroups(action) {
     const response = yield call(API.get, `/personals/${userId}/student_groups`);
 
     if (response && response.status === 200) {
-      yield put(fetchPersonalStudentGroupsSuccess(response));
+      yield put(PersonalReducer.fetchPersonalStudentGroupsSuccess(response));
     }
   } catch (error) {
-    yield put(fetchPersonalStudentGroupsFail(error.response || error));
+    yield put(
+      PersonalReducer.fetchPersonalStudentGroupsFail(error.response || error)
+    );
   }
 }
 
@@ -35,14 +30,22 @@ export function* createPersonalEvaluation(action) {
     );
 
     if (response && response.status === 201) {
-      yield put(createPersonalEvaluationSuccess(response));
+      yield put(PersonalReducer.createPersonalEvaluationSuccess(response));
     }
   } catch (error) {
-    yield put(createPersonalEvaluationFail(error.response || error));
+    yield put(
+      PersonalReducer.createPersonalEvaluationFail(error.response || error)
+    );
   }
 }
 
 export default all([
-  takeLatest(FETCH_PERSONAL_STUDENT_GROUPS_REQUEST, fetchPersonalStudentGroups),
-  takeLatest(CREATE_PERSONAL_EVALUATION_REQUEST, createPersonalEvaluation),
+  takeLatest(
+    PersonalReducer.FETCH_PERSONAL_STUDENT_GROUPS_REQUEST,
+    fetchPersonalStudentGroups
+  ),
+  takeLatest(
+    PersonalReducer.CREATE_PERSONAL_EVALUATION_REQUEST,
+    createPersonalEvaluation
+  ),
 ]);

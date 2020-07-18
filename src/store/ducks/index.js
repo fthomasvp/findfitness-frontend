@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 
-import { auth } from './Auth';
-import { studentGroup } from './StudentGroup';
-import { exercise } from './Exercise';
-import { localization } from './Localization';
-import { student } from './Student';
-import { personal } from './Personal';
+import { auth } from './auth';
+import { studentGroup } from './student_group';
+import { exercise } from './exercise';
+import { localization } from './localization';
+import { student } from './student';
+import { personal } from './personal';
 
 export default combineReducers({
   auth,

@@ -1,10 +1,7 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
+
 import API from '../../services/API';
-import {
-  SEARCH_EXERCISES_REQUEST,
-  searchExercisesSuccess,
-  searchExercisesFail,
-} from '../ducks/Exercise';
+import * as ExerciseReducer from '../ducks/exercise';
 
 export function* searchExercises(action) {
   const { pagination } = action;
@@ -16,13 +13,13 @@ export function* searchExercises(action) {
     );
 
     if (response && response.status === 200) {
-      yield put(searchExercisesSuccess(response));
+      yield put(ExerciseReducer.searchExercisesSuccess(response));
     }
   } catch (error) {
-    yield put(searchExercisesFail(error.response || error));
+    yield put(ExerciseReducer.searchExercisesFail(error.response || error));
   }
 }
 
 export default all([
-  takeLatest(SEARCH_EXERCISES_REQUEST, searchExercises),
+  takeLatest(ExerciseReducer.SEARCH_EXERCISES_REQUEST, searchExercises),
 ]);

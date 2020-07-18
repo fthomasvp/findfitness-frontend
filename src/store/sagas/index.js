@@ -1,16 +1,11 @@
 import { all } from 'redux-saga/effects';
-// takeLatest: fará a requisição apenas do último clique,
-//  caso tenha vários cliques consecutivos
 
-// takeEvery: fará a requisição de todos os
-//  requests de vários cliques consecutivos
-
-import Auth from './Auth';
-import StudentGroup from './StudentGroup';
-import Exercise from './Exercise';
-import Localization from './Localization';
-import Student from './Student';
-import Personal from './Personal';
+import Auth from './auth';
+import StudentGroup from './student_group';
+import Exercise from './exercise';
+import Localization from './localization';
+import Student from './student';
+import Personal from './personal';
 
 export default function* rootSaga() {
   return yield all([

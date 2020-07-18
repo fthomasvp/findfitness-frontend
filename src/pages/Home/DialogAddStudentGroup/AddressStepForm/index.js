@@ -10,8 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Search from '@material-ui/icons/Search';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import * as StudentGroupReducer from '../../../../store/ducks/StudentGroup';
-import * as LocalizationReducer from '../../../../store/ducks/Localization';
+import * as StudentGroupReducer from '../../../../store/ducks/student_group';
+import * as LocalizationReducer from '../../../../store/ducks/localization';
 import YupSchema, {
   street,
   neighborhood,
@@ -20,6 +20,7 @@ import YupSchema, {
 } from '../../../validators';
 import SForm from '../../../../components/Form';
 import Alert from '../../../../components/Alert';
+import { useGlobalStyles } from '../../../../global/styles';
 import { ContainerActionButtons, ActionButtons } from '../styles';
 
 // Yup Fields Schema
@@ -32,6 +33,7 @@ const ThirdStepSchema = YupSchema({
 
 const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const { createStudentGroup } = useSelector(state => state.studentGroup);
   const { thirdStepData } = createStudentGroup;
@@ -100,8 +102,8 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
     <>
       <Formik
         initialValues={thirdStepData}
-        onSubmit={thirdStepData => {
-          dispatch(StudentGroupReducer.storeThirdStepForm(thirdStepData));
+        onSubmit={async thirdStepData => {
+          await dispatch(StudentGroupReducer.storeThirdStepForm(thirdStepData));
 
           handleNext();
         }}
@@ -148,8 +150,9 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   value={zipcode}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   InputProps={{
                     endAdornment: (
@@ -165,7 +168,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                       </InputAdornment>
                     ),
                   }}
-                  style={{ marginBottom: '20px', width: '60%' }}
+                  style={{ width: '60%' }}
                   error={
                     (errors && errors.zipcode && touched.zipcode) ||
                     (errorLocalization && errorLocalization.status === 500)
@@ -176,7 +179,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                     errors.zipcode && touched.zipcode ? errors.zipcode : ''
                   }
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -187,16 +190,16 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   value={street}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
-                  style={{ marginBottom: '20px' }}
                   error={errors.street && touched.street ? true : false}
                   helperText={
                     errors.street && touched.street ? errors.street : ''
                   }
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -207,8 +210,9 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   value={neighborhood}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   style={{ marginBottom: '20px', width: '50%' }}
                   error={
@@ -220,7 +224,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                       : ''
                   }
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -232,8 +236,9 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   value={number}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   inputProps={{ min: 1 }}
                   style={{ marginBottom: '20px', width: '30%' }}
@@ -245,10 +250,10 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   value={complement}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
-                  style={{ marginBottom: '20px' }}
                 />
                 <TextField
                   id="referenceLocation"
@@ -257,10 +262,10 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   value={referenceLocation}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
-                  style={{ marginBottom: '20px' }}
                 />
 
                 {/* Serão Select Fields */}
@@ -283,8 +288,9 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                       )
                     );
                   }}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   SelectProps={{
                     autoWidth: true,
@@ -293,7 +299,7 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   error={errors.state && touched.state ? true : false}
                   helperText={errors.state && touched.state ? errors.state : ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                    className: globalClasses.formHelperText,
                   }}
                 >
                   {states &&
@@ -311,17 +317,17 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                   variant="outlined"
                   value={city}
                   onChange={evt => setFieldValue('city', evt.target.value)}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   SelectProps={{
                     autoWidth: true,
                   }}
-                  style={{ marginBottom: '20px' }}
                   error={errors.city && touched.city ? true : false}
                   helperText={errors.city && touched.city ? errors.city : ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                    className: globalClasses.formHelperText,
                   }}
                 >
                   {citiesByState && citiesByState.length > 0 ? (
@@ -341,20 +347,21 @@ const AddressStepForm = ({ activeStep, handleBack, handleNext }) => {
                 <ActionButtons>
                   <div>
                     <Button
-                      disabled={activeStep === 0}
-                      variant="outlined"
                       color="secondary"
+                      variant="outlined"
                       onClick={handleBack}
+                      disabled={activeStep === 0}
+                      className={globalClasses.secondaryButton}
                     >
                       Voltar
                     </Button>
                   </div>
                   <div>
                     <Button
-                      variant="contained"
-                      color="primary"
                       type="submit"
-                      style={{ marginLeft: '8px' }}
+                      color="primary"
+                      variant="contained"
+                      className={globalClasses.primaryButton}
                     >
                       Concluir
                     </Button>

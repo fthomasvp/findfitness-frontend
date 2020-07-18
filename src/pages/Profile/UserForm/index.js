@@ -21,6 +21,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import * as AuthReducer from '../../../store/ducks/auth';
 import YupSchema, {
   errorMessages,
   email,
@@ -28,11 +29,12 @@ import YupSchema, {
   name,
   birthdate,
 } from '../../validators';
-import * as AuthReducer from '../../../store/ducks/Auth';
+import Utils from '../../../utils';
 import Alert from '../../../components/Alert';
 import SForm from '../../../components/Form';
+import { useGlobalStyles } from '../../../global/styles';
 import * as S from '../styles';
-import Utils from '../../../utils';
+
 import 'moment/locale/pt-br';
 
 /**
@@ -47,6 +49,7 @@ const StudentOrPersonalSchema = YupSchema({
 
 const UserForm = ({ id, profile, userToUpdate }) => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const { gender } = userToUpdate;
 
@@ -263,17 +266,17 @@ const UserForm = ({ id, profile, userToUpdate }) => {
 
                       handleBlur(evt);
                     }}
+                    className={globalClasses.textField}
                     InputLabelProps={{
-                      style: { fontSize: '1rem' },
+                      className: globalClasses.inputLabel,
                     }}
                     style={{
-                      marginBottom: '20px',
                       width: '40%',
                     }}
                     error={errors.cref && touched.cref ? true : false}
                     helperText={errors.cref && touched.cref ? errors.cref : ''}
                     FormHelperTextProps={{
-                      style: { fontSize: '1.1rem' },
+                      className: globalClasses.formHelperText,
                     }}
                   />
                 )}
@@ -286,14 +289,15 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                   value={name}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   style={{ marginBottom: '20px' }}
                   error={errors.name && touched.name ? true : false}
                   helperText={errors.name && touched.name ? errors.name : ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -304,14 +308,15 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                   value={phone}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   style={{ marginBottom: '20px', width: '140px' }}
                   error={errors.phone && touched.phone ? true : false}
                   helperText={errors.phone && touched.phone ? errors.phone : ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -322,14 +327,15 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                   value={cpf}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   style={{ marginBottom: '20px', width: '160px' }}
                   error={errors.cpf && touched.cpf ? true : false}
                   helperText={errors.cpf && touched.cpf ? errors.cpf : ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -345,14 +351,14 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                 </Typography>
                 <AppBar
                   position="relative"
-                  color="transparent"
+                  className={globalClasses.appBar}
                   style={{ marginBottom: '20px' }}
                 >
                   <Tabs
                     value={tabGender}
                     onChange={handleChangeTabGender}
-                    indicatorColor="primary"
                     centered
+                    classes={{ indicator: globalClasses.tabIndicator }}
                   >
                     <Tab label="FEMININO" />
                     <Tab label="MASCULINO" />
@@ -365,7 +371,7 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                     style={{
                       width: '100%',
                       display: 'flex',
-                      marginBottom: '20px',
+                      // marginBottom: '20px',
                     }}
                   >
                     <div>
@@ -378,13 +384,12 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                         onChange={value => {
                           setFieldValue('birthdate', value);
                         }}
+                        className={globalClasses.textField}
                         inputVariant="outlined"
                         cancelLabel="Cancelar"
                         okLabel="Confirmar"
                         InputLabelProps={{
-                          style: {
-                            fontSize: '1rem',
-                          },
+                          className: globalClasses.inputLabel,
                         }}
                         error={
                           errors.birthdate && touched.birthdate ? true : false
@@ -395,10 +400,7 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                             : ''
                         }
                         FormHelperTextProps={{
-                          style: {
-                            width: 'max-content',
-                            fontSize: '1.1rem',
-                          },
+                          className: globalClasses.formHelperText,
                         }}
                       />
                     </div>
@@ -413,14 +415,14 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                   value={email}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
-                  style={{ marginBottom: '20px' }}
                   error={errors.email && touched.email ? true : false}
                   helperText={errors.email && touched.email ? errors.email : ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -432,8 +434,9 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                   value={password}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   InputProps={{
                     endAdornment: (
@@ -456,13 +459,12 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                       </InputAdornment>
                     ),
                   }}
-                  style={{ marginBottom: '20px' }}
                   error={errors.password && touched.password ? true : false}
                   helperText={
                     errors.password && touched.password ? errors.password : ''
                   }
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
               </S.PanelContent>
@@ -478,6 +480,7 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                       submitForm();
                     }
                   }}
+                  className={globalClasses.primaryButton}
                 >
                   Atualizar
                 </Button>
@@ -490,13 +493,13 @@ const UserForm = ({ id, profile, userToUpdate }) => {
                 aria-describedby="alert-dialog-description"
               >
                 <DialogTitle id="alert-dialog-title">
-                  Calma, calma! Antes de confirmar...
+                  Calma, calma! Antes de confirmar, leia com atenção...
                 </DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-description">
                     Ao alterar o seu email, você está ciente de que, por motivos
-                    de segurança, será preciso fazer login novamente em nossa
-                    plataforma.
+                    de segurança, seu usuário será deslogado e será preciso
+                    fazer login novamente em nossa plataforma.
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>

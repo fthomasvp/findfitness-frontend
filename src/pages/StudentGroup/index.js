@@ -5,19 +5,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import MaterialTable from 'material-table';
 import Typography from '@material-ui/core/Typography';
 import OpenInBrowserIcon from '@material-ui/icons/OpenInBrowser';
+import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
 
-import { fetchPaymentsRequest } from '../../store/ducks/Student';
-import * as StudentGroupReducer from '../../store/ducks/StudentGroup';
-import * as PersonalReducer from '../../store/ducks/Personal';
+import { fetchPaymentsRequest } from '../../store/ducks/student';
+import * as StudentGroupReducer from '../../store/ducks/student_group';
+import * as PersonalReducer from '../../store/ducks/personal';
 import Utils from '../../utils';
 import DialogPaymentDetails from '../../components/DialogPaymentDetails';
 import DialogStudentGroupEvaluation from '../../components/DialogStudentGroupEvaluation';
 import Alert from '../../components/Alert';
-import { tableIcons } from '../../assets/js/material-table-icons';
-import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
+import { useGlobalStyles } from '../../global/styles';
+import {
+  tableIcons,
+  tableOptions,
+  tableLocalization,
+} from '../../assets/js/material-table';
 
 const StudentGroup = () => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
+
   const INITIAL_STUDENT_EVALUATION = {
     commentary: '',
     id: 0,
@@ -56,7 +63,10 @@ const StudentGroup = () => {
       field: 'eventDateTimeBegin',
       defaultSort: 'desc',
       render: rowData => (
-        <Typography style={{ fontSize: '1.2rem' }}>
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
           {Utils.formatDateTime(rowData.eventDateTimeBegin)}
         </Typography>
       ),
@@ -64,16 +74,35 @@ const StudentGroup = () => {
     {
       title: 'Atividade',
       field: 'exercises[0][name]',
+      render: rowData => (
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
+          {rowData.exercises[0].name}
+        </Typography>
+      ),
     },
     {
       title: 'Personal',
       field: 'personal[name]',
+      render: rowData => (
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
+          {rowData.personal.name}
+        </Typography>
+      ),
     },
     {
       title: 'Preço',
       field: 'eventPrice',
       render: rowData => (
-        <Typography style={{ fontSize: '1.2rem' }}>
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
           R$ {rowData.eventPrice}
         </Typography>
       ),
@@ -85,30 +114,48 @@ const StudentGroup = () => {
       title: 'Quando',
       field: 'studentGroup[eventDateTimeBegin]',
       defaultSort: 'desc',
-      // eslint-disable-next-line react/prop-types
-      render: ({ studentGroup }) => (
-        <Typography style={{ fontSize: '1.2rem' }}>
-          {/* eslint-disable-next-line react/prop-types */}
-          {Utils.formatDateTime(studentGroup.eventDateTimeBegin)}
+      render: rowData => (
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
+          {Utils.formatDateTime(rowData.studentGroup.eventDateTimeBegin)}
         </Typography>
       ),
     },
     {
       title: 'Atividade',
       field: 'studentGroup[exercises][0][name]',
+      render: rowData => (
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
+          {rowData.studentGroup.exercises[0].name}
+        </Typography>
+      ),
     },
     {
       title: 'Personal',
       field: 'studentGroup[personal][name]',
+      render: rowData => (
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
+          {rowData.studentGroup.personal.name}
+        </Typography>
+      ),
     },
     {
       title: 'Preço',
       field: 'studentGroup[eventPrice]',
-      // eslint-disable-next-line react/prop-types
-      render: ({ studentGroup }) => (
-        <Typography style={{ fontSize: '1.2rem' }}>
-          {/* eslint-disable-next-line react/prop-types */}
-          R$ {studentGroup.eventPrice}
+      render: rowData => (
+        <Typography
+          color="textSecondary"
+          className={globalClasses.primaryTypography}
+        >
+          R$ {rowData.studentGroup.eventPrice}
         </Typography>
       ),
     },
@@ -229,34 +276,13 @@ const StudentGroup = () => {
         }
         actions={profile === 'ROLE_PERSONAL' ? personalActions : studentActions}
         options={{
-          pageSizeOptions: [], // Don't show Row size option
-          actionsColumnIndex: -1, // Add actions on the end of row
-          headerStyle: {
-            fontSize: '1.2rem',
-          },
-          cellStyle: {
-            fontSize: '1.2rem',
-            color: '#d3d3d3',
-          },
-          searchFieldStyle: {
-            fontSize: '1.2rem',
-          },
-          paginationType: 'stepped',
+          ...tableOptions,
         }}
         localization={{
-          toolbar: {
-            searchPlaceholder: 'Buscar',
-            searchTooltip: 'Buscar',
-          },
+          ...tableLocalization,
           body: {
             emptyDataSourceMessage:
               'Hmmm... Parece que você ainda não entrou numa aula :(',
-          },
-          pagination: {
-            firstTooltip: 'Primeira página',
-            previousTooltip: 'Página anterior',
-            nextTooltip: 'Próxima página',
-            lastTooltip: 'Última página',
           },
           header: {
             actions: '',

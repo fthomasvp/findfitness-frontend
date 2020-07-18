@@ -17,16 +17,18 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown';
-import DialogPersonalEvaluation from '../../components/DialogPersonalEvaluation';
 
 import Utils from '../../utils';
+import DialogPersonalEvaluation from '../../components/DialogPersonalEvaluation';
+import { useGlobalStyles } from '../../global/styles';
 import { DialogContent, DialogActions } from './styles';
 
 const DialogPaymentDetails = ({ open, handleClose, payment, profile }) => {
+  const globalClasses = useGlobalStyles();
+
   const {
     studentGroup: {
       completeAddress,
@@ -79,13 +81,13 @@ const DialogPaymentDetails = ({ open, handleClose, payment, profile }) => {
       maxWidth="md"
       fullWidth
     >
-      <AppBar position="relative" color="transparent">
+      <AppBar position="relative" className={globalClasses.appBar}>
         <Tabs
           value={tab}
           onChange={handleChangeTab}
-          indicatorColor="primary"
           centered
           aria-label="payment details tabs"
+          classes={{ indicator: globalClasses.tabIndicator }}
         >
           <Tab label="Informações" />
           <Tab label="Alunos" />
@@ -95,7 +97,7 @@ const DialogPaymentDetails = ({ open, handleClose, payment, profile }) => {
 
       <DialogContent
         dividers
-        style={{ minHeight: '565px', maxHeight: '565px' }}
+        style={{ minHeight: '600px', maxHeight: '600px' }}
       >
         {/* Info Tab */}
         {tab === 0 && (
@@ -106,7 +108,12 @@ const DialogPaymentDetails = ({ open, handleClose, payment, profile }) => {
                 <PersonIcon /> PERSONAL
               </Typography>
               <div
-                style={{ display: 'flex', flex: 1, justifyContent: 'center' }}
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'center',
+                  marginBottom: '15px',
+                }}
               >
                 <Avatar
                   src={`${personal.profilePicture}?${Date.now()}`}
@@ -115,12 +122,10 @@ const DialogPaymentDetails = ({ open, handleClose, payment, profile }) => {
                 />
               </div>
               <Typography
+                color="textSecondary"
                 variant="h6"
                 align="center"
-                style={{
-                  fontSize: '1.2em',
-                  color: '#d3d3d3',
-                }}
+                className={globalClasses.primaryTypography}
               >
                 {personal.name}
               </Typography>
@@ -134,22 +139,17 @@ const DialogPaymentDetails = ({ open, handleClose, payment, profile }) => {
               >
                 <PhoneIcon style={{ marginRight: '3px' }} />
                 <Typography
+                  color="textSecondary"
                   align="center"
-                  style={{
-                    fontSize: '1.2em',
-                    color: '#d3d3d3',
-                  }}
+                  className={globalClasses.primaryTypography}
                 >
                   {Utils.formatPhone(contactPhone)}
                 </Typography>
               </div>
               <Typography
+                color="textSecondary"
                 align="center"
-                style={{
-                  marginBottom: '20px',
-                  fontSize: '1.2em',
-                  color: '#d3d3d3',
-                }}
+                className={globalClasses.primaryTypography}
               >
                 CREF: {personal.cref}
               </Typography>
@@ -162,37 +162,31 @@ const DialogPaymentDetails = ({ open, handleClose, payment, profile }) => {
                   <LocationOnIcon /> ENDEREÇO
                 </Typography>
                 <Typography
+                  color="textSecondary"
                   variant="button"
                   display="block"
                   gutterBottom
-                  style={{
-                    fontSize: '1.2em',
-                    color: '#d3d3d3',
-                  }}
+                  className={globalClasses.primaryTypography}
                 >
                   {formatedAddress.street}
                   {formatedAddress.number}
                   {formatedAddress.complemento}
                 </Typography>
                 <Typography
+                  color="textSecondary"
                   variant="button"
                   display="block"
                   gutterBottom
-                  style={{
-                    fontSize: '1.2em',
-                    color: '#d3d3d3',
-                  }}
+                  className={globalClasses.primaryTypography}
                 >
                   {formatedAddress.referenceLocation}
                 </Typography>
                 <Typography
+                  color="textSecondary"
                   variant="button"
                   display="block"
                   gutterBottom
-                  style={{
-                    fontSize: '1.2em',
-                    color: '#d3d3d3',
-                  }}
+                  className={globalClasses.primaryTypography}
                 >
                   {formatedAddress.neighboor}
                   {formatedAddress.city}
@@ -205,44 +199,38 @@ const DialogPaymentDetails = ({ open, handleClose, payment, profile }) => {
             <Grid container justify="center" item xs={12} sm={6}>
               <div>
                 <Typography
+                  color="primary"
                   gutterBottom
                   variant="h5"
-                  style={{ color: 'gold' }}
                   align="center"
                 >
-                  <PriorityHighIcon /> IMPORTANTE
+                  <PriorityHighIcon color="primary" /> IMPORTANTE
                 </Typography>
 
                 <Typography
+                  color="textSecondary"
                   variant="button"
                   display="block"
                   gutterBottom
-                  style={{
-                    fontSize: '1.2em',
-                    color: '#d3d3d3',
-                  }}
+                  className={globalClasses.primaryTypography}
                 >
                   Começa em: {Utils.formatDateTime(eventDateTimeBegin)}
                 </Typography>
                 <Typography
+                  color="textSecondary"
                   gutterBottom
                   variant="button"
                   display="block"
-                  style={{
-                    fontSize: '1.2em',
-                    color: '#d3d3d3',
-                  }}
+                  className={globalClasses.primaryTypography}
                 >
                   Término em: {Utils.formatDateTime(eventDateTimeEnd)}
                 </Typography>
                 <Typography
+                  color="textSecondary"
                   variant="button"
                   display="block"
                   gutterBottom
-                  style={{
-                    fontSize: '1.2em',
-                    color: '#d3d3d3',
-                  }}
+                  className={globalClasses.primaryTypography}
                 >
                   Valor: R$ {eventPrice}
                 </Typography>
@@ -275,11 +263,9 @@ const DialogPaymentDetails = ({ open, handleClose, payment, profile }) => {
 
                   <Grid container justify="center" item xs={12} sm={9}>
                     <Typography
+                      color="textSecondary"
                       variant="h6"
-                      style={{
-                        fontSize: '1.1rem',
-                        color: '#d3d3d3',
-                      }}
+                      className={globalClasses.primaryTypography}
                     >
                       {description}
                     </Typography>
@@ -399,8 +385,10 @@ DialogPaymentDetails.propTypes = {
       }).isRequired,
       personalEvaluations: PropTypes.array,
       studentEvaluations: PropTypes.array,
+      payments: PropTypes.array,
     }).isRequired,
   }),
+  profile: PropTypes.string.isRequired,
 };
 
 export default DialogPaymentDetails;

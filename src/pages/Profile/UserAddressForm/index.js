@@ -10,10 +10,8 @@ import { Formik } from 'formik';
 import Search from '@material-ui/icons/Search';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import * as AuthReducer from '../../../store/ducks/Auth';
-import * as LocalizationReducer from '../../../store/ducks/Localization';
-import * as S from '../styles';
-import SForm from '../../../components/Form';
+import * as AuthReducer from '../../../store/ducks/auth';
+import * as LocalizationReducer from '../../../store/ducks/localization';
 import YupSchema, {
   street,
   number,
@@ -21,7 +19,10 @@ import YupSchema, {
   city,
   zipcode,
 } from '../../validators';
+import SForm from '../../../components/Form';
 import Alert from '../../../components/Alert';
+import { useGlobalStyles } from '../../../global/styles';
+import * as S from '../styles';
 
 /**
  * Yup Fields Schema
@@ -36,6 +37,7 @@ const AddressSchema = YupSchema({
 
 const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const handleClickFindAddressByZipcode = (zipcode, states) => {
     if (zipcode) {
@@ -163,8 +165,9 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                   value={zipcode}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   InputProps={{
                     endAdornment: (
@@ -180,7 +183,7 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                       </InputAdornment>
                     ),
                   }}
-                  style={{ marginBottom: '20px', width: '50%' }}
+                  style={{ width: '50%' }}
                   error={
                     (errors.zipcode && touched.zipcode) ||
                     (errorLocalization && errorLocalization.status === 500)
@@ -191,7 +194,7 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                     errors.zipcode && touched.zipcode ? errors.zipcode : ''
                   }
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -202,8 +205,9 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                   value={street}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   style={{ marginBottom: '20px' }}
                   error={errors.street && touched.street ? true : false}
@@ -211,7 +215,7 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                     errors.street && touched.street ? errors.street : ''
                   }
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -222,10 +226,11 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                   value={neighborhood}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
-                  style={{ marginBottom: '20px', width: '50%' }}
+                  style={{ width: '50%' }}
                   error={
                     errors.neighborhood && touched.neighborhood ? true : false
                   }
@@ -235,7 +240,7 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                       : ''
                   }
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -247,17 +252,18 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                   value={number}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   inputProps={{ min: 1 }}
-                  style={{ marginBottom: '20px', width: '30%' }}
+                  style={{ width: '30%' }}
                   error={errors.number && touched.number ? true : false}
                   helperText={
                     errors.number && touched.number ? errors.number : ''
                   }
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                    className: globalClasses.formHelperText,
                   }}
                 />
 
@@ -268,8 +274,9 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                   value={complement}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   style={{ marginBottom: '20px' }}
                 />
@@ -280,10 +287,11 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                   value={referenceLocation}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  className={globalClasses.textField}
                   multiline
                   rows={2}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   style={{ marginBottom: '20px' }}
                 />
@@ -307,17 +315,18 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                       )
                     );
                   }}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   SelectProps={{
                     autoWidth: true,
                   }}
-                  style={{ marginBottom: '20px', width: '30%' }}
+                  style={{ width: '30%' }}
                   error={errors.state && touched.state ? true : false}
                   helperText={errors.state && touched.state ? errors.state : ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem', minWidth: '280px' },
+                    className: globalClasses.formHelperText,
                   }}
                 >
                   {states &&
@@ -335,8 +344,9 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                   variant="outlined"
                   value={city}
                   onChange={evt => setFieldValue('city', evt.target.value)}
+                  className={globalClasses.textField}
                   InputLabelProps={{
-                    style: { fontSize: '1rem' },
+                    className: globalClasses.inputLabel,
                   }}
                   SelectProps={{
                     autoWidth: true,
@@ -345,7 +355,7 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
                   error={errors.city && touched.city ? true : false}
                   helperText={errors.city && touched.city ? errors.city : ''}
                   FormHelperTextProps={{
-                    style: { fontSize: '1.1rem' },
+                    className: globalClasses.formHelperText,
                   }}
                 >
                   {citiesByState && citiesByState.length > 0 ? (
@@ -361,7 +371,12 @@ const UserAddressForm = ({ id, profile, states, citiesByState, address }) => {
               </S.PanelContent>
 
               <S.PanelActions>
-                <Button color="primary" variant="contained" type="submit">
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  className={globalClasses.primaryButton}
+                >
                   Atualizar
                 </Button>
               </S.PanelActions>

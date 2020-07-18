@@ -1,33 +1,7 @@
 import { all, call, put, takeLatest } from 'redux-saga/effects';
-import API from '../../services/API';
-import {
-  SIGN_UP_REQUEST,
-  signUpSuccess,
-  signUpFail,
-  SIGN_IN_REQUEST,
-  signInSuccess,
-  signInFail,
-  UPLOAD_PROFILE_PICTURE_REQUEST,
-  uploadProfilePictureSuccess,
-  uploadProfilePictureFail,
-  FETCH_USER_DATA_REQUEST,
-  fetchUserDataSuccess,
-  fetchUserDataFail,
-  PATCH_USER_DATA_REQUEST,
-  patchUserDataSuccess,
-  patchUserDataFail,
-  PATCH_USER_ADDRESS_DATA_REQUEST,
-  patchUserAddressDataSuccess,
-  patchUserAddressDataFail,
-  PATCH_USER_HEALTH_CARD_DATA_REQUEST,
-  patchUserHealthCardDataSuccess,
-  patchUserHealthCardDataFail,
-  CREATE_USER_HEALTH_CARD_REQUEST,
-  createUserHealthCardSuccess,
-  createUserHealthCardFail,
-} from '../ducks/Auth';
 
-// put: faz a chamada de uma "Action Creators"
+import API from '../../services/API';
+import * as AuthReducer from '../ducks/auth';
 
 export function* signUp(action) {
   const { profileType } = action.userToCreate;
@@ -40,10 +14,10 @@ export function* signUp(action) {
     const response = yield call(API.post, `/${resource}`, requestBody);
 
     if (response && response.status === 201) {
-      yield put(signUpSuccess(response));
+      yield put(AuthReducer.signUpSuccess(response));
     }
   } catch (error) {
-    yield put(signUpFail(error.response || error));
+    yield put(AuthReducer.signUpFail(error.response || error));
   }
 }
 
@@ -52,10 +26,10 @@ export function* signIn(action) {
     const response = yield call(API.post, '/login', action.payload);
 
     if (response && response.status === 200) {
-      yield put(signInSuccess(response));
+      yield put(AuthReducer.signInSuccess(response));
     }
   } catch (error) {
-    yield put(signInFail(error.response || error));
+    yield put(AuthReducer.signInFail(error.response || error));
   }
 }
 
@@ -77,10 +51,10 @@ export function* uploadProfilePicture(action) {
     );
 
     if (response && response.status === 200) {
-      yield put(uploadProfilePictureSuccess(response));
+      yield put(AuthReducer.uploadProfilePictureSuccess(response));
     }
   } catch (error) {
-    yield put(uploadProfilePictureFail(error.response || error));
+    yield put(AuthReducer.uploadProfilePictureFail(error.response || error));
   }
 }
 
@@ -93,10 +67,10 @@ export function* fetchUserData(action) {
     const response = yield call(API.get, `/${resource}/${id}`);
 
     if (response && response.status === 200) {
-      yield put(fetchUserDataSuccess(response));
+      yield put(AuthReducer.fetchUserDataSuccess(response));
     }
   } catch (error) {
-    yield put(fetchUserDataFail(error.response || error));
+    yield put(AuthReducer.fetchUserDataFail(error.response || error));
   }
 }
 
@@ -121,10 +95,10 @@ export function* patchUserData(action) {
     const response = yield call(API.patch, `/${resource}/${userData.id}`, data);
 
     if (response && response.status === 204) {
-      yield put(patchUserDataSuccess(response));
+      yield put(AuthReducer.patchUserDataSuccess(response));
     }
   } catch (error) {
-    yield put(patchUserDataFail(error.response || error));
+    yield put(AuthReducer.patchUserDataFail(error.response || error));
   }
 }
 
@@ -141,10 +115,10 @@ export function* patchUserAddressData(action) {
     const response = yield call(API.patch, `/${resource}/${id}/address`, data);
 
     if (response && response.status === 204) {
-      yield put(patchUserAddressDataSuccess(response));
+      yield put(AuthReducer.patchUserAddressDataSuccess(response));
     }
   } catch (error) {
-    yield put(patchUserAddressDataFail(error.response || error));
+    yield put(AuthReducer.patchUserAddressDataFail(error.response || error));
   }
 }
 
@@ -159,10 +133,10 @@ export function* patchUserHealthCardData(action) {
     const response = yield call(API.patch, `/students/${id}/health_card`, data);
 
     if (response && response.status === 204) {
-      yield put(patchUserHealthCardDataSuccess(response));
+      yield put(AuthReducer.patchUserHealthCardDataSuccess(response));
     }
   } catch (error) {
-    yield put(patchUserHealthCardDataFail(error.response || error));
+    yield put(AuthReducer.patchUserHealthCardDataFail(error.response || error));
   }
 }
 
@@ -177,22 +151,25 @@ export function* createUserHealthCard(action) {
     );
 
     if (response && response.status === 201) {
-      yield put(createUserHealthCardSuccess(response));
+      yield put(AuthReducer.createUserHealthCardSuccess(response));
     }
   } catch (error) {
-    yield put(createUserHealthCardFail(error.response || error));
+    yield put(AuthReducer.createUserHealthCardFail(error.response || error));
   }
 }
 
 export default all([
-  takeLatest(SIGN_UP_REQUEST, signUp),
-  takeLatest(SIGN_IN_REQUEST, signIn),
-  takeLatest(UPLOAD_PROFILE_PICTURE_REQUEST, uploadProfilePicture),
-  takeLatest(FETCH_USER_DATA_REQUEST, fetchUserData),
-  takeLatest(PATCH_USER_DATA_REQUEST, patchUserData),
-  takeLatest(PATCH_USER_ADDRESS_DATA_REQUEST, patchUserAddressData),
-  takeLatest(PATCH_USER_HEALTH_CARD_DATA_REQUEST, patchUserHealthCardData),
-  takeLatest(CREATE_USER_HEALTH_CARD_REQUEST, createUserHealthCard),
+  takeLatest(AuthReducer.SIGN_UP_REQUEST, signUp),
+  takeLatest(AuthReducer.SIGN_IN_REQUEST, signIn),
+  takeLatest(AuthReducer.UPLOAD_PROFILE_PICTURE_REQUEST, uploadProfilePicture),
+  takeLatest(AuthReducer.FETCH_USER_DATA_REQUEST, fetchUserData),
+  takeLatest(AuthReducer.PATCH_USER_DATA_REQUEST, patchUserData),
+  takeLatest(AuthReducer.PATCH_USER_ADDRESS_DATA_REQUEST, patchUserAddressData),
+  takeLatest(
+    AuthReducer.PATCH_USER_HEALTH_CARD_DATA_REQUEST,
+    patchUserHealthCardData
+  ),
+  takeLatest(AuthReducer.CREATE_USER_HEALTH_CARD_REQUEST, createUserHealthCard),
 ]);
 
 function _makeUserBodyRequest(userToCreate) {

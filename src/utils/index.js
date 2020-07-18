@@ -6,14 +6,16 @@ const Utils = {
 
     const formatedAddress = {
       street: splitedAddress[0],
-      number: !splitedAddress[1] ? '' : `, ${splitedAddress[1]}`,
+      number: !splitedAddress[1] ? ', Sem número' : `, ${splitedAddress[1]}`,
 
-      complemento: !splitedAddress[2] ? '' : ` - ${splitedAddress[2]}`,
+      complemento: !splitedAddress[2]
+        ? ' - Sem complemento'
+        : ` - ${splitedAddress[2]}`,
 
       neighboor: splitedAddress[3],
 
       referenceLocation: !splitedAddress[4]
-        ? 'Sem Ponto de Referência'
+        ? 'Sem ponto de referência'
         : splitedAddress[4],
 
       city: `, ${splitedAddress[5]}`,

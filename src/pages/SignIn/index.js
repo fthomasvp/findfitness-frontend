@@ -12,13 +12,14 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import Container from '@material-ui/core/Container';
 
-import * as AuthReducer from '../../store/ducks/Auth';
+import * as AuthReducer from '../../store/ducks/auth';
 import YupSchema, { email, password } from '../validators';
 import * as S from './styles';
 import STextLink from '../../components/TextLink';
 import SForm from '../../components/Form';
 import Alert from '../../components/Alert';
 import Footer from '../../components/Footer';
+import { useGlobalStyles } from '../../global/styles';
 import FindFitnessLogo from '../../assets/images/findfitness_logo.png';
 
 // Yup Fields Schema
@@ -30,6 +31,7 @@ const SignInSchema = YupSchema({
 const SignIn = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const globalClasses = useGlobalStyles();
 
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
@@ -136,16 +138,21 @@ const SignIn = () => {
                       value={email}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
-                      style={{ marginBottom: '40px' }}
+                      InputProps={{
+                        style: {
+                          color: '#fafafa',
+                        },
+                      }}
                       error={errors.email && touched.email ? true : false}
                       helperText={
                         errors.email && touched.email ? errors.email : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem' },
+                        className: globalClasses.formHelperText,
                       }}
                     />
 
@@ -157,8 +164,9 @@ const SignIn = () => {
                       value={password}
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      className={globalClasses.textField}
                       InputLabelProps={{
-                        style: { color: 'white', fontSize: '1rem' },
+                        className: globalClasses.inputLabel,
                       }}
                       InputProps={{
                         endAdornment: (
@@ -180,8 +188,10 @@ const SignIn = () => {
                             )}
                           </InputAdornment>
                         ),
+                        style: {
+                          color: '#fafafa',
+                        },
                       }}
-                      style={{ marginBottom: '40px' }}
                       error={errors.password && touched.password ? true : false}
                       helperText={
                         errors.password && touched.password
@@ -189,14 +199,16 @@ const SignIn = () => {
                           : ''
                       }
                       FormHelperTextProps={{
-                        style: { fontSize: '1.1rem' },
+                        className: globalClasses.formHelperText,
                       }}
                     />
                     <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
                       type="submit"
+                      color="primary"
+                      variant="contained"
+                      size="large"
+                      title="Acessar conta"
+                      className={globalClasses.primaryButton}
                     >
                       Acessar conta
                     </Button>
