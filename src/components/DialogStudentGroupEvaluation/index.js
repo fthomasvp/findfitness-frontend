@@ -14,10 +14,12 @@ import ThumbDownOutlinedIcon from '@material-ui/icons/ThumbDownOutlined';
 import TextField from '@material-ui/core/TextField';
 
 import * as StudentGroupReducer from '../../store/ducks/student_group';
+import { useGlobalStyles } from '../../global/styles';
 import { DialogTitle, DialogContent, DialogActions } from './styles';
 
 const DialogStudentGroupEvaluation = ({ open, handleClose, evaluation }) => {
   const dispatch = useDispatch();
+  const globalClasses = useGlobalStyles();
 
   const {
     id,
@@ -163,8 +165,8 @@ const DialogStudentGroupEvaluation = ({ open, handleClose, evaluation }) => {
       <DialogActions>
         <Button
           autoFocus
-          variant="outlined"
           color="secondary"
+          variant="outlined"
           onClick={() => {
             handleClose();
 
@@ -175,8 +177,8 @@ const DialogStudentGroupEvaluation = ({ open, handleClose, evaluation }) => {
         </Button>
         {id === 0 && (
           <Button
-            variant="contained"
             color="primary"
+            variant="contained"
             onClick={() => {
               handleClose();
 
@@ -197,7 +199,7 @@ const DialogStudentGroupEvaluation = ({ open, handleClose, evaluation }) => {
 
               clearEvaluation();
             }}
-            // disabled={id !== 0}
+            className={globalClasses.primaryButton}
           >
             Avaliar
           </Button>
@@ -210,6 +212,7 @@ const DialogStudentGroupEvaluation = ({ open, handleClose, evaluation }) => {
 DialogStudentGroupEvaluation.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  evaluation: PropTypes.object.isRequired,
 };
 
 export default DialogStudentGroupEvaluation;
