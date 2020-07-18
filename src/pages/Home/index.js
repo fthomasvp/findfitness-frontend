@@ -74,34 +74,32 @@ const StudentGroup = () => {
 
   return (
     <div style={{ width: '100%', height: '85%' }}>
-      {studentGroups?.length > 0 && (
-        <GoogleMapReact
-          // eslint-disable-next-line no-undef
-          bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY }}
-          center={MAP_CENTER_POSITION} // defaultCenter prop needs a constant object
-          defaultZoom={13}
-          options={{ fullscreenControl: false, zoomControl: false }}
-        >
-          {studentGroups.map(({ latitude, longitude }, index) => (
-            <IconButton
-              key={index}
-              lat={latitude}
-              lng={longitude}
-              onClick={() => {
-                setOpenDialogDetails(true);
+      <GoogleMapReact
+        // eslint-disable-next-line no-undef
+        bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY }}
+        center={MAP_CENTER_POSITION} // defaultCenter prop needs a constant object
+        defaultZoom={13}
+        options={{ fullscreenControl: false, zoomControl: false }}
+      >
+        {studentGroups?.map(({ latitude, longitude }, index) => (
+          <IconButton
+            key={index}
+            lat={latitude}
+            lng={longitude}
+            onClick={() => {
+              setOpenDialogDetails(true);
 
-                setSelectedStudentGroupIndex(index);
-              }}
-              style={{
-                position: 'absolute',
-                transform: 'translate(-50%, -50%)',
-              }}
-            >
-              <LocationOnIcon fontSize="large" style={{ color: '#51389b' }} />
-            </IconButton>
-          ))}
-        </GoogleMapReact>
-      )}
+              setSelectedStudentGroupIndex(index);
+            }}
+            style={{
+              position: 'absolute',
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            <LocationOnIcon fontSize="large" style={{ color: '#51389b' }} />
+          </IconButton>
+        ))}
+      </GoogleMapReact>
 
       {user.profile !== 'ROLE_STUDENT' && (
         <Fab
