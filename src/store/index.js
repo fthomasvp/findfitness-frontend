@@ -7,7 +7,7 @@ import reducers from './ducks';
 import sagas from './sagas';
 
 const persistConfig = {
-  key: 'findfitness',
+  key: '@findfitness',
   storage,
   whitelist: ['auth'],
 };

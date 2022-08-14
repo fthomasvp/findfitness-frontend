@@ -18,8 +18,10 @@ import PaymentMethod from '../pages/PaymentMethod';
 import API from '../services/API';
 
 const Routes = () => {
-  const { user, isAuthenticated } = useSelector(state => state.auth);
-  const { token } = user;
+  const {
+    user: { token },
+    isAuthenticated,
+  } = useSelector(state => state.auth);
 
   if (token && token.length > 0) {
     API.defaults.headers.common['Authorization'] = token;
@@ -84,3 +86,4 @@ const Routes = () => {
 };
 
 export default Routes;
+
