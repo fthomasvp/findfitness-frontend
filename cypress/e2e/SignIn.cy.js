@@ -20,7 +20,15 @@ describe('Sign In', () => {
 
     cy.login(email, password);
 
-    cy.get('.MuiAlert-message').should('be.visible');
+    cy.get('.MuiAlert-standardError').within(() => {
+      cy.get('.MuiAlert-message').should('be.visible');
+    });
+  });
+
+  it('should navigate to Sign Up page', () => {
+    cy.get('a[href="/signup"]').click();
+
+    cy.location('pathname').should('include', 'signup');
   });
 
   it('should be able to login successfully', () => {
