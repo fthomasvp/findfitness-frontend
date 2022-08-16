@@ -32,7 +32,7 @@ Cypress.Commands.add('login', (email, password) => {
   cy.get('button[type=submit]').click();
 });
 
-Cypress.Commands.add('setDatePicker', (id, date) => {
+Cypress.Commands.add('setDatePicker', ({ id, date }) => {
   const [year, month, day] = date.split('-');
 
   cy.get(`input[id=${id}]`).click();
