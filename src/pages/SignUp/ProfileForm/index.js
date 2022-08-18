@@ -66,7 +66,11 @@ const ProfileForm = () => {
       <Paper variant="outlined">
         <S.Panel id="SPanel">
           <div>
-            <Stepper activeStep={activeStep} alternativeLabel>
+            <Stepper
+              data-test="signup-stepper"
+              activeStep={activeStep}
+              alternativeLabel
+            >
               {steps.length > 0 &&
                 steps.map(label => (
                   <Step key={label}>
@@ -97,6 +101,7 @@ const ProfileForm = () => {
           <S.PanelContent id="SPanelContent">
             <AppBar position="relative" className={globalClasses.appBar}>
               <Tabs
+                data-test="profileType-tabs"
                 value={tab}
                 onChange={handleChangeTab}
                 centered

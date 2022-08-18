@@ -5,18 +5,15 @@ describe('Sign Up page', () => {
     cy.visit('/signup');
   });
 
-  context('Student form', () => {
+  context('Student Journey', () => {
     beforeEach(() => {
-      //#region Select "ESTUDANTE" profile type
-      cy.get('.MuiTabs-flexContainer').within(() => {
-        cy.get('button')
-          .first()
-          .and('have.text', 'ESTUDANTE')
-          .click();
-      });
-      //#endregion
+      cy.getByData('profileType-tabs')
+        .find('button[role="tab"]')
+        .first()
+        .and('have.text', 'ESTUDANTE')
+        .click();
 
-      cy.get('.MuiStepper-root').within(() => {
+      cy.getByData('signup-stepper').within(() => {
         cy.get('.MuiStepLabel-labelContainer')
           .first()
           .should('have.text', 'Perfil');
@@ -39,22 +36,30 @@ describe('Sign Up page', () => {
         phone: '81987403692',
         gender: 'MASCULINO',
       };
+      const address = {
+        zipcode: '52051395',
+        street: 'Rua da Harmonia',
+        neighborhood: 'Casa Amarela',
+        number: '305',
+        state: 'PE',
+        city: 'Recife',
+      };
 
-      cy.location('pathname').should('include', 'signup/userform');
+      cy.location('pathname').should('equal', '/signup/userform');
       cy.get('.MuiStep-root')
         .first()
         .should('have.class', 'MuiStep-completed');
 
-      //#region Fulfill personal information
-      cy.get('.MuiStepper-root').within(() => {
+      //#region Fulfill student information
+      cy.getByData('signup-stepper').within(() => {
         cy.get('.MuiStepLabel-labelContainer')
           .eq(1)
           .should('have.text', 'Dados pessoais');
       });
 
-      const TEXT_INPUTS = ['name', 'phone', 'cpf', 'email', 'password'];
-      TEXT_INPUTS.forEach(item => {
-        cy.get(`input[id=${item}]`).type(student[`${item}`]);
+      const studentTextInputs = ['name', 'phone', 'cpf', 'email', 'password'];
+      studentTextInputs.forEach(item => {
+        cy.getByData(`${item}-input`).type(student[`${item}`]);
       });
 
       cy.get('.MuiTabs-flexContainer').within(() => {
@@ -63,7 +68,10 @@ describe('Sign Up page', () => {
           .click();
       });
 
-      cy.setDatePicker({ id: 'birthdate', date: student.birthdate });
+      cy.setDatePicker({
+        selector: 'birthdate-input',
+        date: student.birthdate,
+      });
 
       cy.get('.MuiDialogActions-root').within(() => {
         cy.get('button')
@@ -74,33 +82,55 @@ describe('Sign Up page', () => {
       cy.get('button[type=submit]').click();
       //#endregion
 
-      cy.location('pathname').should('include', 'signup/addressform');
+      cy.location('pathname').should('equal', '/signup/addressform');
       cy.get('.MuiStep-root')
         .eq(1)
         .should('have.class', 'MuiStep-completed');
 
       //#region Fulfill address information
-      cy.get('.MuiStepper-root').within(() => {
+      cy.getByData('signup-stepper').within(() => {
         cy.get('.MuiStepLabel-labelContainer')
           .last()
           .should('have.text', 'Endereço');
       });
 
-      cy.get('button[type=submit]').click();
+      // TODO: check if request to get all states was made.
+
+      const addressTextInputs = ['zipcode', 'street', 'neighborhood', 'number'];
+      addressTextInputs.forEach(item => {
+        cy.getByData(`${item}-input`).type(address[`${item}`]);
+      });
+
+      cy.setSelectInput({ selector: 'state-input', value: 'PE' });
+
+      // TODO: check if request to get cities by state was made.
+
+      cy.setSelectInput({ selector: 'city-input', value: 'Recife' });
+
+      // cy.get('button[type=submit]').click();
       //#endregion
     });
   });
 
-  context.skip('Personal form', () => {
+  context.skip('Personal Journey', () => {
     beforeEach(() => {
-      //#region Select "PERSONAL" profile type
-      cy.get('.MuiTabs-flexContainer').within(() => {
+      cy.getByData('profileType-tabs')
+        .find('button[role="tab"]')
+        .last()
+        .and('have.text', 'PERSONAL')
+        .click();
+
+      cy.getByData('signup-stepper').within(() => {
+        cy.get('.MuiStepLabel-labelContainer')
+          .first()
+          .should('have.text', 'Perfil');
+      });
+
+      cy.get('#sPanelActions').within(() => {
         cy.get('button')
           .last()
-          .and('have.text', 'PERSONAL')
           .click();
       });
-      //#endregion
     });
   });
 });

@@ -181,7 +181,11 @@ const StudentOrPersonalForm = () => {
               <SForm onSubmit={handleSubmit}>
                 <S.Panel>
                   <div>
-                    <Stepper activeStep={activeStep} alternativeLabel>
+                    <Stepper
+                      data-test="signup-stepper"
+                      activeStep={activeStep}
+                      alternativeLabel
+                    >
                       {steps &&
                         steps.length > 0 &&
                         steps.map(label => (
@@ -207,6 +211,7 @@ const StudentOrPersonalForm = () => {
                     {userToCreate.profileType === 'PERSONAL' && (
                       <TextField
                         autoFocus
+                        data-test="cref-input"
                         id="cref"
                         label="CREF"
                         variant="outlined"
@@ -254,6 +259,7 @@ const StudentOrPersonalForm = () => {
 
                     <TextField
                       autoFocus={userToCreate.profileType === 'STUDENT'}
+                      data-test="name-input"
                       id="name"
                       label="Nome"
                       variant="outlined"
@@ -274,6 +280,7 @@ const StudentOrPersonalForm = () => {
                     />
 
                     <TextField
+                      data-test="phone-input"
                       id="phone"
                       label="Celular"
                       variant="outlined"
@@ -295,6 +302,7 @@ const StudentOrPersonalForm = () => {
                     />
 
                     <TextField
+                      data-test="cpf-input"
                       id="cpf"
                       label="CPF"
                       variant="outlined"
@@ -352,6 +360,7 @@ const StudentOrPersonalForm = () => {
                       >
                         <div>
                           <DatePicker
+                            data-test="birthdate-input"
                             id="birthdate"
                             label="Data de Nascimento"
                             format="DD/MM/YYYY"
@@ -386,6 +395,7 @@ const StudentOrPersonalForm = () => {
                     </MuiPickersUtilsProvider>
 
                     <TextField
+                      data-test="email-input"
                       id="email"
                       label="Email"
                       type="email"
@@ -407,6 +417,7 @@ const StudentOrPersonalForm = () => {
                     />
 
                     <TextField
+                      data-test="password-input"
                       id="password"
                       label="Senha"
                       type={toggleVisibilityIcon ? 'text' : 'password'}

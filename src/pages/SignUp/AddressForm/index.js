@@ -171,7 +171,11 @@ const AddressForm = () => {
               <SForm onSubmit={handleSubmit}>
                 <S.Panel>
                   <div>
-                    <Stepper activeStep={activeStep} alternativeLabel>
+                    <Stepper
+                      data-test="signup-stepper"
+                      activeStep={activeStep}
+                      alternativeLabel
+                    >
                       {steps &&
                         steps.length > 0 &&
                         steps.map(label => (
@@ -199,6 +203,7 @@ const AddressForm = () => {
 
                     <TextField
                       autoFocus
+                      data-test="zipcode-input"
                       id="zipcode"
                       label="CEP"
                       variant="outlined"
@@ -238,6 +243,7 @@ const AddressForm = () => {
                       }}
                     />
                     <TextField
+                      data-test="street-input"
                       id="street"
                       label="Rua"
                       variant="outlined"
@@ -258,6 +264,7 @@ const AddressForm = () => {
                     />
 
                     <TextField
+                      data-test="neighborhood-input"
                       id="neighborhood"
                       label="Bairro"
                       variant="outlined"
@@ -285,6 +292,7 @@ const AddressForm = () => {
                     />
 
                     <TextField
+                      data-test="number-input"
                       id="number"
                       label="N°"
                       type="number"
@@ -308,6 +316,7 @@ const AddressForm = () => {
                     />
 
                     <TextField
+                      data-test="complement-input"
                       id="complement"
                       label="Complemento"
                       variant="outlined"
@@ -320,6 +329,7 @@ const AddressForm = () => {
                       }}
                     />
                     <TextField
+                      data-test="referenceLocation-input"
                       id="referenceLocation"
                       label="Ponto de Referência"
                       variant="outlined"
@@ -333,6 +343,7 @@ const AddressForm = () => {
                     />
 
                     <TextField
+                      data-test="state-input"
                       id="state"
                       select
                       label="Estado"
@@ -357,6 +368,9 @@ const AddressForm = () => {
                       }}
                       SelectProps={{
                         autoWidth: true,
+                        MenuProps: {
+                          ['data-test']: 'menu-state-input',
+                        },
                       }}
                       style={{ width: '30%' }}
                       error={errors.state && touched.state ? true : false}
@@ -376,6 +390,7 @@ const AddressForm = () => {
                     </TextField>
 
                     <TextField
+                      data-test="city-input"
                       id="city"
                       select
                       label="Cidade"
@@ -388,6 +403,9 @@ const AddressForm = () => {
                       }}
                       SelectProps={{
                         autoWidth: true,
+                        MenuProps: {
+                          ['data-test']: 'menu-city-input',
+                        },
                       }}
                       error={errors.city && touched.city ? true : false}
                       helperText={

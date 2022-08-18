@@ -21,13 +21,24 @@ Cypress.Commands.add('login', (email, password) => {
   cy.getByData('email-input').type(email);
   cy.getByData('password-input').type(password);
 
+  cy.get('#email-helper-text').should('not.exist');
+  cy.get('#password-helper-text').should('not.exist');
+
   cy.getByData('submit-button').click();
 });
 
-Cypress.Commands.add('setDatePicker', ({ id, date }) => {
+Cypress.Commands.add('setSelectInput', ({ selector, value }) => {
+  cy.getByData(selector).click();
+
+  cy.get(`[data-test="menu-${selector}"] > .MuiPaper-root`)
+    .contains(value)
+    .click();
+});
+
+Cypress.Commands.add('setDatePicker', ({ selector, date }) => {
   const [year, month, day] = date.split('-');
 
-  cy.get(`input[id=${id}]`).click();
+  cy.getByData(selector).click();
 
   //#region Select the year
   cy.get('.MuiPickersDatePickerRoot-toolbar').within(() => {
