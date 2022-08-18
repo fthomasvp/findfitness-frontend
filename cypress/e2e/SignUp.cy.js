@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
-describe('Sign Up', () => {
+describe('Sign Up page', () => {
   beforeEach(() => {
     cy.visit('/signup');
   });
 
-  describe('Student', () => {
+  context('Student form', () => {
     beforeEach(() => {
       //#region Select "ESTUDANTE" profile type
       cy.get('.MuiTabs-flexContainer').within(() => {
@@ -91,7 +91,7 @@ describe('Sign Up', () => {
     });
   });
 
-  describe.skip('Personal', () => {
+  context.skip('Personal form', () => {
     beforeEach(() => {
       //#region Select "PERSONAL" profile type
       cy.get('.MuiTabs-flexContainer').within(() => {
