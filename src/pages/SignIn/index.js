@@ -130,6 +130,7 @@ const SignIn = () => {
 
                   <S.PanelContent>
                     <TextField
+                      data-test="email-input"
                       id="email"
                       autoFocus
                       label="Email"
@@ -157,6 +158,7 @@ const SignIn = () => {
                     />
 
                     <TextField
+                      data-test="password-input"
                       id="password"
                       label="Senha"
                       type={toggleVisibilityIcon ? 'text' : 'password'}
@@ -203,6 +205,7 @@ const SignIn = () => {
                       }}
                     />
                     <Button
+                      data-test="submit-button"
                       type="submit"
                       color="primary"
                       variant="contained"

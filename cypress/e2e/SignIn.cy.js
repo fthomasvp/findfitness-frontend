@@ -1,18 +1,18 @@
 /// <reference types="cypress" />
 
-describe('Sign In', () => {
+describe('Sign In page', () => {
   beforeEach(() => {
     cy.visit('/');
   });
 
-  it('should not login without credentials', () => {
-    cy.get('button[type=submit]').click();
+  it('should NOT login with empty credentials', () => {
+    cy.getByData('submit-button').click();
 
     cy.get('#email-helper-text').should('be.visible');
     cy.get('#password-helper-text').should('be.visible');
   });
 
-  it('should not login with incorrect credentials', () => {
+  it('should NOT login with incorrect credentials', () => {
     const { email, password } = {
       email: 'fellipecab@gmail.com',
       password: 'Wr0ng@',
@@ -20,9 +20,7 @@ describe('Sign In', () => {
 
     cy.login(email, password);
 
-    cy.get('.MuiAlert-standardError').within(() => {
-      cy.get('.MuiAlert-message').should('be.visible');
-    });
+    cy.getByData('error-snackbar').should('be.visible');
   });
 
   it('should navigate to Sign Up page', () => {

@@ -9,6 +9,7 @@ const Alert = ({ open, handleClose, growTransition, message, severity }) => {
   return (
     <Grow in={growTransition}>
       <Snackbar
+        data-test={`${severity}-snackbar`}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',

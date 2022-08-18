@@ -1,14 +1,3 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
 const MONTHS = [
   'janeiro',
   'fevereiro',
@@ -24,12 +13,15 @@ const MONTHS = [
   'dezembro',
 ];
 
-// -- This is a parent command --
-Cypress.Commands.add('login', (email, password) => {
-  cy.get('#email').type(email);
-  cy.get('#password').type(password);
+Cypress.Commands.add('getByData', selector =>
+  cy.get(`[data-test=${selector}]`)
+);
 
-  cy.get('button[type=submit]').click();
+Cypress.Commands.add('login', (email, password) => {
+  cy.getByData('email-input').type(email);
+  cy.getByData('password-input').type(password);
+
+  cy.getByData('submit-button').click();
 });
 
 Cypress.Commands.add('setDatePicker', ({ id, date }) => {
@@ -89,16 +81,3 @@ Cypress.Commands.add('setDatePicker', ({ id, date }) => {
     .click();
   //#endregion
 });
-
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
