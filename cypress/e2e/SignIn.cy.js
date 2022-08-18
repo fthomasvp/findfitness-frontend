@@ -8,8 +8,8 @@ describe('Sign In page', () => {
   it('should NOT login with empty credentials', () => {
     cy.getByData('submit-button').click();
 
-    cy.get('#email-helper-text').should('be.visible');
-    cy.get('#password-helper-text').should('be.visible');
+    cy.get('#email-helper-text').should('exist');
+    cy.get('#password-helper-text').should('exist');
   });
 
   it('should NOT login with incorrect credentials', () => {
@@ -26,7 +26,7 @@ describe('Sign In page', () => {
   it('should navigate to Sign Up page', () => {
     cy.get('a[href="/signup"]').click();
 
-    cy.location('pathname').should('include', 'signup');
+    cy.location('pathname').should('equal', '/signup/profileform');
   });
 
   it('should be able to login successfully', () => {
@@ -37,6 +37,6 @@ describe('Sign In page', () => {
 
     cy.login(email, password);
 
-    cy.location('pathname').should('include', 'home');
+    cy.location('pathname').should('equal', '/home');
   });
 });
