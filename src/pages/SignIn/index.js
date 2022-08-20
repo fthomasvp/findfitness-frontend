@@ -205,7 +205,7 @@ const SignIn = () => {
                       }}
                     />
                     <Button
-                      data-test="submit-button"
+                      data-test="login-button"
                       type="submit"
                       color="primary"
                       variant="contained"

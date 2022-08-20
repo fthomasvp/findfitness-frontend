@@ -21,10 +21,7 @@ Cypress.Commands.add('login', (email, password) => {
   cy.getByData('email-input').type(email);
   cy.getByData('password-input').type(password);
 
-  cy.get('#email-helper-text').should('not.exist');
-  cy.get('#password-helper-text').should('not.exist');
-
-  cy.getByData('submit-button').click();
+  cy.getByData('login-button').click();
 });
 
 Cypress.Commands.add('setSelectInput', ({ selector, value }) => {

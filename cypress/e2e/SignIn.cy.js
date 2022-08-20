@@ -2,11 +2,14 @@
 
 describe('Sign In page', () => {
   beforeEach(() => {
-    cy.visit('/');
+    cy.visit('/login');
   });
 
   it('should NOT login with empty credentials', () => {
-    cy.getByData('submit-button').click();
+    cy.getByData('email-input').clear();
+    cy.getByData('password-input').clear();
+
+    cy.getByData('login-button').click();
 
     cy.get('#email-helper-text').should('exist');
     cy.get('#password-helper-text').should('exist');
@@ -19,6 +22,11 @@ describe('Sign In page', () => {
     };
 
     cy.login(email, password);
+
+    // TODO: check if sign in request was made.
+
+    cy.get('#email-helper-text').should('not.exist');
+    cy.get('#password-helper-text').should('not.exist');
 
     cy.getByData('error-snackbar').should('be.visible');
   });
@@ -36,6 +44,11 @@ describe('Sign In page', () => {
     };
 
     cy.login(email, password);
+
+    // TODO: check if sign in request was made.
+
+    cy.get('#email-helper-text').should('not.exist');
+    cy.get('#password-helper-text').should('not.exist');
 
     cy.location('pathname').should('equal', '/home');
   });
