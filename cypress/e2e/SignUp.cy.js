@@ -7,23 +7,23 @@ describe('Sign Up page', () => {
 
   context('Student Journey', () => {
     beforeEach(() => {
-      cy.getByData('profileType-tabs')
-        .find('button[role="tab"]')
-        .first()
-        .and('have.text', 'ESTUDANTE')
+      cy.getByData('profile-type-tabs')
+        .find('button')
+        .contains('ESTUDANTE')
         .click();
 
-      cy.getByData('signup-stepper').within(() => {
-        cy.get('.MuiStepLabel-labelContainer')
-          .first()
-          .should('have.text', 'Perfil');
-      });
+      cy.getByData('signup-stepper')
+        .children()
+        .first()
+        .should('contains.text', 'Perfil');
 
-      cy.get('#sPanelActions').within(() => {
-        cy.get('button')
-          .last()
-          .click();
-      });
+      cy.getByData('next-button').click();
+
+      cy.location('pathname').should('equal', '/signup/userform');
+      cy.getByData('signup-stepper')
+        .children()
+        .first()
+        .should('have.class', 'MuiStep-completed');
     });
 
     it('should be able to sign up successfully', () => {
@@ -45,28 +45,21 @@ describe('Sign Up page', () => {
         city: 'Recife',
       };
 
-      cy.location('pathname').should('equal', '/signup/userform');
-      cy.get('.MuiStep-root')
-        .first()
-        .should('have.class', 'MuiStep-completed');
-
       //#region Fulfill student information
-      cy.getByData('signup-stepper').within(() => {
-        cy.get('.MuiStepLabel-labelContainer')
-          .eq(1)
-          .should('have.text', 'Dados pessoais');
-      });
+      cy.getByData('signup-stepper')
+        .children()
+        .eq(1)
+        .should('contains.text', 'Dados pessoais');
 
       const studentTextInputs = ['name', 'phone', 'cpf', 'email', 'password'];
       studentTextInputs.forEach(item => {
         cy.getByData(`${item}-input`).type(student[`${item}`]);
       });
 
-      cy.get('.MuiTabs-flexContainer').within(() => {
-        cy.get('button')
-          .contains(student.gender)
-          .click();
-      });
+      cy.getByData('gender-tabs')
+        .find('button')
+        .contains(student.gender)
+        .click();
 
       cy.setDatePicker({
         selector: 'birthdate-input',
@@ -79,20 +72,20 @@ describe('Sign Up page', () => {
           .click();
       });
 
-      cy.get('button[type=submit]').click();
+      cy.getByData('next-button').click();
       //#endregion
 
       cy.location('pathname').should('equal', '/signup/addressform');
-      cy.get('.MuiStep-root')
+      cy.getByData('signup-stepper')
+        .children()
         .eq(1)
         .should('have.class', 'MuiStep-completed');
 
       //#region Fulfill address information
-      cy.getByData('signup-stepper').within(() => {
-        cy.get('.MuiStepLabel-labelContainer')
-          .last()
-          .should('have.text', 'Endereço');
-      });
+      cy.getByData('signup-stepper')
+        .children()
+        .last()
+        .should('contains.text', 'Endereço');
 
       // TODO: check if request to get all states was made.
 
@@ -107,30 +100,29 @@ describe('Sign Up page', () => {
 
       cy.setSelectInput({ selector: 'city-input', value: 'Recife' });
 
-      // cy.get('button[type=submit]').click();
+      cy.getByData('finish-button').click();
       //#endregion
+
+      cy.location('pathname').should('equal', '/login');
+      cy.getByData('success-snackbar').should('be.visible');
     });
+
+    it.skip('should NOT sign up with an email that already exists', () => {});
   });
 
   context.skip('Personal Journey', () => {
     beforeEach(() => {
-      cy.getByData('profileType-tabs')
-        .find('button[role="tab"]')
-        .last()
-        .and('have.text', 'PERSONAL')
+      cy.getByData('profile-type-tabs')
+        .find('button')
+        .contains('PERSONAL')
         .click();
 
-      cy.getByData('signup-stepper').within(() => {
-        cy.get('.MuiStepLabel-labelContainer')
-          .first()
-          .should('have.text', 'Perfil');
-      });
+      cy.getByData('signup-stepper')
+        .children()
+        .first()
+        .should('contains.text', 'Perfil');
 
-      cy.get('#sPanelActions').within(() => {
-        cy.get('button')
-          .last()
-          .click();
-      });
+      cy.getByData('next-button').click();
     });
   });
 });

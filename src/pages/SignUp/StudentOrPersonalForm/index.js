@@ -337,6 +337,7 @@ const StudentOrPersonalForm = () => {
                       style={{ marginBottom: '20px' }}
                     >
                       <Tabs
+                        data-test="gender-tabs"
                         value={tab}
                         onChange={handleChangeTab}
                         centered
@@ -464,6 +465,7 @@ const StudentOrPersonalForm = () => {
 
                   <S.PanelActions>
                     <Button
+                      data-test="back-button"
                       color="secondary"
                       variant="outlined"
                       title="Voltar"
@@ -477,6 +479,7 @@ const StudentOrPersonalForm = () => {
                       Voltar
                     </Button>
                     <Button
+                      data-test="next-button"
                       type="submit"
                       color="primary"
                       variant="contained"

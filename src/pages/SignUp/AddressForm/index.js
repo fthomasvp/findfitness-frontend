@@ -429,6 +429,7 @@ const AddressForm = () => {
 
                   <S.PanelActions>
                     <Button
+                      data-test="back-button"
                       color="secondary"
                       variant="outlined"
                       onClick={() => {
@@ -441,6 +442,7 @@ const AddressForm = () => {
                       VOLTAR
                     </Button>
                     <Button
+                      data-test="finish-button"
                       type="submit"
                       color="primary"
                       variant="contained"

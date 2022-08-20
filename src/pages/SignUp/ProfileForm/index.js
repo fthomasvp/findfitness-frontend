@@ -101,7 +101,7 @@ const ProfileForm = () => {
           <S.PanelContent id="SPanelContent">
             <AppBar position="relative" className={globalClasses.appBar}>
               <Tabs
-                data-test="profileType-tabs"
+                data-test="profile-type-tabs"
                 value={tab}
                 onChange={handleChangeTab}
                 centered
@@ -115,6 +115,7 @@ const ProfileForm = () => {
 
           <S.PanelActions id="sPanelActions">
             <Button
+              data-test="back-button"
               color="secondary"
               variant="outlined"
               onClick={leavePage}
@@ -123,6 +124,7 @@ const ProfileForm = () => {
               Voltar
             </Button>
             <Button
+              data-test="next-button"
               color="primary"
               variant="contained"
               onClick={handleClickNextButton}
