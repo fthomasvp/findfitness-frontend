@@ -23,7 +23,9 @@ describe('Sign In page', () => {
 
     cy.login(email, password);
 
-    // TODO: check if sign in request was made.
+    cy.wait('@login')
+      .its('response.statusCode')
+      .should('equal', 401);
 
     cy.get('#email-helper-text').should('not.exist');
     cy.get('#password-helper-text').should('not.exist');
@@ -45,7 +47,9 @@ describe('Sign In page', () => {
 
     cy.login(email, password);
 
-    // TODO: check if sign in request was made.
+    cy.wait('@login')
+      .its('response.statusCode')
+      .should('equal', 200);
 
     cy.get('#email-helper-text').should('not.exist');
     cy.get('#password-helper-text').should('not.exist');

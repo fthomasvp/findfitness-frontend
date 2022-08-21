@@ -21,6 +21,8 @@ Cypress.Commands.add('login', (email, password) => {
   cy.getByData('email-input').type(email);
   cy.getByData('password-input').type(password);
 
+  cy.intercept('POST', '/login').as('login');
+
   cy.getByData('login-button').click();
 });
 
