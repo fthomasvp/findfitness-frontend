@@ -23,9 +23,10 @@ describe('Sign In page', () => {
 
     cy.login(email, password);
 
-    cy.wait('@login')
-      .its('response.statusCode')
-      .should('equal', 401);
+    cy.wait('@login').should(({ request, response }) => {
+      expect(request.body).to.have.all.keys('email', 'password');
+      expect(response.statusCode).to.equal(401);
+    });
 
     cy.get('#email-helper-text').should('not.exist');
     cy.get('#password-helper-text').should('not.exist');
@@ -47,13 +48,21 @@ describe('Sign In page', () => {
 
     cy.login(email, password);
 
-    cy.wait('@login')
-      .its('response.statusCode')
-      .should('equal', 200);
+    cy.wait('@login').should(({ request, response }) => {
+      expect(request.body).to.have.all.keys('email', 'password');
+      expect(response.statusCode).to.equal(200);
+    });
 
     cy.get('#email-helper-text').should('not.exist');
     cy.get('#password-helper-text').should('not.exist');
 
     cy.location('pathname').should('equal', '/home');
+
+    cy.intercept('GET', '/student_groups*').as('getStudentGroups');
+
+    cy.wait('@getStudentGroups').should(({ request, response }) => {
+      expect(request.headers).to.have.property('authorization');
+      expect(response.statusCode).to.equal(200);
+    });
   });
 });
