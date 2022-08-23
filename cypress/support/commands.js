@@ -39,7 +39,7 @@ Cypress.Commands.add('setDatePicker', ({ selector, date }) => {
 
   cy.getByData(selector).click();
 
-  //#region Select the year
+  // Select the year
   cy.get('.MuiPickersDatePickerRoot-toolbar').within(() => {
     cy.get('button')
       .first()
@@ -49,9 +49,8 @@ Cypress.Commands.add('setDatePicker', ({ selector, date }) => {
   cy.get('.MuiPickersYearSelection-container')
     .contains(year)
     .click();
-  //#endregion
 
-  //#region Select the month
+  // Select the month
   cy.get('.MuiPickersCalendarHeader-switchHeader').within(() => {
     let currentMonthNumber = 0;
 
@@ -83,11 +82,10 @@ Cypress.Commands.add('setDatePicker', ({ selector, date }) => {
         }
       });
   });
-  //#endregion
 
-  //#region Select the day
-  cy.get('.MuiPickersCalendar-week')
+  // Select the day
+  cy.get('.MuiPickersCalendar-transitionContainer')
+    .find('button[tabindex=0]')
     .contains(Number(day))
     .click();
-  //#endregion
 });
