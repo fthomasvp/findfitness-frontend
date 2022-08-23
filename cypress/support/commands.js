@@ -89,3 +89,64 @@ Cypress.Commands.add('setDatePicker', ({ selector, date }) => {
     .contains(Number(day))
     .click();
 });
+
+Cypress.Commands.add('signUpStudent', ({ student }) => {
+  const studentTextInputs = ['name', 'phone', 'cpf', 'email', 'password'];
+  studentTextInputs.forEach(item => {
+    cy.getByData(`${item}-input`).type(student[`${item}`]);
+  });
+
+  cy.getByData('gender-tabs')
+    .find('button')
+    .contains(student.gender)
+    .click();
+
+  cy.setDatePicker({
+    selector: 'birthdate-input',
+    date: student.birthdate,
+  });
+
+  cy.get('.MuiDialogActions-root').within(() => {
+    cy.get('button')
+      .last()
+      .click();
+  });
+
+  cy.intercept('GET', '/localizations/states').as('getStates');
+  cy.intercept('GET', '/localizations/states/*/cities').as('getCitiesByState');
+
+  cy.getByData('next-button').click();
+
+  cy.location('pathname').should('equal', '/signup/addressform');
+  cy.getByData('signup-stepper')
+    .children()
+    .eq(1)
+    .should('have.class', 'MuiStep-completed');
+});
+
+Cypress.Commands.add('signUpAddress', ({ address }) => {
+  cy.wait('@getStates').should(({ response }) => {
+    expect(response.statusCode).to.eq(200);
+    expect(response.body)
+      .to.be.an('array')
+      .and.length.to.be.greaterThan(1);
+    expect(response.body[0]).to.have.all.keys('id', 'initials', 'name');
+  });
+
+  const addressTextInputs = ['zipcode', 'street', 'neighborhood', 'number'];
+  addressTextInputs.forEach(item => {
+    cy.getByData(`${item}-input`).type(address[`${item}`]);
+  });
+
+  cy.setSelectInput({ selector: 'state-input', value: address.state });
+
+  cy.wait('@getCitiesByState').should(({ response }) => {
+    expect(response.statusCode).to.eq(200);
+    expect(response.body)
+      .to.be.an('array')
+      .and.length.to.be.greaterThan(1);
+    expect(response.body[0]).to.have.all.keys('id', 'name');
+  });
+
+  cy.setSelectInput({ selector: 'city-input', value: address.city });
+});

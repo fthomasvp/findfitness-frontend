@@ -8,6 +8,33 @@ describe('Sign Up page', () => {
   });
 
   context('Student Journey', () => {
+    let student = null;
+    let address = null;
+
+    before(() => {
+      student = {
+        email: faker.internet.email(),
+        password: '1234f@',
+        birthdate: faker.date
+          .birthdate()
+          .toISOString()
+          .split('T')[0],
+        cpf: faker.finance.account(11),
+        name: faker.name.fullName(),
+        phone: faker.phone.number('55#########'),
+        gender: 'MASCULINO',
+      };
+
+      address = {
+        zipcode: faker.phone.number('########'),
+        street: faker.address.street(),
+        neighborhood: faker.address.county(),
+        number: faker.address.buildingNumber(),
+        state: 'PE',
+        city: 'Recife',
+      };
+    });
+
     beforeEach(() => {
       cy.getByData('profile-type-tabs')
         .find('button')
@@ -26,101 +53,22 @@ describe('Sign Up page', () => {
         .children()
         .first()
         .should('have.class', 'MuiStep-completed');
-    });
 
-    it('should be able to sign up successfully', () => {
-      const student = {
-        email: faker.internet.email(),
-        password: '1234f@',
-        birthdate: faker.date
-          .birthdate()
-          .toISOString()
-          .split('T')[0],
-        cpf: faker.finance.account(11),
-        name: faker.name.fullName(),
-        phone: faker.phone.number('55#########'),
-        gender: 'MASCULINO',
-      };
-      const address = {
-        zipcode: faker.phone.number('########'),
-        street: faker.address.street(),
-        neighborhood: faker.address.county(),
-        number: faker.address.buildingNumber(),
-        state: 'PE',
-        city: 'Recife',
-      };
-
-      //#region Fulfill student information
       cy.getByData('signup-stepper')
         .children()
         .eq(1)
         .should('contains.text', 'Dados pessoais');
+    });
 
-      const studentTextInputs = ['name', 'phone', 'cpf', 'email', 'password'];
-      studentTextInputs.forEach(item => {
-        cy.getByData(`${item}-input`).type(student[`${item}`]);
-      });
+    it('should be able to sign up successfully', () => {
+      cy.signUpStudent({ student });
 
-      cy.getByData('gender-tabs')
-        .find('button')
-        .contains(student.gender)
-        .click();
-
-      cy.setDatePicker({
-        selector: 'birthdate-input',
-        date: student.birthdate,
-      });
-
-      cy.get('.MuiDialogActions-root').within(() => {
-        cy.get('button')
-          .last()
-          .click();
-      });
-
-      cy.intercept('GET', '/localizations/states').as('getStates');
-      cy.intercept('GET', '/localizations/states/*/cities').as(
-        'getCitiesByState'
-      );
-
-      cy.getByData('next-button').click();
-      //#endregion
-
-      cy.location('pathname').should('equal', '/signup/addressform');
-      cy.getByData('signup-stepper')
-        .children()
-        .eq(1)
-        .should('have.class', 'MuiStep-completed');
-
-      //#region Fulfill address information
       cy.getByData('signup-stepper')
         .children()
         .last()
         .should('contains.text', 'Endereço');
 
-      cy.wait('@getStates').should(({ response }) => {
-        expect(response.statusCode).to.eq(200);
-        expect(response.body)
-          .to.be.an('array')
-          .and.length.to.be.greaterThan(1);
-        expect(response.body[0]).to.have.all.keys('id', 'initials', 'name');
-      });
-
-      const addressTextInputs = ['zipcode', 'street', 'neighborhood', 'number'];
-      addressTextInputs.forEach(item => {
-        cy.getByData(`${item}-input`).type(address[`${item}`]);
-      });
-
-      cy.setSelectInput({ selector: 'state-input', value: address.state });
-
-      cy.wait('@getCitiesByState').should(({ response }) => {
-        expect(response.statusCode).to.eq(200);
-        expect(response.body)
-          .to.be.an('array')
-          .and.length.to.be.greaterThan(1);
-        expect(response.body[0]).to.have.all.keys('id', 'name');
-      });
-
-      cy.setSelectInput({ selector: 'city-input', value: address.city });
+      cy.signUpAddress({ address });
 
       cy.intercept('POST', '/students').as('saveStudent');
 
@@ -130,13 +78,26 @@ describe('Sign Up page', () => {
         expect(request.body).to.have.all.keys('student', 'address');
         expect(response.statusCode).to.eq(201);
       });
-      //#endregion
 
       cy.location('pathname').should('equal', '/login');
       cy.getByData('success-snackbar').should('be.visible');
     });
 
-    it.skip('should NOT sign up with an email that already exists', () => {});
+    it('should NOT sign up with an email that already exists', () => {
+      cy.signUpStudent({ student });
+      cy.signUpAddress({ address });
+
+      cy.intercept('POST', '/students').as('saveStudent');
+
+      cy.getByData('finish-button').click();
+
+      cy.wait('@saveStudent').should(({ request, response }) => {
+        expect(request.body).to.have.all.keys('student', 'address');
+        expect(response.statusCode).to.eq(400);
+      });
+
+      cy.getByData('error-snackbar').should('be.visible');
+    });
   });
 
   context.skip('Personal Journey', () => {
