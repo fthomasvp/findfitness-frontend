@@ -35,6 +35,7 @@ import { useGlobalStyles } from '../../../global/styles';
 import * as S from '../styles';
 
 import 'moment/locale/pt-br';
+import API from '../../../services/API';
 
 /**
  * Yup Fields Schema
@@ -219,25 +220,20 @@ const StudentOrPersonalForm = () => {
                         onChange={handleChange}
                         onBlur={evt => {
                           if (/^[0-9]{6}-[A-Z]{1}\/[A-Z]{2}/gm.test(cref)) {
-                            fetch(
-                              // eslint-disable-next-line no-undef
+                            API.get(
                               `${process.env.REACT_APP_AXIOS_BASE_URL}/personals/search?cref=${cref}`
-                            )
-                              .then(response => {
-                                return response.status;
-                              })
-                              .then(status => {
-                                if (status !== 200) {
-                                  setFieldError(
-                                    'cref',
-                                    'CREF não está registrado na CONFEF'
-                                  );
+                            ).then(({ status }) => {
+                              if (status !== 200) {
+                                setFieldError(
+                                  'cref',
+                                  'CREF não está registrado na CONFEF'
+                                );
 
-                                  setFieldValue('validCref', false);
-                                } else {
-                                  setFieldValue('validCref', true);
-                                }
-                              });
+                                setFieldValue('validCref', false);
+                              } else {
+                                setFieldValue('validCref', true);
+                              }
+                            });
                           }
 
                           handleBlur(evt);

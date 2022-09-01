@@ -41,14 +41,14 @@ export const state = Yup.string()
   )
   .required('Preencha o campo apenas com duas letras');
 
-export const zipcode = Yup.number()
+export const zipcode = Yup.string()
   .typeError(
     'Não pode conter letras, espaços em branco ou caracteres especiais'
   )
   .test(
     'zipcode',
     'Deve conter 8 caracteres numéricos',
-    value => String(value).length === 8
+    value => value.length === 8
   )
   .required('Preencha o campo apenas com números');
 

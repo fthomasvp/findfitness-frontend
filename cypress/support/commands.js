@@ -90,20 +90,33 @@ Cypress.Commands.add('setDatePicker', ({ selector, date }) => {
     .click();
 });
 
-Cypress.Commands.add('signUpStudent', ({ student }) => {
-  const studentTextInputs = ['name', 'phone', 'cpf', 'email', 'password'];
-  studentTextInputs.forEach(item => {
-    cy.getByData(`${item}-input`).type(student[`${item}`]);
+Cypress.Commands.add('signUpUser', ({ user }) => {
+  let textInputs = ['name', 'phone', 'cpf', 'email', 'password'];
+
+  if (Object.keys(user).includes('cref')) {
+    cy.intercept('GET', `/personals/search?cref=${user.cref}`).as('getCref');
+
+    textInputs.unshift('cref');
+  }
+
+  textInputs.forEach(item => {
+    cy.getByData(`${item}-input`).type(user[`${item}`]);
   });
+
+  if (Object.keys(user).includes('cref')) {
+    cy.wait('@getCref').should(({ response }) => {
+      expect(response.statusCode).to.eq(200);
+    });
+  }
 
   cy.getByData('gender-tabs')
     .find('button')
-    .contains(student.gender)
+    .contains(user.gender)
     .click();
 
   cy.setDatePicker({
     selector: 'birthdate-input',
-    date: student.birthdate,
+    date: user.birthdate,
   });
 
   cy.get('.MuiDialogActions-root').within(() => {
@@ -133,7 +146,14 @@ Cypress.Commands.add('signUpAddress', ({ address }) => {
     expect(response.body[0]).to.have.all.keys('id', 'initials', 'name');
   });
 
-  const addressTextInputs = ['zipcode', 'street', 'neighborhood', 'number'];
+  const addressTextInputs = [
+    'zipcode',
+    'street',
+    'neighborhood',
+    'number',
+    'complement',
+    'referenceLocation',
+  ];
   addressTextInputs.forEach(item => {
     cy.getByData(`${item}-input`).type(address[`${item}`]);
   });
